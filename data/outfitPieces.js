@@ -1,0 +1,1 @@
+import { outfitPieces } from "../config/mongoCollections.js";

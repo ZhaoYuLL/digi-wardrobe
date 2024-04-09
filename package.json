@@ -1,0 +1,25 @@
+{
+  "name": "digi-wardrobe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZhaoYuLL/digi-wardrobe.git"
+  },
+  "author": "Group 25",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZhaoYuLL/digi-wardrobe/issues"
+  },
+  "homepage": "https://github.com/ZhaoYuLL/digi-wardrobe#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "express-handlebars": "^7.1.2",
+    "mongodb": "^6.5.0"
+  }
+}

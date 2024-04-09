@@ -1,0 +1,1 @@
+import { fitposts } from "../config/mongoCollections.js";
