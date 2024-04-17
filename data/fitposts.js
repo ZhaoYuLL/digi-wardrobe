@@ -63,4 +63,4 @@ const searchByUID = async(uid) => {
 
 }
 
-export{getAll, latest, trending}
+export{getAll, latest, trending, searchByUID}
