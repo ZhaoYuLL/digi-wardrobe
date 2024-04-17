@@ -12,6 +12,25 @@ const getAll = async () => {
       element._id = element._id.toString();
       return element;
     })
+
+    // remove later
+    console.log('getAll():',fpList);
+
     return fpList;
   };
-  
+
+const latest = async() => {
+    let fpList = await getAll();
+    fpList.sort((a, b) => new Date(b.postedDate) - new Date(a.postedDate));
+    return fpList;
+}
+
+const trending = async() => {
+    let fpList = await getAll();
+    // some formula to find most trending
+    fpList.sort((a, b) => (b.likes + b.saves) - (a.likes + a.saves));
+    return fpList;
+}
+
+
+export{getAll, latest, trending}
