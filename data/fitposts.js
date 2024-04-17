@@ -62,4 +62,21 @@ const searchByUID = async(uid) => {
 
 }
 
+const searchByFPID = async(id) => {
+ 
+    id = helper.validString(id);
+    const fitpostCollection = await fitposts();
+    const fp = await fitpostCollection.findOne({_id: new ObjectId(id)});
+    if (fp === null) throw 'No fitpost with that id';
+
+    // replaces ObjectId with string
+    fp._id = fp._id.toString();
+
+    // remove later
+    console.log(fp);
+
+    return fp;
+ 
+}
+
 export{getAll, latest, trending, searchByUID}
