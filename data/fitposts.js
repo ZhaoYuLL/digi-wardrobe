@@ -42,3 +42,28 @@ const getImage = async (fileId) => {
 		});
 	});
 };
+
+try {
+	// Upload an image
+	const imagePath = "path/to/image.jpg";
+	const filename = "image.jpg";
+	const metadata = { description: "My image" };
+	const fileId = await uploadImage(imagePath, filename, metadata);
+	console.log("Image uploaded successfully. File ID:", fileId);
+
+	// Retrieve the uploaded image
+	const imageBuffer = await getImage(fileId);
+	console.log(
+		"Image retrieved successfully. Buffer size:",
+		imageBuffer.length
+	);
+
+	// You can now save the fileId in your fitpost document
+	const fitpost = {
+		// ... other fitpost fields
+		image: fileId,
+	};
+	await fitpostCollection.insertOne(fitpost);
+} catch (error) {
+	console.error("Error:", error);
+}
