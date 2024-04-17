@@ -1,17 +1,26 @@
 import { fitposts } from "../config/mongoCollections.js";
-import { MongoClient, GridFSBucket } from "mongodb";
-const fitpostCollection = await fitposts();
+//initial branch commit
+import { GridFSBucket } from "mongodb";
+import fs from "fs";
+import path from "path";
 
-// Upload an image
-const uploadImage = async (imagePath, filename, metadata) => {
+let bucket;
+
+export const initializeBucket = (db) => {
+	bucket = new GridFSBucket(db);
+};
+
+export const uploadImage = async (imagePath) => {
 	return new Promise((resolve, reject) => {
-		const imageStream = fs.createReadStream(imagePath);
+		const filename = path.basename(imagePath);
 		const uploadStream = bucket.openUploadStream(filename, {
-			contentType: "image/jpeg",
-			metadata: metadata,
+			contentType: "image/jpeg", // Adjust the content type based on your image format
+			metadata: {
+				/* Additional metadata */
+			},
 		});
 
-		imageStream
+		fs.createReadStream(imagePath)
 			.pipe(uploadStream)
 			.on("error", (error) => {
 				reject(error);
@@ -22,48 +31,6 @@ const uploadImage = async (imagePath, filename, metadata) => {
 	});
 };
 
-// Retrieve an image
-const getImage = async (fileId) => {
-	return new Promise((resolve, reject) => {
-		const downloadStream = bucket.openDownloadStream(fileId);
-		const chunks = [];
-
-		downloadStream.on("data", (chunk) => {
-			chunks.push(chunk);
-		});
-
-		downloadStream.on("error", (error) => {
-			reject(error);
-		});
-
-		downloadStream.on("end", () => {
-			const imageBuffer = Buffer.concat(chunks);
-			resolve(imageBuffer);
-		});
-	});
+export const getFitpostCollection = (db) => {
+	return db.collection("fitposts");
 };
-
-try {
-	// Upload an image
-	const imagePath = "path/to/image.jpg";
-	const filename = "image.jpg";
-	const metadata = { description: "My image" };
-	const fileId = await uploadImage(imagePath, filename, metadata);
-	console.log("Image uploaded successfully. File ID:", fileId);
-
-	// Retrieve the uploaded image
-	const imageBuffer = await getImage(fileId);
-	console.log(
-		"Image retrieved successfully. Buffer size:",
-		imageBuffer.length
-	);
-
-	// You can now save the fileId in your fitpost document
-	const fitpost = {
-		// ... other fitpost fields
-		image: fileId,
-	};
-	await fitpostCollection.insertOne(fitpost);
-} catch (error) {
-	console.error("Error:", error);
-}
