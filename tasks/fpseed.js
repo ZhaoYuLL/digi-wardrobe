@@ -1,9 +1,5 @@
 import { dbConnection, closeConnection } from "../config/mongoConnection.js";
-import {
-	initializeBucket,
-	uploadImage,
-	getFitpostCollection,
-} from "./fitposts.js";
+import { initializeBucket, uploadImage } from "./fitposts.js";
 import { fitposts } from "../config/mongoCollections.js";
 
 const db = await dbConnection();
