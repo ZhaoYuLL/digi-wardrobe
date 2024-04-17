@@ -22,7 +22,7 @@ const getAll = async () => {
     }
 
     // remove later
-    console.log('getAll():',fpList);
+    //console.log('getAll():',fpList);
 
     return fpList;
   };
@@ -33,7 +33,7 @@ const latest = async() => {
     fpList.sort((a, b) => new Date(b.postedDate) - new Date(a.postedDate));
 
     // remove later
-    console.log('latest', fpList);
+    //console.log('latest', fpList);
 
     return fpList;
 }
@@ -51,9 +51,8 @@ const trending = async() => {
 
 const searchByUID = async(uid) => {
     uid = helper.validString(uid);
-    let fpList = latest();
+    let fpList = await latest();
     fpList = fpList.filter(fp => fp.user_id === uid);
-
     if (!fpList) throw 'There are no fitposts';
 
     // remove later

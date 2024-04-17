@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as fp from '../data/fitposts.js';
+import * as helper from '../helper.js';
 
 const router = Router();
 
@@ -39,16 +40,17 @@ router.route('/latest').get(async (req, res) => {
 
 router.route('/:id').get(async (req, res) => {
     //code here for GET a single movie
-    
+    console.log(req.params.id);
+    let userId = req.params.id;
     try {
-        req.params.id = helper.checkId(req.params.id);
+        userId = helper.validString(userId);
     } catch (e) {
         return res.status(500).send(e);
     }
     try {
-        let fpList = await fp.searchByUID(req.params.id);
+        let fpList = await fp.searchByUID(userId);
         // will need to change later to show user name and not user id
-        return res.render('explore_page', {title: `${req.params.id}'s FitPosts`, fitposts:  fpList});
+        return res.render('explore_page', {title: `${userId}'s FitPosts`, fitposts:  fpList});
     } catch (e) {
         return res.status(500).send(e);
     }
