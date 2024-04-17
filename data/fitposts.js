@@ -29,7 +29,3 @@ export const uploadImage = async (imagePath) => {
 			});
 	});
 };
-
-export const getFitpostCollection = (db) => {
-	return db.collection("fitposts");
-};
