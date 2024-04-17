@@ -2,6 +2,7 @@ import userRoutes from "./userRoutes.js";
 import fitpostRoutes from "./fitpostRoutes.js";
 import outfitPieceRoutes from "./outfitPieceRoutes.js";
 import wardrobeRoutes from "./wardrobeRoutes.js";
+import { static as staticDir } from "express";
 
 
 const constructorMethod = (app) => {
