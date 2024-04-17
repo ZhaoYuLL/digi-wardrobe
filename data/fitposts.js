@@ -21,3 +21,24 @@ const uploadImage = async (imagePath, filename, metadata) => {
 			});
 	});
 };
+
+// Retrieve an image
+const getImage = async (fileId) => {
+	return new Promise((resolve, reject) => {
+		const downloadStream = bucket.openDownloadStream(fileId);
+		const chunks = [];
+
+		downloadStream.on("data", (chunk) => {
+			chunks.push(chunk);
+		});
+
+		downloadStream.on("error", (error) => {
+			reject(error);
+		});
+
+		downloadStream.on("end", () => {
+			const imageBuffer = Buffer.concat(chunks);
+			resolve(imageBuffer);
+		});
+	});
+};
