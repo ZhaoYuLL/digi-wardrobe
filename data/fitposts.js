@@ -79,4 +79,4 @@ const searchByFPID = async(id) => {
  
 }
 
-export{getAll, latest, trending, searchByUID}
+export{getAll, latest, trending, searchByUID, searchByFPID}

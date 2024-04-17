@@ -4,7 +4,7 @@
 	<ol>
 		{{#each fitposts}}
 			<li>
-				<p>Fitpost ID: {{this._id}}</p>
+				<a href="/fitposts/{{this._id}}">Fitpost ID: {{this._id}}</a>
 				<p>Likes: {{this.likes}}</p>
 			</li>
 		{{/each}}

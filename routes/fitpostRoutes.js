@@ -38,10 +38,10 @@ router.route('/latest').get(async (req, res) => {
 });
 
 
-router.route('/:id').get(async (req, res) => {
+router.route('/user/:uid').get(async (req, res) => {
     //code here for GET a single movie
-    console.log(req.params.id);
-    let userId = req.params.id;
+    console.log(req.params.uid);
+    let userId = req.params.uid;
     try {
         userId = helper.validString(userId);
     } catch (e) {
@@ -51,6 +51,25 @@ router.route('/:id').get(async (req, res) => {
         let fpList = await fp.searchByUID(userId);
         // will need to change later to show user name and not user id
         return res.render('explore_page', {title: `${userId}'s FitPosts`, fitposts:  fpList});
+    } catch (e) {
+        return res.status(500).send(e);
+    }
+  });
+
+  router.route('/:id').get(async (req, res) => {
+    //code here for GET a single movie
+    console.log(req.params.id);
+    let fpid = req.params.id;
+    try {
+        fpid = helper.validString(fpid);
+    } catch (e) {
+        return res.status(500).send(e);
+    }
+    try {
+        let fitpost = await fp.searchByFPID(fpid);
+        return res.render('fitpost_page', {post: fitpost});
+        //return res.render('explore_page', {title: `${userId}'s FitPosts`, fitposts:  fpList});
+        
     } catch (e) {
         return res.status(500).send(e);
     }
