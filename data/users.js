@@ -49,10 +49,24 @@ const createUser = async (userName, firstName, lastName, age, email, password) =
         passoword: passwordHash,
         wardrobes: [],
         closet: [],
-        favorite: []
+        favorite: [],
+        // might add profile pic when we get image storage working
     }
     const userCollection = await users();
     const newInsertInformation = await userCollection.insertOne(newUser);
     if (!newInsertInformation._id) throw new Error("Error creating new user");
     return getUserById(newInsertInformation._id);
+}
+
+
+
+const deleteUser = async (id) => {
+    // TODO: validate id and that a user with that id exists
+    const userCollection = await users();
+    const deletionInfo = await userCollection.findOneAndDelete({
+        _id: new ObjectId(id)
+    });
+    if (!deletionInfo) throw `Error: Could not delete user with id of ${id}`;
+
+    return { ...deletionInfo, deleted: true };
 }
