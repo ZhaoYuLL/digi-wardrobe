@@ -53,7 +53,7 @@ const searchByUID = async(uid) => {
     uid = helper.validString(uid);
     let fpList = await latest();
     fpList = fpList.filter(fp => fp.user_id === uid);
-    if (!fpList) throw 'There are no fitposts';
+    if (!fpList) throw 'There are no user of that id';
 
     // remove later
     console.log('uid', fpList);
@@ -79,4 +79,52 @@ const searchByFPID = async(id) => {
  
 }
 
-export{getAll, latest, trending, searchByUID, searchByFPID}
+const createFP = async (
+    user_id,
+    headwear,
+    bodywear,
+    legwear,
+    footwear
+  ) => {
+
+    // find a way to validate these ids
+    user_id = helper.validString(user_id);
+    headwear = helper.validString(headwear);
+    bodywear = helper.validString(bodywear);
+    legwear = helper.validString(legwear);
+    footwear = helper.validString(footwear);
+
+    let likes = 0;
+    let saves = 0;
+    //save
+    // let postedDate = 
+
+    let date = new Date();
+
+    let formattedDate = date.toISOString().split('T')[0];
+    
+    let newFP = {
+      user_id,
+      postedDate: formattedDate,
+      headwear,
+      bodywear,
+      legwear,
+      footwear,
+      likes,
+      saves
+    };
+   
+    const fitpostCollection = await fitposts();
+    const insertInfo = await fitpostCollection.insertOne(newFP);
+    if (!insertInfo.acknowledged || !insertInfo.insertedId)
+      throw 'could not add fitpost womp womp';
+  
+    // converts id to string to get the product object
+    const newId = insertInfo.insertedId.toString();
+    const fp = await searchByFPID(newId);
+    return fp;
+    //return newProduct;
+  
+  }
+
+export{getAll, latest, trending, searchByUID, searchByFPID, createFP}
