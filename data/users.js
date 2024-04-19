@@ -16,6 +16,7 @@ const getUserById = async (id) => {
 }
 
 const getUserByUserName = async (userName) => {
+    // Made this to check if a username already exists
     // TODO: validate userName parameter
     const userCollection = await users();
     const user = userCollection.find({ userName: userName });
@@ -24,6 +25,7 @@ const getUserByUserName = async (userName) => {
 }
 
 const getUserByEmail = async (email) => {
+    // Made this to check if an account with the given email already exists
     // TODO: validate email parameter
     const userCollection = await users();
     const user = userCollection.find({ email: email });
@@ -32,6 +34,7 @@ const getUserByEmail = async (email) => {
 }
 
 const passwordHelper = async (password) => {
+    // will probably move to a helper function file
     const saltRounds = 10;
     const hash = await bcrypt.hash(password, saltRounds);
     return hash;
@@ -59,6 +62,8 @@ const createUser = async (userName, firstName, lastName, age, email, password) =
 }
 
 const updateUserInfo = async (id, userInfo) => {
+    // For now, this only updates the user info that the user can directly edit
+    // Assuming wardrobes, closet, and favorites will be edited in a different file
     // TODO: input validation
     const changes = {};
 
@@ -91,7 +96,7 @@ const updateUserInfo = async (id, userInfo) => {
     const userCollection = await users();
     const updateInfo = await userCollection.findOneAndUpdate(
         { _id: new ObjectId(id) },
-        { $set: userInfo },
+        { $set: changes },
         { returnDocument: 'after' }
     );
     if (!updateInfo) throw new Error('Error updating user info');
