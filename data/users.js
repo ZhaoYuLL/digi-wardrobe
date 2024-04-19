@@ -10,7 +10,7 @@ const getAllUsers = async () => {
 const getUserById = async (id) => {
     // TODO: validate id parameter
     const userCollection = await users();
-    const user = userCollection.find({ _id: new ObjectId(id) });
+    const user = userCollection.findOne({ _id: new ObjectId(id) });
     if (!user) throw new Error(`Error getting user with id: ${id}`);
     return user;
 }
@@ -39,7 +39,7 @@ const passwordHelper = async (password) => {
 
 const createUser = async (userName, firstName, lastName, age, email, password) => {
     // TODO: validate all parameters
-    const passwordHash = passwordHelper(password);
+    const passwordHash = await passwordHelper(password);
     const newUser = {
         userName: userName,
         firstName: firstName,
@@ -54,8 +54,8 @@ const createUser = async (userName, firstName, lastName, age, email, password) =
     }
     const userCollection = await users();
     const newInsertInformation = await userCollection.insertOne(newUser);
-    if (!newInsertInformation._id) throw new Error("Error creating new user");
-    return getUserById(newInsertInformation._id);
+    if (!newInsertInformation.insertedId) throw new Error("Error creating new user");
+    return getUserById(newInsertInformation.insertedId);
 }
 
 const updateUserInfo = async (id, userInfo) => {
