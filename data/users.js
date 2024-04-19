@@ -46,7 +46,7 @@ const createUser = async (userName, firstName, lastName, age, email, password) =
         lastName: lastName,
         age: age,
         email: email,
-        passoword: passwordHash,
+        password: passwordHash,
         wardrobes: [],
         closet: [],
         favorite: [],
@@ -58,7 +58,46 @@ const createUser = async (userName, firstName, lastName, age, email, password) =
     return getUserById(newInsertInformation._id);
 }
 
+const updateUserInfo = async (id, userInfo) => {
+    // TODO: input validation
+    const changes = {};
 
+    if (userInfo.userName) {
+        // TODO: validate username
+        changes['userName'] = userInfo.userName;
+    }
+    if (userInfo.firstName) {
+        // TODO: validate first name
+        changes['firstName'] = userInfo.firstName;
+    }
+    if (userInfo.lastName) {
+        // TODO: validate last name
+        changes['lastName'] = userInfo.lastName;
+    }
+    if (userInfo.age) {
+        // TODO: validate age
+        changes['age'] = userInfo.age;
+    }
+    if (userInfo.email) {
+        // TODO: validate email
+        changes['email'] = userInfo.email;
+    }
+    if (userInfo.password) {
+        // TODO: validate password
+        const hash = passwordHelper(userInfo.password);
+        changes['password'] = hash;
+    }
+
+    const userCollection = await users();
+    const updateInfo = await userCollection.findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: userInfo },
+        { returnDocument: 'after' }
+    );
+    if (!updateInfo) throw new Error('Error updating user info');
+
+    return updateInfo;
+}
 
 const deleteUser = async (id) => {
     // TODO: validate id and that a user with that id exists
@@ -70,3 +109,5 @@ const deleteUser = async (id) => {
 
     return { ...deletionInfo, deleted: true };
 }
+
+export { getAllUsers, getUserById, createUser, updateUserInfo, deleteUser };
