@@ -3,6 +3,7 @@
 import express from 'express';
 const app = express();
 import configRoutes from './routes/index.js';
+import session from "express-session";
 
 import exphbs from 'express-handlebars';
 
@@ -23,6 +24,50 @@ const handlebarsInstance = exphbs.create({
     }
 });
 
+app.use((req, res, next) => {
+    console.log(`${new Date().toUTCString()}: ${req.method} ${req.originalUrl} (${req.session.user ? 'Authenticated User' : 'Non-Authenticated User'})`);
+  
+    if (req.path === "/") {
+		if (req.session.user) {
+			res.redirect("/user");
+		} else {
+			res.redirect("/login");
+		}
+	} else {
+		next();
+	}
+});
+app.use('/login', (req, res, next) => {
+    if (req.session.user) {
+        return res.redirect('/user');
+    }
+    else{
+        next();
+    }
+});
+app.use('/register', (req, res, next) => {
+    if (req.session.user) {
+        return res.redirect('/user');
+    }else{
+        next();
+    }
+});
+app.use('/user', (req, res, next) => {
+    if (!req.session.user) {
+      return res.redirect('/login');
+    }
+    else{
+        next();
+    }
+});
+app.use('/logout', (req, res, next) => {
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+    else{
+        next();
+    }
+});
 app.use('/public', staticDir);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
