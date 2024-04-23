@@ -9,6 +9,13 @@ import exphbs from 'express-handlebars';
 
 const staticDir = express.static('public');
 
+app.use(session({
+    name: 'AuthenticationState',
+    secret: 'some secret string!',
+    resave: false,
+    saveUninitialized: false
+  }))
+  
 const handlebarsInstance = exphbs.create({
     defaultLayout: 'main',
     // Specify helpers which are only registered on this instance.
