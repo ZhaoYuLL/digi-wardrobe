@@ -2,6 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import sharp from "sharp";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { storeImage, getImage } from "../data/fitposts.js";
 const router = Router();
 
 //not_secure
@@ -43,15 +44,19 @@ router
 		const fileBuffer = await sharp(req.file.buffer)
 			.resize({ height: 1920, width: 1080, fit: "contain" })
 			.toBuffer();
-
+		//give image its name
+		const imageName = await generateFileName();
 		const params = {
 			Bucket: BUCKET_NAME,
-			Key: await generateFileName(),
+			Key: imageName,
 			Body: fileBuffer,
 			ContentType: req.file.mimetype,
 		};
 		const command = new PutObjectCommand(params);
 		await s3.send(command);
+
+		//storing image in mongo
+		const post = await storeImage(imageName, req.body.caption);
 		res.render("fitposts", { title: "fitposts" });
 	});
 
