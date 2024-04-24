@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
 router.post("/login", (req, res) => {
 	// Retrieve email and password from request body
 	const { email, password } = req.body;
-
+	console.log(req.body);
 	// Perform authentication logic here, such as checking against a database
 	// For demonstration purposes, let's assume the authentication is successful
 	// Replace this with your actual authentication logic
