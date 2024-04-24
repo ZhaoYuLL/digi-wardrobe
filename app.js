@@ -4,7 +4,6 @@ import express from "express";
 const app = express();
 import configRoutes from "./routes/index.js";
 import methodOverride from "method-override";
-import configRoutes from "./routes/index.js";
 
 import exphbs from "express-handlebars";
 
