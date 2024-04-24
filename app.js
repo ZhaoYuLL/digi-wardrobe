@@ -2,11 +2,12 @@
 
 import express from "express";
 const app = express();
-import configRoutes from './routes/index.js';
+import configRoutes from "./routes/index.js";
+import methodOverride from "method-override";
 
 import exphbs from "express-handlebars";
 
-const staticDir = express.static('public');
+const staticDir = express.static("public");
 
 const handlebarsInstance = exphbs.create({
 	defaultLayout: "main",
@@ -25,7 +26,7 @@ const handlebarsInstance = exphbs.create({
 	},
 });
 
-app.use('/public', staticDir);
+app.use("/public", staticDir);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
