@@ -1,31 +1,5 @@
-import { fitposts } from "../config/mongoCollections.js";
-import { GridFSBucket } from "mongodb";
-import fs from "fs";
-import path from "path";
-
-let bucket;
-
-export const initializeBucket = (db) => {
-	bucket = new GridFSBucket(db);
-};
-
-export const uploadImage = async (imagePath) => {
-	return new Promise((resolve, reject) => {
-		const filename = path.basename(imagePath);
-		const uploadStream = bucket.openUploadStream(filename, {
-			contentType: "image/jpeg", // Adjust the content type based on your image format
-			metadata: {
-				/* Additional metadata */
-			},
-		});
-
-		fs.createReadStream(imagePath)
-			.pipe(uploadStream)
-			.on("error", (error) => {
-				reject(error);
-			})
-			.on("finish", () => {
-				resolve(uploadStream.id);
-			});
-	});
-};
+// import { fitposts } from "../config/mongoCollections.js";
+const BUCKET_NAME = "digidrobe";
+const BUCKET_REGION = "na-east-2";
+const ACCESS_KEY = "AKIA2UC3EQYTZS4TLAVG";
+const SECRET_ACCESS_KEY = "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";
