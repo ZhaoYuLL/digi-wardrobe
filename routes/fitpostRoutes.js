@@ -1,10 +1,19 @@
 import { Router } from "express";
 import multer from "multer";
 import sharp from "sharp";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+	S3Client,
+	PutObjectCommand,
+	DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { storeImage, getImage, getAllImages } from "../data/fitposts.js";
+import {
+	storeImage,
+	getImage,
+	getAllImages,
+	deleteImage,
+} from "../data/fitposts.js";
 const router = Router();
 
 //not_secure
@@ -38,7 +47,7 @@ const addSignedUrlsToPosts = async () => {
 	try {
 		// Get all posts from the database
 		const posts = await getAllImages();
-		console.log(posts);
+		// console.log(posts);
 		// Loop through each post and generate a signed URL for the image
 		for (let post of posts) {
 			const imageName = post.imageName;
@@ -54,10 +63,10 @@ const addSignedUrlsToPosts = async () => {
 
 			// Add the signed URL to the post object
 			post.imageUrl = signedUrl;
-			console.log("image url:", post.imageUrl);
+			// console.log("image url:", post.imageUrl);
 		}
 
-		console.log("Signed URLs added to posts");
+		// console.log("Signed URLs added to posts");
 		return posts;
 	} catch (error) {
 		console.error("Error adding signed URLs to posts:", error);
@@ -73,9 +82,9 @@ router
 	.get(async (req, res) => {
 		// addSignedUrlsToPosts;
 		try {
-			console.log("yo");
+			// console.log("yo");
 			const postsUrls = await addSignedUrlsToPosts();
-			console.log("");
+			// console.log("");
 			res.render("fitposts", { title: "fitposts", posts: postsUrls });
 			// res.render("fitposts");
 		} catch (error) {
@@ -103,5 +112,34 @@ router
 		const post = await storeImage(req.body.caption, imageName);
 		res.render("fitposts", { title: "fitposts" });
 	});
+router.route("/:imageName").delete(async (req, res) => {
+	console.log("you're in");
+	try {
+		const postId = req.params.imageName;
+
+		// Find the post by ID in the database
+		const post = await getImage(postId);
+
+		if (!post) {
+			return res.status(404).send("Post not found");
+		}
+
+		// Delete the image from S3
+		const deleteParams = {
+			Bucket: BUCKET_NAME,
+			Key: postId,
+		};
+
+		await s3.send(new DeleteObjectCommand(deleteParams));
+
+		// Delete the post from the database
+		await deleteImage(postId);
+
+		res.send("Post deleted successfully");
+	} catch (error) {
+		console.error("Error deleting post:", error);
+		res.status(500).send("Internal Server Error");
+	}
+});
 
 export default router;
