@@ -1,0 +1,59 @@
+{{!-- Registration Handlebars --}}
+
+<h2>Register</h2>
+
+<form action="/register" method="POST" id="signup-form">
+  <div>
+    <label for="userName">Username:</label>
+    <input type="text" id="userName" name="userName" required>
+  </div>
+  <div>
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" required>
+  </div>
+  <div>
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" required>
+  </div>
+  <div>
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" required>
+  </div>
+  <div>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+  </div>
+  <div>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+  </div>
+  <div>
+    <label for="confirmPassword">Confirm Password:</label>
+    <input type="password" id="confirmPassword" name="confirmPassword" required>
+  </div>
+  <div>
+    <label for="bio">Bio:</label>
+    <textarea id="bio" name="bio" required></textarea>
+  </div>
+  <div>
+    <label for="profilePicture">Profile Picture:</label>
+    <input type="file" id="profilePicture" name="profilePicture" accept="image/*" required>
+  </div>
+  <div>
+    <label for="themePreference">Theme Preference:</label>
+    <select id="themePreference" name="themePreference" required>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+  </div>
+  <div>
+    <label for="role">Role:</label>
+    <select id="role" name="role" required>
+      <option value="admin">Admin</option>
+      <option value="user">User</option>
+    </select>
+  </div>
+  <button type="submit" id="submitButton">Submit</button>
+</form>
+
+<a href="/login">Already have an account? Click here to log-in</a>
