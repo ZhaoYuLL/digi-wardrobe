@@ -3,3 +3,16 @@
 	<input type="text" name="caption" placeholder="Caption" />
 	<button type="submit">Submit</button>
 </form>
+
+{{#each posts}}
+	<div class="post">
+		<img
+			src="{{this.imageUrl}}"
+			width="200px;"
+			height="200px"
+			alt="Fitpost Image"
+		/>
+		<p>{{this.caption}}</p>
+		<button class="delete-button" data-id="{{this._id}}">Delete</button>
+	</div>
+{{/each}}
