@@ -35,3 +35,13 @@ export const getImage = async (imageName) => {
 		throw new Error("Image not found");
 	}
 };
+
+export const getAllImages = async () => {
+	const fitpostsCollection = await fitposts();
+
+	// Find all documents in the fitposts collection
+	const images = await fitpostsCollection.find({}).toArray();
+
+	console.log(`Found ${images.length} images`);
+	return images;
+};
