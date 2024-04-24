@@ -18,16 +18,12 @@ import {
 const router = Router();
 
 dotenv.config();
-//not_secure
+
+//secure way of accessing secret key
 const BUCKET_NAME = process.env.BUCKET_NAME1;
 const BUCKET_REGION = process.env.BUCKET_REGION1;
 const ACCESS_KEY = process.env.ACCESS_KEY1;
 const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY1;
-
-console.log(process.env.BUCKET_NAME1);
-console.log(process.env.BUCKET_REGION1);
-console.log(process.env.ACCESS_KEY1);
-console.log(process.env.SECRET_ACCESS_KEY1);
 
 const generateFileName = async (bytes = 32) => {
 	const { randomBytes } = await import("node:crypto");
