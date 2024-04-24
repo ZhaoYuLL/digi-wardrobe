@@ -15,12 +15,12 @@ const getUserById = async (id) => {
     return user;
 }
 
-const getUserByUserName = async (userName) => {
+const getUserByusername = async (username) => {
     // Made this to check if a username already exists
-    // TODO: validate userName parameter
+    // TODO: validate username parameter
     const userCollection = await users();
-    const user = userCollection.find({ userName: userName });
-    if (!user) throw new Error(`Error getting user with username: ${userName}`);
+    const user = userCollection.find({ username: username });
+    if (!user) throw new Error(`Error getting user with username: ${username}`);
     return user;
 }
 
@@ -40,11 +40,11 @@ const passwordHelper = async (password) => {
     return hash;
 }
 
-const createUser = async (userName, firstName, lastName, age, email, password) => {
+const createUser = async (username, firstName, lastName, age, email, password) => {
     // TODO: validate all parameters
     const passwordHash = await passwordHelper(password);
     const newUser = {
-        userName: userName,
+        username: username,
         firstName: firstName,
         lastName: lastName,
         age: age,
@@ -67,9 +67,11 @@ const updateUserInfo = async (id, userInfo) => {
     // TODO: input validation
     const changes = {};
 
-    if (userInfo.userName) {
+    if (userInfo.username) {
         // TODO: validate username
-        changes['userName'] = userInfo.userName;
+        const userExists = await getUserByusername(userInfo.username);
+        if (userExists) throw new Error(`User with username ${userInfo.username} already exists`);
+        changes['username'] = userInfo.username;
     }
     if (userInfo.firstName) {
         // TODO: validate first name

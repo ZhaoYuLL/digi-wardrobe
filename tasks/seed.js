@@ -29,6 +29,20 @@ try {
     console.error(error.message);
 }
 
+try {
+    const updatedUser = await updateUserInfo(user1._id, { email: "johnnydoe@gmail.com", age: 23 });
+    console.log(updatedUser);
+} catch (error) {
+    console.error(error.message);
+}
+
+try {
+    const deletedUser = await deleteUser(user2._id);
+    console.log(deletedUser);
+} catch (error) {
+    console.error(error.message);
+}
+
 
 console.log('Done seeding database');
 await closeConnection();
