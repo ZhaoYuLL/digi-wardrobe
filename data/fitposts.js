@@ -96,8 +96,7 @@ const createFP = async (
 
     let likes = 0;
     let saves = 0;
-    //save
-    // let postedDate = 
+  
 
     let date = new Date();
 
