@@ -1,4 +1,5 @@
 import { fitposts } from "../config/mongoCollections.js";
+import { ObjectId } from "mongodb";
 
 export const storeImage = async (caption, imageName) => {
 	const fitpostsCollection = await fitposts();
@@ -44,4 +45,9 @@ export const getAllImages = async () => {
 
 	console.log(`Found ${images.length} images`);
 	return images;
+};
+
+export const deleteImage = async (postId) => {
+	const fitpostsCollection = await fitposts();
+	await fitpostsCollection.deleteOne({ _id: new ObjectId(postId) });
 };
