@@ -47,7 +47,7 @@ export const getAllImages = async () => {
 	return images;
 };
 
-export const deleteImage = async (postId) => {
+export const deleteImage = async (imageName) => {
 	const fitpostsCollection = await fitposts();
-	await fitpostsCollection.deleteOne({ _id: new ObjectId(postId) });
+	await fitpostsCollection.deleteOne({ imageName: imageName });
 };
