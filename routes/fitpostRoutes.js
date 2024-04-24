@@ -1,6 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import sharp from "sharp";
+import dotenv from "dotenv";
 import {
 	S3Client,
 	PutObjectCommand,
@@ -16,11 +17,17 @@ import {
 } from "../data/fitposts.js";
 const router = Router();
 
+dotenv.config();
 //not_secure
-const BUCKET_NAME = "digidrobe";
-const BUCKET_REGION = "us-east-2";
-const ACCESS_KEY = "AKIA2UC3EQYTZS4TLAVG";
-const SECRET_ACCESS_KEY = "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";
+const BUCKET_NAME = process.env.BUCKET_NAME1;
+const BUCKET_REGION = process.env.BUCKET_REGION1;
+const ACCESS_KEY = process.env.ACCESS_KEY1;
+const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY1;
+
+console.log(process.env.BUCKET_NAME1);
+console.log(process.env.BUCKET_REGION1);
+console.log(process.env.ACCESS_KEY1);
+console.log(process.env.SECRET_ACCESS_KEY1);
 
 const generateFileName = async (bytes = 32) => {
 	const { randomBytes } = await import("node:crypto");
