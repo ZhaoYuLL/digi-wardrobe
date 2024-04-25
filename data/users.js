@@ -42,6 +42,9 @@ const passwordHelper = async (password) => {
 
 const createUser = async (username, firstName, lastName, age, email, password) => {
     // TODO: validate all parameters
+    const userExists = await getUserByusername(username);
+    if (userExists) throw new Error(`User with username ${username} already exists`);
+
     const passwordHash = await passwordHelper(password);
     const newUser = {
         username: username,
@@ -115,6 +118,45 @@ const deleteUser = async (id) => {
     if (!deletionInfo) throw `Error: Could not delete user with id of ${id}`;
 
     return { ...deletionInfo, deleted: true };
+}
+
+const addUserOutfitPiece = async (outfitPieceId, userId) => {
+    // TODO: validate inputs
+    const user = await getUserById(userId);
+    let userCloset = user.closet;
+    userCloset.push(outfitPieceId);
+
+    updatedCloset = {
+        closet: userCloset
+    };
+    const userCollection = await users();
+    const updateInfo = await userCollection.findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: changes },
+        { returnDocument: 'after' }
+    );
+    if (!updateInfo) throw new Error(`Error updating user ${userId} closet with outfit piece ${outfitPieceId}`);
+}
+
+const deleteUserOutfitPiece = async (outfitPieceId, userId) => {
+    // TODO: validate inputs
+    const user = await getUserById(userId);
+    let userCloset = user.closet;
+    const index = userCloset.indexOf(outfitPieceId);
+    if (index > -1) {
+        userCloset.splice(index, 1);
+    }
+
+    updatedCloset = {
+        closet: userCloset
+    };
+    const userCollection = await users();
+    const updateInfo = await userCollection.findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: changes },
+        { returnDocument: 'after' }
+    );
+    if (!updateInfo) throw new Error(`Error removing outfit piece ${outfitPieceId} from user ${userId}'s closet`);
 }
 
 export { getAllUsers, getUserById, createUser, updateUserInfo, deleteUser };
