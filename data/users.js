@@ -40,6 +40,12 @@ const passwordHelper = async (password) => {
     return hash;
 }
 
+export const passwordMatch = async (input, hash) => {
+    // will probably move to a helper function file
+    const match = await bcrypt.compare(input, hash);
+    return match;
+}
+
 const createUser = async (username, firstName, lastName, age, email, password) => {
     // TODO: validate all parameters
     const userExists = await getUserByusername(username);
@@ -120,6 +126,27 @@ const deleteUser = async (id) => {
     return { ...deletionInfo, deleted: true };
 }
 
+const loginUser = async (username, password) => {
+    // TODO: validate inputs
+    const userCollection = await users();
+    const foundUser = await userCollection.findOne({ username: username });
+    if (!foundUser) throw new Error(`Either the username or password is invalid`);
+    console.log(foundUser.password);
+    const match = await passwordMatch(password, foundUser.password);
+    if (!match) throw new Error(`Either the username or password is invalid`);
+
+    const userInfo = {
+        firstName: foundUser.firstName,
+        lastName: foundUser.lastName,
+        username: foundUser.username,
+        wardrobes: foundUser.wardrobes,
+        closet: foundUser.closet,
+        favorite: foundUser.favorite
+    }
+
+    return userInfo;
+}
+
 const addUserOutfitPiece = async (outfitPieceId, userId) => {
     // TODO: validate inputs
     const user = await getUserById(userId);
@@ -136,6 +163,8 @@ const addUserOutfitPiece = async (outfitPieceId, userId) => {
         { returnDocument: 'after' }
     );
     if (!updateInfo) throw new Error(`Error updating user ${userId} closet with outfit piece ${outfitPieceId}`);
+
+    return updateInfo.closet;
 }
 
 const deleteUserOutfitPiece = async (outfitPieceId, userId) => {
@@ -153,10 +182,55 @@ const deleteUserOutfitPiece = async (outfitPieceId, userId) => {
     const userCollection = await users();
     const updateInfo = await userCollection.findOneAndUpdate(
         { _id: new ObjectId(id) },
-        { $set: changes },
+        { $set: updatedCloset },
         { returnDocument: 'after' }
     );
     if (!updateInfo) throw new Error(`Error removing outfit piece ${outfitPieceId} from user ${userId}'s closet`);
+
+    return updateInfo.closet;
+}
+
+const addUserFavorites = async (userId, fitpostId) => {
+    // TODO: validate inputs
+    const user = await getUserById(userId);
+    let userFavorites = user.favorite;
+    userFavorites.push(fitpostId);
+
+    updatedFavorites = {
+        closet: userFavorites
+    };
+    const userCollection = await users();
+    const updateInfo = await userCollection.findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: updatedFavorites },
+        { returnDocument: 'after' }
+    );
+    if (!updateInfo) throw new Error(`Error updating user ${userId} favorites with fitpost ${outfitPieceId}`);
+
+    return updateInfo.favorite;
+}
+
+const deleteUserFavorite = async (userId, fitpostId) => {
+    // TODO: validate inputs
+    const user = await getUserById(userId);
+    let userFavorites = user.favorite;
+    const index = userFavorites.indexOf(fitpostId);
+    if (index > -1) {
+        userFavorites.splice(index, 1);
+    }
+
+    updatedFavorites = {
+        closet: userFavorites
+    };
+    const userCollection = await users();
+    const updateInfo = await userCollection.findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: updatedFavorites },
+        { returnDocument: 'after' }
+    );
+    if (!updateInfo) throw new Error(`Error updating user ${userId} favorites with fitpost ${outfitPieceId}`);
+
+    return updateInfo.favorite;
 }
 
 export { getAllUsers, getUserById, createUser, updateUserInfo, deleteUser };
