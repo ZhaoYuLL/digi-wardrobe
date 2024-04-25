@@ -15,7 +15,7 @@ const getUserById = async (id) => {
     return user;
 }
 
-const getUserByusername = async (username) => {
+const getUserByUsername = async (username) => {
     // Made this to check if a username already exists
     // TODO: validate username parameter
     const userCollection = await users();
@@ -48,8 +48,11 @@ export const passwordMatch = async (input, hash) => {
 
 const createUser = async (username, firstName, lastName, age, email, password) => {
     // TODO: validate all parameters
-    const userExists = await getUserByusername(username);
+    const userExists = await getUserByUsername(username);
     if (userExists) throw new Error(`User with username ${username} already exists`);
+
+    const emailExists = await getUserByEmail(email);
+    if (emailExists) throw new Error(`User with email ${email} already exists`);
 
     const passwordHash = await passwordHelper(password);
     const newUser = {
