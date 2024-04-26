@@ -7,7 +7,8 @@ import { static as staticDir } from "express";
 const constructorMethod = (app) => {
 	// just basic setup, feel free to change routes
 	app.use("/", userRoutes); //change to userRoutes
-	app.use("/fitposts", fitpostRoutes);
+	// app.use("/fitposts", fitpostRoutes);
+	app.use("/outfitpieces", outfitPieceRoutes);
 
 	app.use("/public", staticDir("public"));
 	app.use("*", (req, res) => {
