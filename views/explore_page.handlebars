@@ -1,0 +1,12 @@
+<h1>{{title}}</h1>
+
+<main>
+	<ol>
+		{{#each fitposts}}
+			<li>
+				<a href="/fitposts/{{this._id}}">Fitpost ID: {{this._id}}</a>
+				<p>Likes: {{this.likes}}</p>
+			</li>
+		{{/each}}
+	</ol>
+</main>
