@@ -6,7 +6,8 @@
 	"type": "module",
 	"scripts": {
 		"start": "node app.js",
-		"test": "nodemon app.js"
+		"test": "nodemon app.js",
+		"outfitseed": "node ./tasks/outfitseed.js"
 	},
 	"repository": {
 		"type": "git",
