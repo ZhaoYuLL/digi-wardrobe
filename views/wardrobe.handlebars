@@ -1,0 +1,16 @@
+<h1>Wardrobe</h1>
+<div class="wardrobes">
+	{{#each wardrobes}}
+		<div class="wardrobe">
+			<h2>{{name}}</h2>
+			<div class="fitposts">
+				{{#each fitposts}}
+					<div class="fitpost">
+						<img src="{{imageUrl}}" alt="{{description}}" />
+						<p>{{description}}</p>
+					</div>
+				{{/each}}
+			</div>
+		</div>
+	{{/each}}
+</div>
