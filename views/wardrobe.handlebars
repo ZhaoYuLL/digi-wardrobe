@@ -9,12 +9,31 @@
 <div class="wardrobes">
 	{{#each wardrobes}}
 		<div class="wardrobe">
-			<h2>{{name}}</h2>
+			<h2>{{caption}}</h2>
+			<h2> {{outfit}}</h2>
 			<div class="fitposts">
 				{{#each fitposts}}
 					<div class="fitpost">
-						<img src="{{imageUrl}}" alt="{{description}}" />
-						<p>{{description}}</p>
+						<h1>this is fitpost
+							{{addOne @index}}
+						</h1>
+						{{!-- <p>this is the {{add @index 1}}th fitpost</p> --}}
+						<p>headwear: {{headwear}}</p>
+						<p>bodywear: {{bodywear}}</p>
+						<p>legwear: {{legwear}}</p>
+						<p>footwear: {{footwear}}</p>
+						<p>likes: {{likes}}</p>
+						<p>saves: {{saves}}</p>
+						{{!-- <p>saves: {{saves}}</p> --}}
+						<p>example of an image working inside fitpost</p>
+						{{!-- <p>{{this.imageUrl}}</p> --}}
+						<img
+							src="{{this.imageUrl}}"
+							width="200px;"
+							height="200px"
+							alt="Fitpost Image"
+						/>
+						<p>Posted Date: {{postedDate}}</p>
 					</div>
 				{{/each}}
 			</div>
