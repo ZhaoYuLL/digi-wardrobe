@@ -9,13 +9,12 @@ export const getAllOutfits = async () => {
 	console.log(`Found ${images.length} images`);
 	return images;
 };
-export const storeImage = async (caption, imageName, outfit, fitposts) => {
+export const storeImage = async (caption, outfit, fitposts) => {
 	const outfitPiecesCollection = await test();
 
 	// Create a new document with the provided caption and imageName
 	const newImage = {
 		caption: caption,
-		imageName: imageName,
 		outfit,
 		fitposts,
 	};

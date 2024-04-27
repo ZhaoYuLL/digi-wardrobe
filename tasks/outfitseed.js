@@ -7,10 +7,12 @@ await db.dropDatabase();
 //leave top alone
 
 // await generateFileName()
-const str = "785b7cb8b53d08232c89c88f06a7ad0c7e59acaeccc85119665c4775c73f127e";
-const str2 = "785b7cb8b53d08232c89c88f06a7ad0c7e59acaeccc85119665c4775c73f127f";
+const str = "4e953a865ab0362b1985bd3de9a0f7d08d6244789d2516150fa0dc3075cb9d3d";
 
-const a = await getAllOutfits();
+const str3 =
+	"https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg";
+
+const str4 = "9b3ad1d27fc5fdd19a7b334ed956a40ef5b54f46ea146c9efd00a946214638b9";
 const fitposts = {
 	users: [
 		{
@@ -81,8 +83,35 @@ const fitposts = {
 		},
 	],
 };
-await storeImage("cat", str, "headwear", fitposts);
-await storeImage("dog", str2, "legwear");
+const fp = [
+	{
+		_id: "60e4c8fd25602e41d4b9271a",
+		user_id: "60e4c8fd25602e41d4b9271b",
+		postedDate: "2024-04-27T08:00:00Z",
+		link: str,
+		headwear: "hat.jpg",
+		bodywear: "shirt.jpg",
+		legwear: "jeans.jpg",
+		footwear: "sneakers.jpg",
+		likes: 100,
+		saves: 50,
+	},
+	{
+		_id: "60e4c8fd25602e41d4b9271c",
+		user_id: "60e4c8fd25602e41d4b9271d",
+		postedDate: "2024-04-28T10:30:00Z",
+		link: str4,
+		headwear: "beanie.jpg",
+		bodywear: "hoodie.jpg",
+		legwear: "joggers.jpg",
+		footwear: "boots.jpg",
+		likes: 75,
+		saves: 30,
+	},
+];
+
+await storeImage("cat", "summer day", fp);
+await storeImage("dog", "academic weapon", fp);
 
 //leave bottom alone
 console.log("Done seeding database");
