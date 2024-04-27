@@ -90,6 +90,30 @@ export const addSignedUrlsToPosts = async () => {
 	}
 };
 
+export const addSignedUrlsToFitPosts_in_wardrobe = async (outfits) => {
+	try {
+		// Loop through each outfit and generate signed URLs for the fitposts
+		for (let outfit of outfits) {
+			for (let fitpost of outfit.fitposts) {
+				const imageName = fitpost.link;
+				const signedUrl = await getSignedUrl(
+					s3,
+					new GetObjectCommand({
+						Bucket: BUCKET_NAME,
+						Key: imageName,
+					}),
+					{ expiresIn: 60 } // 60 seconds
+				);
+				fitpost.imageUrl = signedUrl;
+			}
+		}
+		return outfits;
+	} catch (error) {
+		console.error("Error adding signed URLs to posts:", error);
+		throw error;
+	}
+};
+
 export const uploadImageToS3 = async (file, h, w, imageName) => {
 	try {
 		// Resize image using sharp package
