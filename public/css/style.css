@@ -1,5 +1,3 @@
-/* css/style.css */
-
 .wardrobe-preview {
   display: flex;
   flex-direction: row;
@@ -18,5 +16,14 @@
 }
 
 .fitpost {
+  margin-right: 20px;
+}
+
+.fitpost-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.fitpost-item {
   margin-right: 20px;
 }

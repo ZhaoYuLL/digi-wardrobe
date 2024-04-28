@@ -12,6 +12,8 @@ const hat2 = "7101237a6d2ef9ae0103ff8ef2d0afe0cb929bd4916eb85605ebd059be373a89";
 const hat3 = "c932a50074e44707f7f1b9bc0768caa3bef341887beadfa313f6b88f18ff7756";
 const hat4 = "3927eeb715b128eaac7e754129d3eab033bd86240aa4d4995bf32083e3587a2d";
 const jean = "e8017cd5326d13759dd71dde65b76d842e3b71fef0bbfb39f66ffb5c31b2e145";
+const tanktop =
+  "a090356d90b6d2a8611349c805fe25589d7ca3b109b33ae5e35127c0cc39e9ba";
 const sweater =
   "211c977fa571cfcc50555af6d4556e76accd38fdada20577eb99fdb352a60bac";
 const shoes =
@@ -103,7 +105,7 @@ const fp = [
     user_id: "60e4c8fd25602e41d4b9271d",
     postedDate: "2024-04-28T10:30:00Z",
     headwear: hat2,
-    bodywear: "hoodie.jpg",
+    bodywear: tanktop,
     legwear: "joggers.jpg",
     footwear: "boots.jpg",
     likes: 75,
