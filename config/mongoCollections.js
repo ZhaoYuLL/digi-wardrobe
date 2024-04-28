@@ -19,4 +19,4 @@ const getCollectionFn = (collection) => {
 export const users = getCollectionFn("users");
 export const fitposts = getCollectionFn("fitpostCollection");
 export const outfitPieces = getCollectionFn("outfitPieceCollection");
-export const test = getCollectionFn("test");
+export const wardrobe = getCollectionFn("wardrobe");

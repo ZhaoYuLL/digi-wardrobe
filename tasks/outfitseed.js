@@ -1,5 +1,5 @@
 import { dbConnection, closeConnection } from "../config/mongoConnection.js";
-import { storeImage, getAllOutfits } from "../data/testwardrobe.js";
+import { storeWardrobe, getAllOutfits } from "../data/testwardrobe.js";
 import { generateFileName } from "../helper.js";
 
 const db = await dbConnection();
@@ -7,12 +7,12 @@ await db.dropDatabase();
 //leave top alone
 
 // await generateFileName()
-const str = "4e953a865ab0362b1985bd3de9a0f7d08d6244789d2516150fa0dc3075cb9d3d";
-
-const str3 =
-	"https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg";
-
-const str4 = "9b3ad1d27fc5fdd19a7b334ed956a40ef5b54f46ea146c9efd00a946214638b9";
+const hat = "0084a3ce67c6bcc90ee7792bddfbd4e105ed1ae2a48d297fdc302f6308496fda";
+const jean = "e8017cd5326d13759dd71dde65b76d842e3b71fef0bbfb39f66ffb5c31b2e145";
+const sweater =
+	"211c977fa571cfcc50555af6d4556e76accd38fdada20577eb99fdb352a60bac";
+const shoes =
+	"b252d8e80320fd288feadb7cc3fc86c6e385f8ea9212ea5d2bffde21d689aa50";
 const fitposts = {
 	users: [
 		{
@@ -88,11 +88,10 @@ const fp = [
 		_id: "60e4c8fd25602e41d4b9271a",
 		user_id: "60e4c8fd25602e41d4b9271b",
 		postedDate: "2024-04-27T08:00:00Z",
-		link: str,
-		headwear: "hat.jpg",
-		bodywear: "shirt.jpg",
-		legwear: "jeans.jpg",
-		footwear: "sneakers.jpg",
+		headwear: hat,
+		bodywear: sweater,
+		legwear: jean,
+		footwear: shoes,
 		likes: 100,
 		saves: 50,
 	},
@@ -100,7 +99,6 @@ const fp = [
 		_id: "60e4c8fd25602e41d4b9271c",
 		user_id: "60e4c8fd25602e41d4b9271d",
 		postedDate: "2024-04-28T10:30:00Z",
-		link: str4,
 		headwear: "beanie.jpg",
 		bodywear: "hoodie.jpg",
 		legwear: "joggers.jpg",
@@ -110,8 +108,8 @@ const fp = [
 	},
 ];
 
-await storeImage("cat", "summer day", fp);
-await storeImage("dog", "academic weapon", fp);
+await storeWardrobe("summer day", fp);
+await storeWardrobe("academic weapon", fp);
 
 //leave bottom alone
 console.log("Done seeding database");

@@ -1,26 +1,25 @@
-import { test } from "../config/mongoCollections.js";
+import { wardrobe } from "../config/mongoCollections.js";
 
 export const getAllOutfits = async () => {
-	const outfitPiecesCollection = await test();
+	const wardrobeCollection = await wardrobe();
 
 	// Find all documents in the outfitPieces collection
-	const images = await outfitPiecesCollection.find({}).toArray();
+	const images = await wardrobeCollection.find({}).toArray();
 
 	console.log(`Found ${images.length} images`);
 	return images;
 };
-export const storeImage = async (caption, outfit, fitposts) => {
-	const outfitPiecesCollection = await test();
+export const storeWardrobe = async (wardrobeName, fitposts) => {
+	const wardrobeCollection = await wardrobe();
 
 	// Create a new document with the provided caption and imageName
 	const newImage = {
-		caption: caption,
-		outfit,
+		wardrobeName,
 		fitposts,
 	};
 
 	// Insert the new document into the outfitPieces collection
-	const result = await outfitPiecesCollection.insertOne(newImage);
+	const result = await wardrobeCollection.insertOne(newImage);
 
 	// Check if the insertion was successful
 	if (result.insertedId) {
