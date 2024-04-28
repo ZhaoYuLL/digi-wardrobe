@@ -1,6 +1,7 @@
 import { Router } from "express";
 const router = Router();
 // import data from users 
+import { createUser, loginUser } from "../data/users.js";
 
 
 router.route('/').get(async (req, res) => {
@@ -13,19 +14,27 @@ router
     .get(async (req, res) => {
         //code here for GET
         if (req.session.user) {
-			res.redirect("/user");
+			  res.redirect("/userProfile");
 	    }else {
 		    res.render("register", { title: "Register" });
 	    }
     })
     .post(async (req, res) => {
         //code here for POST
-        const { username, firstName, lastName, email, password, confirmPassword, } = req.body;
+        const { userName, firstName, lastName, age, email, password, confirmPassword } = req.body;
         if (password !== confirmPassword) {
           return res.status(500).json({ error: 'Internal Server Error' });
         }
-        // else is register user function from user.data
-    });
+        try {
+          const newUser = await createUser(userName, firstName, lastName, age, email, password);
+          req.session.user = newUser;
+          res.redirect("/userProfile");
+      } catch (err) {
+        res.status(400).render("register", {
+          error: err,
+        });
+      }
+  });
 
 router
     .route('/login')
@@ -37,16 +46,35 @@ router
     })
     .post(async (req, res) => {
       //code here for POST
-        const { username, password } = req.body;
-        // try {
-            // const user = await loginUser(username, password);
+        const { userName, password } = req.body;
+        try {
+            const user = await loginUser(userName, password);
+            req.session.user = {
+              username: user.username, 
+              firstName: user.firstName, 
+              lastName: user.lastName, 
+              wardrobes: user.wardrobes, 
+              closet: user.closet, 
+              favorite: user.favorite
+            };
+            res.redirect('/userProfile');
+
+        }catch (err) {
+          res.status(400).render("login", {
+            error: err,
+          });
+        }
     });
 
-router.route('/user').get(async (req, res) => {
+router.route('/userProfile').get(async (req, res) => {
         //code here for GET
     if (!req.session.user) {
         return res.redirect('/login');
     }
+    const { username, firstName, lastName, wardrobes, closet, favorite } = req.session.user;
+    const userName = username;
+    res.render('userProfile', {userName, firstName, lastName,wardrobes, closet, favorite});  
+    
 });
       
 router.route('/logout').get(async (req, res) => {
@@ -55,21 +83,6 @@ router.route('/logout').get(async (req, res) => {
     res.render('logout', {pageTitle: "Logout Page"});  
 });
 
-router.get("/", (req, res) => {
-	// Render your sign-in page
-	res.render("login");
-});
-// POST route for handling sign-in form submission
-router.post("/login", (req, res) => {
-	// Retrieve email and password from request body
-	const { email, password } = req.body;
-	console.log(req.body);
-	// Perform authentication logic here, such as checking against a database
-	// For demonstration purposes, let's assume the authentication is successful
-	// Replace this with your actual authentication logic
 
-	// Redirect the user to their profile page upon successful sign-in
-	res.redirect("/userProfile");
-});
 
 export default router;
