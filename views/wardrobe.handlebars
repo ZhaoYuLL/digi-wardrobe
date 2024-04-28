@@ -8,30 +8,47 @@
   </ul>
 </nav>
 
-<div class="wardrobe-preview">
-  <div class="preview-content">
-    <p>Head: <span id="preview-head"></span></p>
-    <button class="prev-button" data-part="head">Previous Head</button>
-    <button class="next-button" data-part="head">Next Head</button>
-
-    <p>Body: <span id="preview-body"></span></p>
-    <button class="prev-button" data-part="body">Previous Body</button>
-    <button class="next-button" data-part="body">Next Body</button>
-
-    <p>Legs: <span id="preview-legs"></span></p>
-    <button class="prev-button" data-part="legs">Previous Legs</button>
-    <button class="next-button" data-part="legs">Next Legs</button>
-
-    <p>Feet: <span id="preview-feet"></span></p>
-    <button class="prev-button" data-part="feet">Previous Feet</button>
-    <button class="next-button" data-part="feet">Next Feet</button>
-  </div>
-</div>
-
 <div class="wardrobes">
   {{#each wardrobes}}
   <div class="wardrobe">
     <h2>{{wardrobeName}}</h2>
+
+    <div class="wardrobe-preview">
+      <div class="preview-content">
+        <p>Head: <span id="preview-head-{{@index}}"></span></p>
+        <button class="prev-button" data-part="head" data-index="{{@index}}">
+          Previous Head
+        </button>
+        <button class="next-button" data-part="head" data-index="{{@index}}">
+          Next Head
+        </button>
+
+        <p>Body: <span id="preview-body-{{@index}}"></span></p>
+        <button class="prev-button" data-part="body" data-index="{{@index}}">
+          Previous Body
+        </button>
+        <button class="next-button" data-part="body" data-index="{{@index}}">
+          Next Body
+        </button>
+
+        <p>Legs: <span id="preview-leg-{{@index}}"></span></p>
+        <button class="prev-button" data-part="leg" data-index="{{@index}}">
+          Previous Legs
+        </button>
+        <button class="next-button" data-part="leg" data-index="{{@index}}">
+          Next Legs
+        </button>
+
+        <p>Feet: <span id="preview-foot-{{@index}}"></span></p>
+        <button class="prev-button" data-part="foot" data-index="{{@index}}">
+          Previous Feet
+        </button>
+        <button class="next-button" data-part="foot" data-index="{{@index}}">
+          Next Feet
+        </button>
+      </div>
+    </div>
+
     <div class="fitposts">
       {{#each fitposts}}
       <div class="fitpost">
@@ -82,28 +99,71 @@
 </div>
 
 <script>
-  console.log("yay");
-  //i want to print wardrobes
   var ward = {{{wardrobesJson}}}
+  var currentIndex = {};
+
   document.addEventListener("DOMContentLoaded", function () {
+    // Initialize currentIndex for each wardrobe
+    for (var i = 0; i < ward.length; i++) {
+      currentIndex[i] = {
+        head: 0,
+        body: 0,
+        leg: 0,
+        foot: 0
+      };
+    }
+
     // Add event listeners to the buttons
     console.log(window.wardrobesData);
-    var buttons = document.getElementsByClassName("next-button");
-    for (var i = 0; i < buttons.length; i++) {
-      buttons[i].addEventListener("click", validateRegistrationForm);
+
+    var nextButtons = document.getElementsByClassName("next-button");
+    for (var i = 0; i < nextButtons.length; i++) {
+      nextButtons[i].addEventListener("click", nextPiece);
     }
-    var buttons = document.getElementsByClassName("prev-button");
-    for (var i = 0; i < buttons.length; i++) {
-      buttons[i].addEventListener("click", bye);
+
+    var prevButtons = document.getElementsByClassName("prev-button");
+    for (var i = 0; i < prevButtons.length; i++) {
+      prevButtons[i].addEventListener("click", previousPiece);
     }
+
+    updatePreviews();
   });
-  function validateRegistrationForm(event) {
-    console.log("hi");
-    console.log(ward[0].wardrobeName)
-    // Add your validation logic here
+
+  function nextPiece(event) {
+    var part = event.target.getAttribute("data-part");
+    var index = event.target.getAttribute("data-index");
+    currentIndex[index][part]++;
+
+    // Reset the index back to 0 if it reaches the end of the array
+    if (currentIndex[index][part] >= ward[index].fitposts.length) {
+      currentIndex[index][part] = 0;
+    }
+
+    updatePreviews();
   }
-  function bye(event) {
-    console.log("bye");
-    // Add your validation logic here
+
+  function previousPiece(event) {
+    var part = event.target.getAttribute("data-part");
+    var index = event.target.getAttribute("data-index");
+    currentIndex[index][part]--;
+
+    if (currentIndex[index][part] < 0) {
+      currentIndex[index][part] = ward[index].fitposts.length - 1;
+    }
+
+    updatePreviews();
+  }
+
+  function updatePreviews() {
+    var parts = ["head", "body", "leg", "foot"];
+
+    for (var i = 0; i < ward.length; i++) {
+      for (var j = 0; j < parts.length; j++) {
+        var part = parts[j];
+        var imageUrl = ward[i].fitposts[currentIndex[i][part]][part + "Url"];
+        var imageTag = '<img width="200px;" height="200px" src="' + imageUrl + '" alt="' + part + ' Image">';
+        document.getElementById("preview-" + part + "-" + i).innerHTML = imageTag;
+      }
+    }
   }
 </script>
