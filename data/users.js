@@ -10,8 +10,8 @@ const getAllUsers = async () => {
 const getUserById = async (id) => {
     // TODO: validate id parameter
     const userCollection = await users();
-    const user = userCollection.findOne({ _id: new ObjectId(id) });
-    if (!user) throw new Error(`Error getting user with id: ${id}`);
+    const user = await userCollection.findOne({ _id: new ObjectId(id) });
+    // if (!user) throw new Error(`Error getting user with id: ${id}`);
     return user;
 }
 
@@ -19,8 +19,8 @@ const getUserByUsername = async (username) => {
     // Made this to check if a username already exists
     // TODO: validate username parameter
     const userCollection = await users();
-    const user = userCollection.find({ username: username });
-    if (!user) throw new Error(`Error getting user with username: ${username}`);
+    const user = await userCollection.findOne({ username: username });
+    // if (!user) throw new Error(`Error getting user with username: ${username}`);
     return user;
 }
 
@@ -28,14 +28,14 @@ const getUserByEmail = async (email) => {
     // Made this to check if an account with the given email already exists
     // TODO: validate email parameter
     const userCollection = await users();
-    const user = userCollection.find({ email: email });
-    if (!user) throw new Error(`Error getting user with email: ${email}`);
+    const user = await userCollection.findOne({ email: email });
+    // if (!user) throw new Error(`Error getting user with email: ${email}`);
     return user;
 }
 
 const passwordHelper = async (password) => {
     // will probably move to a helper function file
-    const saltRounds = 10;
+    const saltRounds = 2;
     const hash = await bcrypt.hash(password, saltRounds);
     return hash;
 }
@@ -52,6 +52,7 @@ const createUser = async (username, firstName, lastName, age, email, password) =
     if (userExists) throw new Error(`User with username ${username} already exists`);
 
     const emailExists = await getUserByEmail(email);
+    // console.log(emailExists)
     if (emailExists) throw new Error(`User with email ${email} already exists`);
 
     const passwordHash = await passwordHelper(password);
@@ -81,7 +82,7 @@ const updateUserInfo = async (id, userInfo) => {
 
     if (userInfo.username) {
         // TODO: validate username
-        const userExists = await getUserByusername(userInfo.username);
+        const userExists = await getUserByUsername(userInfo.username);
         if (userExists) throw new Error(`User with username ${userInfo.username} already exists`);
         changes['username'] = userInfo.username;
     }
@@ -134,7 +135,6 @@ const loginUser = async (username, password) => {
     const userCollection = await users();
     const foundUser = await userCollection.findOne({ username: username });
     if (!foundUser) throw new Error(`Either the username or password is invalid`);
-    console.log(foundUser.password);
     const match = await passwordMatch(password, foundUser.password);
     if (!match) throw new Error(`Either the username or password is invalid`);
 
@@ -146,7 +146,6 @@ const loginUser = async (username, password) => {
         closet: foundUser.closet,
         favorite: foundUser.favorite
     }
-
     return userInfo;
 }
 
@@ -236,4 +235,4 @@ const deleteUserFavorite = async (userId, fitpostId) => {
     return updateInfo.favorite;
 }
 
-export { getAllUsers, getUserById, createUser, updateUserInfo, deleteUser };
+export { getAllUsers, getUserById, createUser, updateUserInfo, deleteUser, loginUser };
