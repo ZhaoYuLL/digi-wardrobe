@@ -31,8 +31,7 @@
 <div class="wardrobes">
   {{#each wardrobes}}
   <div class="wardrobe">
-    <h2>{{caption}}</h2>
-    <h2>{{outfit}}</h2>
+    <h2>{{wardrobeName}}</h2>
     <div class="fitposts">
       {{#each fitposts}}
       <div class="fitpost">
@@ -82,4 +81,29 @@
   {{/each}}
 </div>
 
-<script src="/public/js/wardrobe.js"></script>
+<script>
+  console.log("yay");
+  //i want to print wardrobes
+  var ward = {{{wardrobesJson}}}
+  document.addEventListener("DOMContentLoaded", function () {
+    // Add event listeners to the buttons
+    console.log(window.wardrobesData);
+    var buttons = document.getElementsByClassName("next-button");
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].addEventListener("click", validateRegistrationForm);
+    }
+    var buttons = document.getElementsByClassName("prev-button");
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].addEventListener("click", bye);
+    }
+  });
+  function validateRegistrationForm(event) {
+    console.log("hi");
+    console.log(ward[0].wardrobeName)
+    // Add your validation logic here
+  }
+  function bye(event) {
+    console.log("bye");
+    // Add your validation logic here
+  }
+</script>
