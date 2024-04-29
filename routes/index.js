@@ -9,6 +9,7 @@ const constructorMethod = (app) => {
 	app.use("/", userRoutes); //change to userRoutes
 	// app.use("/fitposts", fitpostRoutes);
 	app.use("/outfitpieces", outfitPieceRoutes);
+	app.use("/index", wardrobeRoutes);
 
 	app.use("/public", staticDir("public"));
 	app.use("*", (req, res) => {

@@ -1,0 +1,10 @@
+{
+	"overrides": [
+		{
+			"files": "*.handlebars",
+			"options": {
+				"parser": "html"
+			}
+		}
+	]
+}

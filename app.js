@@ -31,6 +31,9 @@ const handlebarsInstance = exphbs.create({
 		},
 
 		partialsDir: ["views/partials/"],
+		addOne: function (value) {
+			return value + 1;
+		},
 	},
 });
 app.use((req, res, next) => {
