@@ -36,7 +36,7 @@ const handlebarsInstance = exphbs.create({
 app.use((req, res, next) => {
     if (req.path === "/") {
 		if (req.session.user) {
-			res.redirect("/user");
+			res.redirect("/userProfile");
 		} else {
 			res.redirect("/login");
 		}
@@ -46,7 +46,7 @@ app.use((req, res, next) => {
 });
 app.use('/login', (req, res, next) => {
     if (req.session.user) {
-        return res.redirect('/user');
+        return res.redirect('/userProfile');
     }
     else{
         next();
@@ -54,7 +54,7 @@ app.use('/login', (req, res, next) => {
 });
 app.use('/register', (req, res, next) => {
     if (req.session.user) {
-        return res.redirect('/user');
+        return res.redirect('/userProfile');
     }else{
         next();
     }
