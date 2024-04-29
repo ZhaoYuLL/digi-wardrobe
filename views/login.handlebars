@@ -1,15 +1,20 @@
+
+
+
+
     <main>
         <h2>Log In</h2>
-        <form action="/login" method="POST">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+        <form id="log-form" method="POST" action="/login">
+            <label for="userName">Username:</label>
+            <input type="userName" id="userName" name="userName" required>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
             <button type="submit">Sign In</button>
         </form>
+        <p id="errorMessage">{{error}}</p>
+
     </main>
 
-    <footer></footer>
-</body>
+<p>Don't have an account? <a href="/register">Click here to register!</a></p>
 
-</html>
+

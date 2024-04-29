@@ -23,6 +23,7 @@
 		"@aws-sdk/client-s3": "^3.556.0",
 		"@aws-sdk/s3-request-presigner": "^3.556.0",
 		"aws-sdk": "^2.1603.0",
+		"bcrypt": "^5.1.1",
 		"crypto": "^1.0.1",
 		"dotenv": "^16.4.5",
 		"express": "^4.19.2",
