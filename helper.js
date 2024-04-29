@@ -74,7 +74,7 @@ export const addSignedUrlsToPosts = async () => {
 					Bucket: BUCKET_NAME,
 					Key: imageName,
 				}),
-				{ expiresIn: 60 } // 60 seconds
+				{ expiresIn: 6000 } // 6000 seconds
 			);
 
 			// Add the signed URL to the post object
@@ -90,12 +90,50 @@ export const addSignedUrlsToPosts = async () => {
 	}
 };
 
+const addUrl = async (imgName) => {
+	return await getSignedUrl(
+		s3,
+		new GetObjectCommand({
+			Bucket: BUCKET_NAME,
+			Key: imgName,
+		}),
+		{ expiresIn: 6000 } // 6000 seconds
+	);
+};
+export const addSignedUrlsToFitPosts_in_wardrobe = async (outfits) => {
+	try {
+		// Loop through each outfit and generate signed URLs for the fitposts
+		for (let outfit of outfits) {
+			for (let fitpost of outfit.fitposts) {
+				let headName = fitpost.headwear;
+				let bodyName = fitpost.bodywear;
+				let legName = fitpost.legwear;
+				let footName = fitpost.footwear;
+
+				let headUrl = await addUrl(headName);
+				let bodyUrl = await addUrl(bodyName);
+				let legUrl = await addUrl(legName);
+				let footUrl = await addUrl(footName);
+				fitpost.headUrl = headUrl;
+				fitpost.bodyUrl = bodyUrl;
+				fitpost.legUrl = legUrl;
+				fitpost.footUrl = footUrl;
+			}
+		}
+		return outfits;
+	} catch (error) {
+		console.error("Error adding signed URLs to posts:", error);
+		throw error;
+	}
+};
+
 export const uploadImageToS3 = async (file, h, w, imageName) => {
 	try {
 		// Resize image using sharp package
-		const fileBuffer = await sharp(file.buffer)
-			.resize({ height: h, width: w, fit: "contain" })
-			.toBuffer();
+		// const fileBuffer = await sharp(file.buffer)
+		// 	.resize({ height: h, width: w, fit: "contain" })
+		// 	.toBuffer();
+		const fileBuffer = file.buffer;
 
 		// Set up params that s3 bucket will need to access
 		const params = {

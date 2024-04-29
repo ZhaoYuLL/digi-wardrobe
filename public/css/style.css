@@ -1,0 +1,29 @@
+.wardrobe-preview {
+  display: flex;
+  flex-direction: row;
+}
+
+.preview-content {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+}
+
+.fitposts {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+}
+
+.fitpost {
+  margin-right: 20px;
+}
+
+.fitpost-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.fitpost-item {
+  margin-right: 20px;
+}
