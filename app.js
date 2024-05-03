@@ -10,12 +10,18 @@ import exphbs from "express-handlebars";
 
 const staticDir = express.static("public");
 
-app.use(session({
-    name: 'AuthenticationState',
-    secret: 'some secret string!',
-    resave: false,
-    saveUninitialized: false
-  }))
+app.use(
+	session({
+		name: "AuthenticationState",
+		secret: "some secret string!",
+		resave: false,
+		saveUninitialized: false,
+		cookie: {
+			secure: process.env.NODE_ENV === "production",
+			maxAge: 24 * 60 * 60 * 1000, // 24 hours
+		},
+	})
+);
 
 const handlebarsInstance = exphbs.create({
 	defaultLayout: "main",
@@ -37,7 +43,7 @@ const handlebarsInstance = exphbs.create({
 	},
 });
 app.use((req, res, next) => {
-    if (req.path === "/") {
+	if (req.path === "/") {
 		if (req.session.user) {
 			res.redirect("/userProfile");
 		} else {
@@ -47,36 +53,33 @@ app.use((req, res, next) => {
 		next();
 	}
 });
-app.use('/login', (req, res, next) => {
-    if (req.session.user) {
-        return res.redirect('/userProfile');
-    }
-    else{
-        next();
-    }
+app.use("/login", (req, res, next) => {
+	if (req.session.user) {
+		return res.redirect("/userProfile");
+	} else {
+		next();
+	}
 });
-app.use('/register', (req, res, next) => {
-    if (req.session.user) {
-        return res.redirect('/userProfile');
-    }else{
-        next();
-    }
+app.use("/register", (req, res, next) => {
+	if (req.session.user) {
+		return res.redirect("/userProfile");
+	} else {
+		next();
+	}
 });
-app.use('/user', (req, res, next) => {
-    if (!req.session.user) {
-      return res.redirect('/login');
-    }
-    else{
-        next();
-    }
+app.use("/user", (req, res, next) => {
+	if (!req.session.user) {
+		return res.redirect("/login");
+	} else {
+		next();
+	}
 });
-app.use('/logout', (req, res, next) => {
-    if (!req.session.user) {
-        return res.redirect('/login');
-    }
-    else{
-        next();
-    }
+app.use("/logout", (req, res, next) => {
+	if (!req.session.user) {
+		return res.redirect("/login");
+	} else {
+		next();
+	}
 });
 
 app.use("/public", staticDir);
