@@ -36,6 +36,12 @@ router
 			//this render file can be changed to what it's supposed to be. right now it
 			//is just a temp place to display the images
 			//moidfy outfitpieces.handlebars to change what's sent
+			if (req.session.user) {
+				console.log("hi");
+				console.log("user:", req.session.user);
+			} else {
+				console.log("no user");
+			}
 			res.render("outfitpieces", { title: "fitposts", posts: postsUrls });
 		} catch (error) {
 			console.error("Error rendering fitposts:", error);
@@ -47,7 +53,11 @@ router
 		const imageName = await generateFileName();
 		const img = await uploadImageToS3(req.file, 1920, 1080, imageName);
 
-		const post = await storeImage(req.body.caption, imageName);
+		const post = await storeImage(
+			req.body.caption,
+			imageName,
+			req.session.user.username
+		);
 		res.render("outfitpieces", { title: "fitposts" });
 	});
 router.route("/:imageName").delete(async (req, res) => {
