@@ -134,18 +134,27 @@ const w2 = [
 	},
 ];
 
-await storeWardrobe("summer day", w1, "z");
-await storeWardrobe("academic weapon", w2, "z");
+await storeWardrobe("summer wardrobe", w1, "z");
+await storeWardrobe("spring capsule", w2, "z");
 await createFitpost(fitpost8);
 
-//testing to see if works
+//this is how to access a collection from another collection
 const fitpostCollection = await fitposts();
 const user_id = "611a24a197aa3b5a1c314624";
 const cursor = await fitpostCollection.find({ user_id: user_id });
 
-await cursor.forEach((doc) => {
-	console.log(doc.footid);
-});
+for (const doc of await cursor.toArray()) {
+	const outfitPiecesCollection = await outfitPieces();
+	const foot = await outfitPiecesCollection.findOne({
+		_id: doc.footid,
+	});
+	console.log(
+		`accessing outfit piece object attributes using id; currently accessing link: "${foot.link}"`
+	);
+
+	console.log("footwear id (outfit piece)", doc.footid);
+	console.log("footwear image name", doc.footwear);
+}
 //leave bottom alone
 console.log("Done seeding database");
 await closeConnection();
