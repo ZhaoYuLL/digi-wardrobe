@@ -1,6 +1,6 @@
 import { fitposts } from "../config/mongoCollections.js";
 
-import {ObjectId} from 'mongodb';
+import { ObjectId } from "mongodb";
 import { validString } from "../helper.js";
 
 const getAll = async () => {
@@ -44,10 +44,8 @@ const trending = async () => {
   // remove later
   console.log("trending", fpList);
 
-
   return fpList;
 };
-
 
 const searchByUID = async (uid) => {
   uid = validString(uid);
@@ -61,13 +59,11 @@ const searchByUID = async (uid) => {
   return fpList;
 };
 
-
-const searchByFPID = async(id) => {
- 
-    id = validString(id);
-    const fitpostCollection = await fitposts();
-    const fp = await fitpostCollection.findOne({_id: new ObjectId(id)});
-    if (fp === null) throw 'No fitpost with that id';
+const searchByFPID = async (id) => {
+  id = validString(id);
+  const fitpostCollection = await fitposts();
+  const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
+  if (fp === null) throw "No fitpost with that id";
 
   // replaces ObjectId with string
   fp._id = fp._id.toString();
@@ -103,51 +99,25 @@ const createFP = async (
 
   let newFP = {
     user_id,
-    username,
+    postedDate: formattedDate,
     headwear,
     bodywear,
     legwear,
-    footwear
-  ) => {
+    footwear,
+    likes,
+    saves,
+  };
 
-    // find a way to validate these ids
-    user_id = validString(user_id);
-    username = validString(username);
-    headwear = validString(headwear);
-    bodywear = validString(bodywear);
-    legwear = validString(legwear);
-    footwear = validString(footwear);
+  const fitpostCollection = await fitposts();
+  const insertInfo = await fitpostCollection.insertOne(newFP);
+  if (!insertInfo.acknowledged || !insertInfo.insertedId)
+    throw "could not add fitpost womp womp";
 
-    let likes = 0;
-    let saves = 0;
-  
-
-    let date = new Date();
-
-    let formattedDate = date.toISOString().split('T')[0];
-    
-    let newFP = {
-      user_id,
-      postedDate: formattedDate,
-      headwear,
-      bodywear,
-      legwear,
-      footwear,
-      likes,
-      saves
-    };
-   
-    const fitpostCollection = await fitposts();
-    const insertInfo = await fitpostCollection.insertOne(newFP);
-    if (!insertInfo.acknowledged || !insertInfo.insertedId)
-      throw 'could not add fitpost womp womp';
-  
-    // converts id to string to get the product object
-    const newId = insertInfo.insertedId.toString();
-    const fp = await searchByFPID(newId);
-    return fp;
-    //return newProduct;
-  
-  }
+  // converts id to string to get the product object
+  const newId = insertInfo.insertedId.toString();
+  const fp = await searchByFPID(newId);
+  return fp;
+  //return newProduct;
+};
 
 export { getAll, latest, trending, searchByUID, searchByFPID, createFP };
