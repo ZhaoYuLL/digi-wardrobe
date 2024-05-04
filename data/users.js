@@ -10,7 +10,7 @@ const getAllUsers = async () => {
 const getUserById = async (id) => {
     // TODO: validate id parameter
     const userCollection = await users();
-    const user = await userCollection.findOne({ _id: new ObjectId(id) });
+    const user = await userCollection.findOne({ _id: new ObjectId(id) }, { projection: { password: 0 } });
     // if (!user) throw new Error(`Error getting user with id: ${id}`);
     return user;
 }
