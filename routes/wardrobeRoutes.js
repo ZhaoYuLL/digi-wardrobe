@@ -1,15 +1,28 @@
 import { Router } from "express";
 import { getAllOutfits } from "../data/testwardrobe.js";
-import { addSignedUrlsToFitPosts_in_wardrobe } from "../helper.js";
+import { getAllOutfitPieces } from "../data/testCloset.js";
+import {
+  addSignedUrlsToFitPosts_in_wardrobe,
+  addSignedUrlsToFitPosts_in_closet,
+} from "../helper.js";
+
 const router = Router();
 
 router.get("/", (req, res) => {
   // Render your sign-in page
   res.render("index", { title: "Sub-page" });
 });
-router.get("/closet", (req, res) => {
+router.get("/closet", async (req, res) => {
   // Render your sign-in page
-  res.render("closet", { title: "Closet Page" });
+  const outfitpieces = await getAllOutfitPieces();
+  const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_closet(
+    outfitpieces
+  );
+  res.render("closet", {
+    title: "Closet Page",
+    outfitpieces: postsWithSignedUrls,
+    outfitpiecesJson: JSON.stringify(postsWithSignedUrls),
+  });
 });
 router.get("/wardrobe", async (req, res) => {
   // Render your sign-in page
