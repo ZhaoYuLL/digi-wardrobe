@@ -37,10 +37,6 @@ const BUCKET_REGION = process.env.BUCKET_REGION1;
 const ACCESS_KEY = process.env.ACCESS_KEY1;
 const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY1;
 
-console.log(BUCKET_NAME)
-console.log(BUCKET_REGION);
-console.log(ACCESS_KEY)
-console.log(SECRET_ACCESS_KEY)
 export const s3 = new S3Client({
   credentials: {
     accessKeyId: ACCESS_KEY,
