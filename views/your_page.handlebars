@@ -1,0 +1,17 @@
+<h1>My Page</h1>
+
+<form id="createFitpost">
+    <label for="headwear">Headwear</label>
+    <div id="headwear-slider">
+        {{#each headwears}}
+        <img data-id="{{this._id}}" src="{{this.url}}">
+        {{/each}}
+    </div>
+    <input type="hidden" id="headwear" name="headwear" value="">
+    <label for="bodywear">Bodywear</label>
+    <input type="hidden" id="bodywear" name="bodywear" value="">
+    <label for="legwear">Legwear</label>
+    <input type="hidden" id="legwear" name="legwear" value="">
+    <label for="footwear">Footwear</label>
+    <input type="hidden" id="footwear" name="footwear" value="">
+</form>

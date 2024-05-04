@@ -1,5 +1,6 @@
 import { dbConnection, closeConnection } from '../config/mongoConnection.js';
 import { getAllUsers, getUserById, createUser, updateUserInfo, deleteUser } from '../data/users.js';
+import { createFP } from '../data/fitposts.js';
 
 const db = await dbConnection();
 await db.dropDatabase();
@@ -22,26 +23,6 @@ try {
     console.error(error.message);
 }
 
-try {
-    const allusers = await getAllUsers();
-    console.log(allusers);
-} catch (error) {
-    console.error(error.message);
-}
-
-try {
-    const updatedUser = await updateUserInfo(user1._id, { email: "johnnydoe@gmail.com", age: 23 });
-    console.log(updatedUser);
-} catch (error) {
-    console.error(error.message);
-}
-
-try {
-    const deletedUser = await deleteUser(user2._id);
-    console.log(deletedUser);
-} catch (error) {
-    console.error(error.message);
-}
 
 
 console.log('Done seeding database');
