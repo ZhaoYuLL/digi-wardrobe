@@ -28,8 +28,9 @@ router.get("/closet", async (req, res) => {
 router.get("/wardrobe", async (req, res) => {
   // Render your sign-in page
   const outfits = await getAllOutfits();
-  console.log(outfits)
-  const postsWithSignedUrls = a;
+  const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_wardrobe(
+    outfits
+  );
   //   console.log(postsWithSignedUrls[0].wardrobeName);
   // console.log(postsWithSignedUrls.fitposts);
   res.render("wardrobe", {
