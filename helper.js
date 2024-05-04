@@ -131,19 +131,6 @@ export const addSignedUrlsToFitPosts_in_wardrobe = async (outfits) => {
   }
 };
 
-export const addSignedUrlsToFitPosts_in_closet = async (outfits) => {
-  try {
-    // Loop through each outfit and generate signed URLs for the fitposts
-    for (let outfit of outfits) {
-      let imageName = outfit.imageName;
-      outfit.imageUrl = await addUrl(imageName);
-    }
-    return outfits;
-  } catch (error) {
-    console.error("Error adding signed URLs to posts:", error);
-    throw error;
-  }
-};
 
 export const addSignedUrlsToFitPosts_in_fitposts = async (outfits) => {
 	try {
