@@ -1,6 +1,6 @@
 import { fitposts } from "../config/mongoCollections.js";
 import {ObjectId} from 'mongodb';
-import * as helper from '../helper.js';
+import { validString } from "../helper.js";
 
 
 
@@ -50,7 +50,7 @@ const trending = async() => {
 }
 
 const searchByUID = async(uid) => {
-    uid = helper.validString(uid);
+    uid = validString(uid);
     let fpList = await latest();
     fpList = fpList.filter(fp => fp.user_id === uid);
     if (!fpList) throw 'There are no user of that id';
@@ -64,7 +64,7 @@ const searchByUID = async(uid) => {
 
 const searchByFPID = async(id) => {
  
-    id = helper.validString(id);
+    id = validString(id);
     const fitpostCollection = await fitposts();
     const fp = await fitpostCollection.findOne({_id: new ObjectId(id)});
     if (fp === null) throw 'No fitpost with that id';
@@ -81,6 +81,7 @@ const searchByFPID = async(id) => {
 
 const createFP = async (
     user_id,
+    username,
     headwear,
     bodywear,
     legwear,
@@ -88,11 +89,12 @@ const createFP = async (
   ) => {
 
     // find a way to validate these ids
-    user_id = helper.validString(user_id);
-    headwear = helper.validString(headwear);
-    bodywear = helper.validString(bodywear);
-    legwear = helper.validString(legwear);
-    footwear = helper.validString(footwear);
+    user_id = validString(user_id);
+    username = validString(username);
+    headwear = validString(headwear);
+    bodywear = validString(bodywear);
+    legwear = validString(legwear);
+    footwear = validString(footwear);
 
     let likes = 0;
     let saves = 0;
