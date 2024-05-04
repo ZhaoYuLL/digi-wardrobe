@@ -16,7 +16,7 @@ async function createFitpost(fitpost) {
 
 const fitpost1 = {
 	_id: "611a24a197aa3b5a1c314701",
-	user_id: "611a24a197aa3b5a1c314619",
+	user_id: "663662d9e7ec3549eca4e975",
 	postedDate: {
 		$date: "2024-04-17T00:00:00.000Z",
 	},
