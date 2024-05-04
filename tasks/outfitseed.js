@@ -66,7 +66,7 @@ await storeOutfitPiece(
   "google.com",
   "foot",
   shoes,
-  "611a24a197aa3b5a1c314624"
+  "z"
 );
 //stores seater
 await storeOutfitPiece(
@@ -74,55 +74,55 @@ await storeOutfitPiece(
   "nike.com",
   "body",
   sweater,
-  "611a24a197aa3b5a1c314624"
+  "z"
 );
 await storeOutfitPiece(
   "711a24a197aa3b5a1c314703",
   "nike.com",
   "leg",
   jean,
-  "611a24a197aa3b5a1c314624"
+  "z"
 );
 await storeOutfitPiece(
   "711a24a197aa3b5a1c314704",
   "nike.com",
   "head",
   hat,
-  "611a24a197aa3b5a1c314624"
+  "z"
 );
 await storeOutfitPiece(
   "711a24a197aa3b5a1c314705",
   "nike.com",
   "head",
   hat2,
-  "611a24a197aa3b5a1c314624"
+  "z"
 );
 await storeOutfitPiece(
   "711a24a197aa3b5a1c314706",
   "nike.com",
   "head",
   hat2,
-  "611a24a197aa3b5a1c314624"
+  "z"
 );
 await storeOutfitPiece(
   "711a24a197aa3b5a1c314707",
   "nike.com",
   "head",
-  hat2,
-  "611a24a197aa3b5a1c314624"
+  hat3,
+  "z"
 );
 await storeOutfitPiece(
   "711a24a197aa3b5a1c314708",
   "nike.com",
   "head",
   hat2,
-  "611a24a197aa3b5a1c314624"
+  "z"
 );
 
 //gets a shoe id
 const outfitPiecesCollection = await outfitPieces();
 const shoe = await outfitPiecesCollection.findOne({
-  username: "611a24a197aa3b5a1c314624",
+  username: "z",
 });
 const shoe_id = shoe._id;
 const head_id = "711a24a197aa3b5a1c314704";
@@ -133,6 +133,7 @@ const body_id = "711a24a197aa3b5a1c314702";
 const fitpost8 = {
   _id: "611a24a197aa3b5a1c314708",
   user_id: "611a24a197aa3b5a1c314624",
+  username: "z",
   postedDate: {
     $date: "2024-04-10T00:00:00.000Z",
   },
@@ -155,6 +156,7 @@ const w1 = [
   {
     _id: "60e4c8fd25602e41d4b9271c",
     user_id: "60e4c8fd25602e41d4b9271d",
+    username: "z",
     postedDate: "2024-04-28T10:30:00Z",
     headwear: hat2,
     bodywear: tanktop,
@@ -170,6 +172,7 @@ const w2 = [
   {
     _id: "60e4c8fd25602e41d4b9271a",
     user_id: "60e4c8fd25602e41d4b9271b",
+    username: "z",
     postedDate: "2024-04-27T08:00:00Z",
     headwear: hat3,
     bodywear: sweater,
@@ -181,6 +184,7 @@ const w2 = [
   {
     _id: "60e4c8fd25602e41d4b9271c",
     user_id: "60e4c8fd25602e41d4b9271d",
+    username: "z",
     postedDate: "2024-04-28T10:30:00Z",
     headwear: hat4,
     bodywear: "hoodie.jpg",

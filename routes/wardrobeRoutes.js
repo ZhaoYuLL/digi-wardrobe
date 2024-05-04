@@ -5,7 +5,7 @@ import {
   addSignedUrlsToFitPosts_in_wardrobe,
   addSignedUrlsToFitPosts_in_closet,
 } from "../helper.js";
-import { outfitPieces } from "../config/mongoCollections.js";
+
 const router = Router();
 
 router.get("/", (req, res) => {

@@ -48,7 +48,7 @@
 }
 
 /* makes preview horizontal */
-.preview-content {
+.preview-content-closet {
   display: flex;
   flex-direction: row;
 }
