@@ -2,7 +2,8 @@ import { Router } from "express";
 const router = Router();
 // import data from users 
 import { createUser, loginUser } from "../data/users.js";
-
+import { getAll, searchByUID } from "../data/fitposts.js";
+import { addSignedUrlsToFitPosts_in_fitposts } from "../helper.js";
 
 router.route('/').get(async (req, res) => {
     //code here for GET THIS ROUTE SHOULD NEVER FIRE BECAUSE OF MIDDLEWARE #1 IN SPECS.
@@ -55,7 +56,8 @@ router
               lastName: user.lastName, 
               wardrobes: user.wardrobes, 
               closet: user.closet, 
-              favorite: user.favorite
+              favorite: user.favorite,
+              userId: user.userId
             };
             res.redirect('/userProfile');
 
@@ -66,16 +68,37 @@ router
         }
     });
 
-router.route('/userProfile').get(async (req, res) => {
-        //code here for GET
-    if (!req.session.user) {
+    router.route('/userProfile').get(async (req, res) => {
+      if (!req.session.user) {
         return res.redirect('/login');
-    }
-    const { username, firstName, lastName, wardrobes, closet, favorite } = req.session.user;
-    const userName = username;
-    res.render('userProfile', {userName, firstName, lastName,wardrobes, closet, favorite});  
+      }
     
-});
+      const { username, firstName, lastName, wardrobes, closet, favorite, userId } = req.session.user;
+      
+      try {
+        // Get all fitposts for the user
+        const allFitposts = await searchByUID(userId);
+        //test for display
+        // const allFitposts = await getAll();
+    
+        // Add signed URLs to fitposts
+        const fitpostsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(allFitposts);
+    
+        res.render('userProfile', {
+          userName: username,
+          firstName,
+          lastName,
+          closet,
+          favorite,
+          allFitposts: fitpostsWithSignedUrls,
+          wardrobes,
+        });
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).send('An error occurred while fetching user data');
+      }
+    });
+    
       
 router.route('/logout').get(async (req, res) => {
         //code here for GET
