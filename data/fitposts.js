@@ -79,6 +79,42 @@ const searchByFPID = async(id) => {
  
 }
 
+
+const addLike= async(id) => {
+ 
+  id = validString(id);
+  const fitpostCollection = await fitposts();
+  const fp = await fitpostCollection.findOne({_id: new ObjectId(id)});
+  if (fp === null) throw 'No fitpost with that id';
+
+  // replaces ObjectId with string
+  fp._id = fp._id.toString();
+
+  // remove later
+  console.log(fp);
+
+  //return fp;
+
+  const updatePost = {
+    likes: fp.likes + 1
+  }
+
+  const updatedInfo = await fitpostCollection.findOneAndUpdate(
+    {_id: new ObjectId(id)},
+    {$set: updatePost},
+    {returnDocument: 'after'}
+  );
+
+  if (!updatedInfo) {
+    throw 'could not update successfully';
+  }
+  updatedInfo._id = updatedInfo._id.toString();
+  return updatedInfo;
+
+}
+
+
+
 const createFP = async (
     user_id,
     username,
@@ -102,11 +138,11 @@ const createFP = async (
 
     let date = new Date();
 
-    let formattedDate = date.toISOString().split('T')[0];
+    //let formattedDate = date.toISOString().split('T')[0];
     
     let newFP = {
       user_id,
-      postedDate: formattedDate,
+      postedDate: date,
       headwear,
       bodywear,
       legwear,
