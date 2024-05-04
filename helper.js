@@ -37,10 +37,7 @@ const BUCKET_REGION = process.env.BUCKET_REGION1;
 const ACCESS_KEY = process.env.ACCESS_KEY1;
 const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY1;
 
-console.log(BUCKET_NAME)
-console.log(BUCKET_REGION);
-console.log(ACCESS_KEY)
-console.log(SECRET_ACCESS_KEY)
+
 export const s3 = new S3Client({
 	credentials: {
 		accessKeyId: ACCESS_KEY,
@@ -222,6 +219,16 @@ export const deleteImageFromS3 = async (s3_image_name) => {
 		throw error;
 	}
 };
+
+// takes a fitpost, returns the stringified date
+export const convertDate = (fitpost) => {
+	const dateValue = fitpost.postedDate['$date'];
+
+	const date = new Date(dateValue);
+	const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
+	return formattedDate;
+	
+}
 //!end outfit pieces
 
 //!please do export const instead of this export {...func names}
