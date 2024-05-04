@@ -222,12 +222,11 @@ export const deleteImageFromS3 = async (s3_image_name) => {
 
 // takes a fitpost, returns the stringified date
 export const convertDate = (fitpost) => {
-	const dateValue = fitpost.postedDate['$date'];
+	const dateValue = fitpost.postedDate;
 
-	const date = new Date(dateValue);
-	const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
-	return formattedDate;
-	
+    const date = new Date(dateValue);
+    const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
+    return formattedDate;
 }
 //!end outfit pieces
 
