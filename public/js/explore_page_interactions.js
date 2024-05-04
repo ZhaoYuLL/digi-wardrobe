@@ -1,5 +1,6 @@
-import { fitposts } from "../../config/mongoCollections.js";
+/*import { fitposts } from "../../config/mongoCollections.js";
 import {ObjectId} from 'mongodb';
+import * as fp from '../../data/fitposts.js';*/
 
 
 
@@ -17,19 +18,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
     });
 
-    function likeClick() {
-        console.log("like clicked!");
+    async function likeClick() {
+        let currentId = this.id.substring(5);
+        console.log("Like clicked!", currentId);
+        
+        try {
+            await fetch('/like', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ fitpostId: currentId })
+            });
+            
+        } catch (error) {
+            throw(error);
+        }
     }
 
-    function saveClick() {
-        console.log("save clicked!");
+    async function saveClick() {
+        let currentId = this.id.substring(5);
+        console.log("Like clicked!", currentId);
+
+        
+
     }
 
     for (let i=0; i < likeButtons.length; i++) {
-        let like = likeButtons[0];
-        let save = saveButtons[0];
+        let like = likeButtons[i];
+        let save = saveButtons[i];
 
         like.addEventListener('click', likeClick);
-        save.addEventListener('click', saveClick)
+        save.addEventListener('click', saveClick);
     }
 });

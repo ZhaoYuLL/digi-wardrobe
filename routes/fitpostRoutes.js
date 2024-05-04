@@ -106,6 +106,34 @@ router.route('/user/:uid').get(async (req, res) => {
         return res.status(500).send(e);
     }
   });
+
+
+  // POST route for handling like action
+router.post('/like', async (req, res) => {
+    try {
+        const fitpostId = req.body.fitpostId;
+        const updatedFitpost = await fp.addLike(fitpostId);
+        res.status(200).json(updatedFitpost);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
+
+// POST route for handling save action
+router.post('/save', async (req, res) => {
+    console.log('save');
+    try {
+        const fitpostId = req.body.fitpostId;
+        console.log(fitpostId);
+        const updatedFitpost = await fp.addSave(fitpostId);
+        res.status(200).json(updatedFitpost);
+    } catch (error) {
+        console.log('error');
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
   
 
 
