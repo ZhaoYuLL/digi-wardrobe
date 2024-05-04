@@ -37,6 +37,10 @@ const BUCKET_REGION = process.env.BUCKET_REGION1;
 const ACCESS_KEY = process.env.ACCESS_KEY1;
 const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY1;
 
+console.log(BUCKET_NAME)
+console.log(BUCKET_REGION);
+console.log(ACCESS_KEY)
+console.log(SECRET_ACCESS_KEY)
 export const s3 = new S3Client({
   credentials: {
     accessKeyId: ACCESS_KEY,
@@ -141,6 +145,45 @@ export const addSignedUrlsToFitPosts_in_closet = async (outfits) => {
   }
 };
 
+export const addSignedUrlsToFitPosts_in_fitposts = async (outfits) => {
+	try {
+		// Loop through each outfit and generate signed URLs for the fitposts
+		for (let fitpost of outfits) {
+			
+				let headName = fitpost.headwear;
+				let bodyName = fitpost.bodywear;
+				let legName = fitpost.legwear;
+				let footName = fitpost.footwear;
+
+				let headUrl = await addUrl(headName);
+				let bodyUrl = await addUrl(bodyName);
+				let legUrl = await addUrl(legName);
+				let footUrl = await addUrl(footName);
+				fitpost.headUrl = headUrl;
+				fitpost.bodyUrl = bodyUrl;
+				fitpost.legUrl = legUrl;
+				fitpost.footUrl = footUrl;
+			
+		}
+		return outfits;
+	} catch (error) {
+		console.error("Error adding signed URLs to posts:", error);
+		throw error;
+	}
+};
+export const addSignedUrlsToFitPosts_in_closet = async (outfits) => {
+	try {
+	  // Loop through each outfit and generate signed URLs for the fitposts
+	  for (let outfit of outfits) {
+		let imageName = outfit.imageName;
+		outfit.imageUrl = await addUrl(imageName);
+	  }
+	  return outfits;
+	} catch (error) {
+	  console.error("Error adding signed URLs to posts:", error);
+	  throw error;
+	}
+  };
 export const uploadImageToS3 = async (file, h, w, imageName) => {
   try {
     // Resize image using sharp package

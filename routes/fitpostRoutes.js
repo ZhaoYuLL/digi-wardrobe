@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import * as fp from '../data/fitposts.js';
-import * as helper from '../helper.js';
+import {validString, addSignedUrlsToFitPosts_in_fitposts} from '../helper.js';
+// import { addSignedUrlsToFitPosts_in_wardrobe } from "../helper.js";
+
 
 const router = Router();
 
@@ -8,7 +10,10 @@ router.route('/').get(async (req, res) => {
     //code here for GET will render the home handlebars file
     try {
         let fpList = await fp.getAll();
-        return res.render('explore_page', {title: 'Explore', fitposts:  fpList});
+        const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
+            fpList
+          );
+        return res.render('explore_page', {title: 'Explore', fitposts:  postsWithSignedUrls});
     }
     catch (e) {
         return res.status(500).send(e);
@@ -43,7 +48,7 @@ router.route('/user/:uid').get(async (req, res) => {
     console.log(req.params.uid);
     let userId = req.params.uid;
     try {
-        userId = helper.validString(userId);
+        userId = validString(userId);
     } catch (e) {
         return res.status(500).send(e);
     }
@@ -61,7 +66,7 @@ router.route('/user/:uid').get(async (req, res) => {
     console.log(req.params.id);
     let fpid = req.params.id;
     try {
-        fpid = helper.validString(fpid);
+        fpid = validString(fpid);
     } catch (e) {
         return res.status(500).send(e);
     }

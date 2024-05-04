@@ -2,11 +2,43 @@
 
 <main>
 	<ol>
-		{{#each fitposts}}
-			<li>
-				<a href="/fitposts/{{this._id}}">Fitpost ID: {{this._id}}</a>
-				<p>Likes: {{this.likes}}</p>
-			</li>
-		{{/each}}
-	</ol>
+		<div class="fitposts">
+      {{#each fitposts}}
+      <div class="fitpost">
+        <h1>this is fitpost {{addOne @index}}</h1>
+        <p>headwear</p>
+        <img
+          src="{{this.headUrl}}"
+          width="200px;"
+          height="200px"
+          alt="head Image"
+        />
+        <p>bodywear:</p>
+        <img
+          src="{{this.bodyUrl}}"
+          width="200px;"
+          height="200px"
+          alt="head Image"
+        />
+        <p>legwear:</p>
+        <img
+          src="{{this.legUrl}}"
+          width="200px;"
+          height="200px"
+          alt="head Image"
+        />
+        <p>footwear:</p>
+        <img
+          src="{{this.footUrl}}"
+          width="200px;"
+          height="200px"
+          alt="head Image"
+        />
+        <p>likes: {{likes}}</p>
+        <p>saves: {{saves}}</p>
+        
+        <p>Posted Date: {{postedDate}}</p>
+      </div>
+      {{/each}}
+
 </main>
