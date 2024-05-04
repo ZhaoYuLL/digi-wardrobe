@@ -16,8 +16,21 @@ router.route('/')
         }
     })
     .post(async (req, res) => {
+        let user_id = "";
         if (req.session && req.session.user) {
-            let user = req.session.user;
+            user_id = req.session.user._id;
+        }
+
+        let data = req.body;
+        let headwear = data.headwear;
+        let bodywear = data.bodywear;
+        let legwear = data.legwear;
+        let footwear = data.footwear;
+
+        try {
+            await fp.createFP(user_id, headwear, bodywear, legwear, footwear);
+        } catch (e) {
+            return res.status(400).send(e.message);
         }
 
     });
