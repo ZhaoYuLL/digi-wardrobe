@@ -28,29 +28,27 @@
   margin-right: 20px;
 }
 
-/* .outfit-previews {
-  display: flex;
-  justify-content: space-between;
-}
-
-.preview-content {
+.outfit-list {
   display: flex;
   flex-wrap: wrap;
 }
 
-.outfit-preview {
-  flex: 0 0 25%;
-  padding: 10px;
-  box-sizing: border-box;
-  text-align: center;
+.outfit {
+  margin: 10px;
 }
 
-.preview-outfit {
-  display: block;
-  margin-bottom: 10px;
+.outfit img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+.outfit-list {
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.prev-button,
-.next-button {
-  margin: 5px;
-} */
+/* makes preview horizontal */
+.preview-content {
+  display: flex;
+  flex-direction: row;
+}

@@ -97,6 +97,27 @@ await storeOutfitPiece(
   hat2,
   "611a24a197aa3b5a1c314624"
 );
+await storeOutfitPiece(
+  "711a24a197aa3b5a1c314706",
+  "nike.com",
+  "head",
+  hat2,
+  "611a24a197aa3b5a1c314624"
+);
+await storeOutfitPiece(
+  "711a24a197aa3b5a1c314707",
+  "nike.com",
+  "head",
+  hat2,
+  "611a24a197aa3b5a1c314624"
+);
+await storeOutfitPiece(
+  "711a24a197aa3b5a1c314708",
+  "nike.com",
+  "head",
+  hat2,
+  "611a24a197aa3b5a1c314624"
+);
 
 //gets a shoe id
 const outfitPiecesCollection = await outfitPieces();
