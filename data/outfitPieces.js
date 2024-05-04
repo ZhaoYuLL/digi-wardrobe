@@ -2,13 +2,14 @@ import { outfitPieces } from "../config/mongoCollections.js";
 // import { outfitPieces } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 
-export const storeImage = async (caption, imageName) => {
+export const storeImage = async (caption, imageName, username) => {
 	const outfitPiecesCollection = await outfitPieces();
 
 	// Create a new document with the provided caption and imageName
 	const newImage = {
 		caption: caption,
 		imageName: imageName,
+		username,
 	};
 
 	// Insert the new document into the outfitPieces collection
