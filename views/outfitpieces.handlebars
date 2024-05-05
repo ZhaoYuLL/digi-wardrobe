@@ -2,6 +2,15 @@
 <form action="/outfitpieces" method="POST" enctype="multipart/form-data">
 	<input type="file" name="image" accept="image/*" />
 	<input type="text" name="caption" placeholder="Caption" />
+	<input type="text" name="link" placeholder="link to where you got this from" />
+	<select name="type">
+		<option value="head">Headwear</option>
+		<option value="body">Tops</option>
+		<option value="leg">Bottoms</option>
+		<option value="foot">Footwear</option>
+	</select>
+
+
 	<button type="submit">Submit</button>
 </form>
 
