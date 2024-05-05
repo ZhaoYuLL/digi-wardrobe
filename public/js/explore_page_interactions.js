@@ -4,6 +4,11 @@ import * as fp from '../../data/fitposts.js';*/
 
 
 
+(function ($) {
+    const routing = '/fitposts';
+})(window.jQuery);
+
+/*
 document.addEventListener('DOMContentLoaded', function() {
     const fitpostElements = document.querySelectorAll('.fitpost');
     let likeButtons = [];
@@ -30,6 +35,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 body: JSON.stringify({ fitpostId: currentId })
             });
+            const likenum = document.getElementById('like_num');
+            let num = parseInt(likenum.innerHTML.slice(7));
+            likenum.innerHTML = `likes: ${num+1}`;
+            console.log('num changed');
             
         } catch (error) {
             throw(error);
@@ -48,6 +57,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 body: JSON.stringify({ fitpostId: currentId })
             });
+            const savenum = document.getElementById('save_num');
+            let num = parseInt(savenum.innerHTML.slice(7));
+            savenum.innerHTML = `saves: ${num+1}`;
+            console.log('num changed');
     
         } catch (error) {
             throw(error);
@@ -62,3 +75,4 @@ document.addEventListener('DOMContentLoaded', function() {
         save.addEventListener('click', saveClick);
     }
 });
+*/
