@@ -51,9 +51,11 @@ router.route('/create')
     })
     .post(async (req, res) => {
         // TODO: input validation
+        console.log("found the post route!");
         if (req.session && req.session.user) {
             const data = req.body;
             const user = req.session.user;
+            //console.log(user);
 
             try {
                 if (!data.headwear) throw new Error('Headwear not provided in route');
@@ -65,14 +67,69 @@ router.route('/create')
                 if (!data.leg_id) throw new Error('Leg_id not provided in route');
                 if (!data.foot_id) throw new Error('Foot_id not provided in route');
             } catch (e) {
-                res.status(400).send(e.message);
+                res.status(400).json({ error: e });
             }
 
             try {
-                const newFitpost = await fp.createFP(user._id, user.username, data.headwear, data.bodywear, legwear, footwear);
+                data.headwear = validString(data.headwear);
             } catch (e) {
-                res.status(500).send(e.message);
+                res.status(400).json({ error: e });
             }
+            try {
+                data.head_id = validString(data.head_id);
+            } catch (e) {
+                res.status(400).json({ error: e });
+            }
+            try {
+                data.bodywear = validString(data.bodywear);
+            } catch (e) {
+                res.status(400).json({ error: e });
+            }
+            try {
+                data.body_id = validString(data.body_id);
+            } catch (e) {
+                res.status(400).json({ error: e });
+            }
+            try {
+                data.legwear = validString(data.legwear);
+            } catch (e) {
+                res.status(400).json({ error: e });
+            }
+            try {
+                data.leg_id = validString(data.leg_id);
+            } catch (e) {
+                res.status(400).json({ error: e });
+            }
+            try {
+                data.footwear = validString(data.footwear);
+            } catch (e) {
+                res.status(400).json({ error: e });
+            }
+            try {
+                data.foot_id = validString(data.foot_id);
+            } catch (e) {
+                res.status(400).json({ error: e });
+            }
+
+            try {
+                const newFitpost = await fp.createFP(
+                    user.userId,
+                    user.username,
+                    data.headwear,
+                    data.bodywear,
+                    data.legwear,
+                    data.footwear,
+                    data.head_id,
+                    data.body_id,
+                    data.leg_id,
+                    data.foot_id);
+                res.status(200).redirect('/');
+            } catch (e) {
+                res.status(500).json({ error: e });
+            }
+        }
+        else {
+            res.status(500).send("Not logged in");
         }
     })
 

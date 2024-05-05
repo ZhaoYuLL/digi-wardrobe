@@ -1,5 +1,17 @@
 (function ($) {
 
+    const validString = (input) => {
+        if (typeof input !== "string" || !input) {
+            throw `${input || "Provided variable"} is not a string`;
+        } else {
+            let inputTrim = input.trim();
+            if (inputTrim.length === 0) {
+                throw "Provided variable is not a string";
+            }
+            return inputTrim;
+        }
+    };
+
     const changeInputValue = (type, id, image) => {
         // function to change the values of the hidden inputs
         if (type === 'headwear') {
@@ -33,7 +45,7 @@
 
     let initialLeg = $("#leg").children().first().attr('data-active', 'true');
     let leg_id = initialLeg[0].children[0].getAttribute('data-id');
-    let leg_url = initialLeg[0].children[0].getAttribute('data-namec');
+    let leg_url = initialLeg[0].children[0].getAttribute('data-name');
     changeInputValue('legwear', leg_id, leg_url);
 
     let initialFoot = $("#foot").children().first().attr('data-active', 'true');
@@ -119,6 +131,7 @@
             event.preventDefault();
         }
 
+        console.log("reached the end of the form handler");
     })
 
 
