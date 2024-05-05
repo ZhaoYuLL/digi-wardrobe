@@ -24,11 +24,31 @@ import * as fp from '../../data/fitposts.js';*/
             };
 
         $.ajax(requestConfig).then(function (response) { 
-            console.log('this is response', response.likes);
             //let likenum = $(`.like_num#like-${currentId}`);
             let likenum = document.querySelector(`.like_num#like-${currentId}`);
             likenum.innerHTML = `likes: ${response.likes}`;
             console.log('likenum', likenum);
+
+        });
+    });
+
+
+
+    saveButtons.on('click', function(event) {
+        event.preventDefault();
+        let currentId = $(this).attr('id').substring(5);
+        console.log(currentId);
+        let requestConfig = {
+            method: 'POST',
+            url: `${routing}/save`,
+            contentType: 'application/json',
+            data: JSON.stringify({ fitpostId: currentId })
+            };
+
+        $.ajax(requestConfig).then(function (response) { 
+            //let savenum = $(`.like_num#like-${currentId}`);
+            let savenum = document.querySelector(`.save_num#save-${currentId}`);
+            savenum.innerHTML = `saves: ${response.saves}`;
 
         });
     });

@@ -136,8 +136,8 @@ router.post('/save', async (req, res) => {
     }
     try {
         const updatedFitpost = await fp.addSave(data.fitpostId);
-        //res.status(200).json(updatedFitpost);
-        res.redirect('back');
+        res.status(200).json(updatedFitpost);
+        //res.redirect('back');
     } 
     catch(error){
         console.log(error, 'oops');
