@@ -128,7 +128,7 @@ const addSave= async(id) => {
   //return fp;
 
   const updatePost = {
-    likes: fp.saves + 1
+    saves: fp.saves + 1
   }
 
   const updatedInfo = await fitpostCollection.findOneAndUpdate(
@@ -197,4 +197,4 @@ const createFP = async (
   
   }
 
-export{getAll, latest, trending, searchByUID, searchByFPID, createFP, addLike}
+export{getAll, latest, trending, searchByUID, searchByFPID, createFP, addLike, addSave}

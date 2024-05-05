@@ -110,10 +110,17 @@ router.route('/user/:uid').get(async (req, res) => {
 
   // POST route for handling like action
 router.post('/like', async (req, res) => {
+    const data = req.body;
+    if (!data || Object.keys(data).length === 0) {
+        return res
+          .status(400)
+          .json({error: 'There are no fields in the request body'});
+    }
     try {
-        const fitpostId = req.body.fitpostId;
-        const updatedFitpost = await fp.addLike(fitpostId);
-        res.status(200).json(updatedFitpost);
+        console.log('this is id', data.fitpostId);
+        const updatedFitpost = await fp.addLike(data.fitpostId);
+        //res.status(200).json(updatedFitpost);
+        res.redirect('back');
     } catch (error) {
         console.error(error);
         res.status(500).send(error);
@@ -122,15 +129,20 @@ router.post('/like', async (req, res) => {
 
 // POST route for handling save action
 router.post('/save', async (req, res) => {
-    console.log('save');
+    const data = req.body;
+    console.log('thisisdata', data);
+    if (!data || Object.keys(data).length === 0) {
+        return res
+          .status(400)
+          .json({error: 'There are no fields in the request body'});
+    }
     try {
-        const fitpostId = req.body.fitpostId;
-        console.log(fitpostId);
-        const updatedFitpost = await fp.addSave(fitpostId);
-        res.status(200).json(updatedFitpost);
-    } catch (error) {
-        console.log('error');
-        console.error(error);
+        const updatedFitpost = await fp.addSave(data.fitpostId);
+        //res.status(200).json(updatedFitpost);
+        res.redirect('back');
+    } 
+    catch(error){
+        console.log(error, 'oops');
         res.status(500).send(error);
     }
 });

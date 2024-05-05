@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Like clicked!", currentId);
         
         try {
-            await fetch('/like', {
+            await fetch('/fitposts/like', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -38,10 +38,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function saveClick() {
         let currentId = this.id.substring(5);
-        console.log("Like clicked!", currentId);
+        console.log("save clicked!", currentId);
 
-        
-
+        try {
+            const response = await fetch('/fitposts/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ fitpostId: currentId })
+            });
+    
+        } catch (error) {
+            throw(error);
+        }
     }
 
     for (let i=0; i < likeButtons.length; i++) {
