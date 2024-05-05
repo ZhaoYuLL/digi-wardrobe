@@ -27,3 +27,16 @@
 .fitpost-item {
   margin-right: 20px;
 }
+
+.slide {
+  display: none;
+}
+
+.slide[data-active] {
+  display: block;
+}
+
+img {
+  width: 200px;
+  height: auto;
+}

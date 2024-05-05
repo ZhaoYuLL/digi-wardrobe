@@ -90,6 +90,35 @@ export const addSignedUrlsToPosts = async () => {
 	}
 };
 
+export const addSignedUrlsToOutfitPieces = async (posts) => {
+	try {
+		// console.log(posts);
+		// Loop through each post and generate a signed URL for the image
+		for (let post of posts) {
+			const imageName = post.imageName;
+			// Generate a signed URL for the image
+			const signedUrl = await getSignedUrl(
+				s3,
+				new GetObjectCommand({
+					Bucket: BUCKET_NAME,
+					Key: imageName,
+				}),
+				{ expiresIn: 6000 } // 6000 seconds
+			);
+
+			// Add the signed URL to the post object
+			post.imageUrl = signedUrl;
+			// console.log("image url:", post.imageUrl);
+		}
+
+		// console.log("Signed URLs added to posts");
+		return posts;
+	} catch (error) {
+		console.error("Error adding signed URLs to posts:", error);
+		throw error;
+	}
+};
+
 const addUrl = async (imgName) => {
 	return await getSignedUrl(
 		s3,
