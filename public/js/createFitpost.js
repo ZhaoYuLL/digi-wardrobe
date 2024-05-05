@@ -1,37 +1,45 @@
 (function ($) {
 
-    const changeInputValue = (type, id) => {
+    const changeInputValue = (type, id, image) => {
         // function to change the values of the hidden inputs
         if (type === 'headwear') {
-            $('#headwear').val(id);
+            $('#head_id').val(id);
+            $('#headwear').val(image);
         }
         else if (type === 'bodywear') {
-            $('#bodywear').val(id);
+            $('#body_id').val(id);
+            $('#bodywear').val(image);
         }
         else if (type === 'legwear') {
-            $('#legwear').val(id);
+            $('#leg_id').val(id);
+            $('#legwear').val(image);
         }
         else if (type === 'footwear') {
-            $('#footwear').val(id);
+            $('#foot_id').val(id);
+            $('#footwear').val(image);
         }
     }
 
     // initialize which outfit pieces are displayed and input values
     let initialHead = $("#head").children().first().attr('data-active', 'true');
     let head_id = initialHead[0].children[0].getAttribute('data-id');
-    changeInputValue('headwear', head_id);
+    let head_url = initialHead[0].children[0].getAttribute('src');
+    changeInputValue('headwear', head_id, head_url);
 
     let initialBody = $("#body").children().first().attr('data-active', 'true');
     let body_id = initialBody[0].children[0].getAttribute('data-id');
-    changeInputValue('bodywear', body_id);
+    let body_url = initialBody[0].children[0].getAttribute('src');
+    changeInputValue('bodywear', body_id, body_url);
 
     let initialLeg = $("#leg").children().first().attr('data-active', 'true');
     let leg_id = initialLeg[0].children[0].getAttribute('data-id');
-    changeInputValue('legwear', leg_id);
+    let leg_url = initialLeg[0].children[0].getAttribute('src');
+    changeInputValue('legwear', leg_id, leg_url);
 
     let initialFoot = $("#foot").children().first().attr('data-active', 'true');
     let foot_id = initialFoot[0].children[0].getAttribute('data-id');
-    changeInputValue('footwear', foot_id);
+    let foot_url = initialFoot[0].children[0].getAttribute('src');
+    changeInputValue('footwear', foot_id, foot_url);
 
 
     const findElementWithAttribute = (item, attribute) => {
@@ -64,37 +72,46 @@
             activeSlide.removeAttribute('data-active');
 
             const currentId = newActive.children[0].getAttribute('data-id');
+            const currentUrl = newActive.children[0].getAttribute('src');
             //console.log(currentId);
             const outfitType = button.data('part');
 
-            changeInputValue(outfitType, currentId);
+            changeInputValue(outfitType, currentId, currentUrl);
         }
 
     })
 
     $("#createFitpost").on("submit", (event) => {
-        // TODO: add user id and url fields?
+        $('#error').remove();
+
         let errorCount = 0;
 
         const headwear = $('#headwear').val().trim();
-        if (!headwear) {
+        const head_id = $('#head_id').val().trim();
+        if (!headwear || !head_id) {
             let error = "<div id='error'>Can't create fitpost with no headwear</div>";
-            $('#headwear').after(error);
+            $('#headwear-slider').after(error);
             errorCount++;
         }
-        if (!bodywear) {
+        const bodywear = $('#bodywear').val().trim();
+        const body_id = $('#body_id').val().trim();
+        if (!bodywear || !body_id) {
             let error = "<div id='error'>Can't create fitpost with no top</div>";
-            $('#bodywear').after(error);
+            $('#bodywear-slider').after(error);
             errorCount++;
         }
-        if (!legwear) {
+        const legwear = $('#legwear').val().trim();
+        const leg_id = $('#leg_id').val().trim();
+        if (!legwear || !leg_id) {
             let error = "<div id='error'>Can't create fitpost with no bottoms</div>";
-            $('#legwear').after(error);
+            $('#legwear-slider').after(error);
             errorCount++;
         }
-        if (!footwear) {
+        const footwear = $('#footwear').val().trim();
+        const foot_id = $('#foot_id').val().trim();
+        if (!footwear || !foot_id) {
             let error = "<div id='error'>Can't create fitpost with no footwear</div>";
-            $('#footwear').after(error);
+            $('#footwear-slider').after(error);
             errorCount++;
         }
 

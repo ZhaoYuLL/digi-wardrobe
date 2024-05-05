@@ -25,6 +25,7 @@ router.route('/').get(async (req, res) => {
 
 router.route('/create')
     .get(async (req, res) => {
+        // need to change so that it only gets outfit pieces that the user has in their closet
         try {
             const postsUrls = await addSignedUrlsToPosts();
             //console.log(postsUrls);
@@ -45,7 +46,45 @@ router.route('/create')
 
             res.render('your_page', { title: "Create Fitpost", head: headwear, body: bodywear, leg: legwear, foot: footwear });
         } catch (e) {
-            return res.status(500).json({ error: e.message });
+            return res.status(500).send(e.message);
+        }
+    })
+    .post(async (req, res) => {
+        // TODO: input validation
+        if (req.session && req.session.user) {
+            const data = req.body;
+            const user = req.session.user;
+
+            try {
+                if (!data.headwear) throw new Error('Headwear not provided in route');
+                if (!data.bodywear) throw new Error('Bodywear not provided in route');
+                if (!data.legwear) throw new Error('Legwear not provided in route');
+                if (!data.footwear) throw new Error('Footwear not provided in route');
+                if (!data.head_id) throw new Error('Head_id not provided in route');
+                if (!data.body_id) throw new Error('Body_id not provided in route');
+                if (!data.leg_id) throw new Error('Leg_id not provided in route');
+                if (!data.foot_id) throw new Error('Foot_id not provided in route');
+            } catch (e) {
+                res.status(400).send(e.message);
+            }
+
+            try {
+                let newFitpost = {
+                    user_id: user._id,
+                    headwear: data.headwear,
+                    bodywear: data.bodywear,
+                    legwear: data.legwear,
+                    footwear: data.footwear,
+                    head_id: data.head_id,
+                    body_id: data.body_id,
+                    leg_id: data.leg_id,
+                    foot_id: data.foot_id,
+                }
+
+                const postedFitpost = await fp.createFP()
+            } catch (e) {
+
+            }
         }
     })
 
