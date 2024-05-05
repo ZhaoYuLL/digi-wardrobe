@@ -36,13 +36,17 @@
 				/>
 				<button class="like" id="like-{{this._id}}">Like Button</button>
 				<button class="save" id="save-{{this._id}}">Save Button</button>
-				<p id="like_num">likes: {{likes}}</p>
-				<p id="save_num">saves: {{saves}}</p>
+				<p class="like_num" id="like-{{this._id}}">likes: {{likes}}</p>
+				<p class="save_num" id="save-{{this._id}}">saves: {{saves}}</p>
 				
 				<p>Posted Date: {{postedDate}}</p>
 			</div>
 			{{/each}}
 		</ol>
-  	
+  	<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+     crossorigin="anonymous"></script>
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
 	<script src="../../public/js/explore_page_interactions.js"></script>
 </main>

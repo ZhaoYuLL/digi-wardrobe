@@ -6,7 +6,36 @@ import * as fp from '../../data/fitposts.js';*/
 
 (function ($) {
     const routing = '/fitposts';
+    let likeButtons = $('.like'),
+        saveButtons = $('.save');
+
+  
+
+    likeButtons.on('click', function(event) {
+        event.preventDefault();
+        console.log('like button clicked');
+        let currentId = $(this).attr('id').substring(5);
+        console.log(currentId);
+        let requestConfig = {
+            method: 'POST',
+            url: `${routing}/like`,
+            contentType: 'application/json',
+            data: JSON.stringify({ fitpostId: currentId })
+            };
+
+        $.ajax(requestConfig).then(function (response) { 
+            console.log('this is response', response.likes);
+            //let likenum = $(`.like_num#like-${currentId}`);
+            let likenum = document.querySelector(`.like_num#like-${currentId}`);
+            likenum.innerHTML = `likes: ${response.likes}`;
+            console.log('likenum', likenum);
+
+        });
+    });
+
 })(window.jQuery);
+
+
 
 /*
 document.addEventListener('DOMContentLoaded', function() {

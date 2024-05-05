@@ -117,10 +117,9 @@ router.post('/like', async (req, res) => {
           .json({error: 'There are no fields in the request body'});
     }
     try {
-        console.log('this is id', data.fitpostId);
         const updatedFitpost = await fp.addLike(data.fitpostId);
-        //res.status(200).json(updatedFitpost);
-        res.redirect('back');
+        res.status(200).json(updatedFitpost);
+        //res.redirect('back');
     } catch (error) {
         console.error(error);
         res.status(500).send(error);
@@ -130,7 +129,6 @@ router.post('/like', async (req, res) => {
 // POST route for handling save action
 router.post('/save', async (req, res) => {
     const data = req.body;
-    console.log('thisisdata', data);
     if (!data || Object.keys(data).length === 0) {
         return res
           .status(400)

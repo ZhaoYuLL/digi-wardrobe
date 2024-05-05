@@ -88,10 +88,7 @@ const addLike= async(id) => {
   // replaces ObjectId with string
   fp._id = fp._id.toString();
 
-  // remove later
-  console.log(fp);
 
-  //return fp;
 
   const updatePost = {
     likes: fp.likes + 1
@@ -122,10 +119,7 @@ const addSave= async(id) => {
   // replaces ObjectId with string
   fp._id = fp._id.toString();
 
-  // remove later
-  console.log(fp);
-
-  //return fp;
+ 
 
   const updatePost = {
     saves: fp.saves + 1
