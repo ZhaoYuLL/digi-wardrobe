@@ -200,7 +200,7 @@ const addUserFavorites = async (userId, fitpostId) => {
     userFavorites.push(fitpostId);
 
     updatedFavorites = {
-        closet: userFavorites
+        favorite: userFavorites
     };
     const userCollection = await users();
     const updateInfo = await userCollection.findOneAndUpdate(
@@ -223,7 +223,7 @@ const deleteUserFavorite = async (userId, fitpostId) => {
     }
 
     updatedFavorites = {
-        closet: userFavorites
+        favorite: userFavorites
     };
     const userCollection = await users();
     const updateInfo = await userCollection.findOneAndUpdate(

@@ -111,15 +111,17 @@ const addLike = async (id) => {
 
 }
 
-
-
 const createFP = async (
   user_id,
   username,
   headwear,
   bodywear,
   legwear,
-  footwear
+  footwear,
+  head_id,
+  body_id,
+  leg_id,
+  foot_id,
 ) => {
   // find a way to validate these ids
   user_id = validString(user_id);
@@ -128,10 +130,13 @@ const createFP = async (
   bodywear = validString(bodywear);
   legwear = validString(legwear);
   footwear = validString(footwear);
+  head_id = validString(head_id);
+  body_id = validString(body_id);
+  leg_id = validString(leg_id);
+  foot_id = validString(foot_id);
 
   let likes = 0;
   let saves = 0;
-
 
   let date = new Date();
 
@@ -144,6 +149,10 @@ const createFP = async (
     bodywear,
     legwear,
     footwear,
+    head_id,
+    body_id,
+    leg_id,
+    foot_id,
     likes,
     saves
   };
@@ -158,7 +167,6 @@ const createFP = async (
   const fp = await searchByFPID(newId);
   return fp;
   //return newProduct;
-
 }
 
 export { getAll, latest, trending, searchByUID, searchByFPID, createFP }
