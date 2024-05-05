@@ -139,6 +139,7 @@ const loginUser = async (username, password) => {
     if (!match) throw new Error(`Either the username or password is invalid`);
 
     const userInfo = {
+        userId: foundUser._id, // Include userId in the returned userInfo object
         firstName: foundUser.firstName,
         lastName: foundUser.lastName,
         username: foundUser.username,

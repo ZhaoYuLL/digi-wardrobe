@@ -40,3 +40,29 @@ img {
   width: 200px;
   height: auto;
 }
+
+.outfit-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.outfit {
+  margin: 10px;
+}
+
+.outfit img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.outfit-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* makes preview horizontal */
+.preview-content-closet {
+  display: flex;
+  flex-direction: row;
+}
