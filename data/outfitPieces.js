@@ -55,3 +55,12 @@ export const deleteImage = async (imageName) => {
 	const outfitPiecesCollection = await outfitPieces();
 	await outfitPiecesCollection.deleteOne({ imageName: imageName });
 };
+
+export const getOutfitPiecesByUserId = async (user_id) => {
+	// get all outfit pieces owned by user
+	const outfitPiecesCollection = await outfitPieces();
+	const userOutfitPieces = outfitPiecesCollection.find({ user_id: user_id }).toArray();
+	if (!userOutfitPieces) throw new Error(`Error getting outfit pieces for user ${user_id}`);
+
+	return userOutfitPieces;
+}
