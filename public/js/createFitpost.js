@@ -4,7 +4,6 @@
         // function to change the values of the hidden inputs
         if (type === 'headwear') {
             $('#headwear').val(id);
-            console.log($('#headwear'));
         }
         else if (type === 'bodywear') {
             $('#bodywear').val(id);
@@ -23,7 +22,6 @@
     changeInputValue('headwear', head_id);
 
     let initialBody = $("#body").children().first().attr('data-active', 'true');
-    console.log(initialBody[0].children[0]);
     let body_id = initialBody[0].children[0].getAttribute('data-id');
     changeInputValue('bodywear', body_id);
 
@@ -75,6 +73,7 @@
     })
 
     $("#createFitpost").on("submit", (event) => {
+        // TODO: add user id and url fields?
         let errorCount = 0;
 
         const headwear = $('#headwear').val().trim();
