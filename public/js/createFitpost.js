@@ -23,22 +23,22 @@
     // initialize which outfit pieces are displayed and input values
     let initialHead = $("#head").children().first().attr('data-active', 'true');
     let head_id = initialHead[0].children[0].getAttribute('data-id');
-    let head_url = initialHead[0].children[0].getAttribute('src');
+    let head_url = initialHead[0].children[0].getAttribute('data-name');
     changeInputValue('headwear', head_id, head_url);
 
     let initialBody = $("#body").children().first().attr('data-active', 'true');
     let body_id = initialBody[0].children[0].getAttribute('data-id');
-    let body_url = initialBody[0].children[0].getAttribute('src');
+    let body_url = initialBody[0].children[0].getAttribute('data-name');
     changeInputValue('bodywear', body_id, body_url);
 
     let initialLeg = $("#leg").children().first().attr('data-active', 'true');
     let leg_id = initialLeg[0].children[0].getAttribute('data-id');
-    let leg_url = initialLeg[0].children[0].getAttribute('src');
+    let leg_url = initialLeg[0].children[0].getAttribute('data-namec');
     changeInputValue('legwear', leg_id, leg_url);
 
     let initialFoot = $("#foot").children().first().attr('data-active', 'true');
     let foot_id = initialFoot[0].children[0].getAttribute('data-id');
-    let foot_url = initialFoot[0].children[0].getAttribute('src');
+    let foot_url = initialFoot[0].children[0].getAttribute('data-name');
     changeInputValue('footwear', foot_id, foot_url);
 
 
@@ -72,7 +72,7 @@
             activeSlide.removeAttribute('data-active');
 
             const currentId = newActive.children[0].getAttribute('data-id');
-            const currentUrl = newActive.children[0].getAttribute('src');
+            const currentUrl = newActive.children[0].getAttribute('data-name');
             //console.log(currentId);
             const outfitType = button.data('part');
 

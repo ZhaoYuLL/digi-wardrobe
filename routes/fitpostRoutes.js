@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as fp from '../data/fitposts.js';
-import { validString, addSignedUrlsToFitPosts_in_fitposts, convertDate } from '../helper.js';
+import { validString, addSignedUrlsToFitPosts_in_fitposts, convertDate, addSignedUrlsToPosts } from '../helper.js';
 // import { addSignedUrlsToFitPosts_in_wardrobe } from "../helper.js";
 
 
@@ -69,21 +69,9 @@ router.route('/create')
             }
 
             try {
-                let newFitpost = {
-                    user_id: user._id,
-                    headwear: data.headwear,
-                    bodywear: data.bodywear,
-                    legwear: data.legwear,
-                    footwear: data.footwear,
-                    head_id: data.head_id,
-                    body_id: data.body_id,
-                    leg_id: data.leg_id,
-                    foot_id: data.foot_id,
-                }
-
-                const postedFitpost = await fp.createFP()
+                const newFitpost = await fp.createFP(user._id, user.username, data.headwear, data.bodywear, legwear, footwear);
             } catch (e) {
-
+                res.status(500).send(e.message);
             }
         }
     })
