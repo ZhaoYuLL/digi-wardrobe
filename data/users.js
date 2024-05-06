@@ -236,4 +236,29 @@ const deleteUserFavorite = async (userId, fitpostId) => {
     return updateInfo.favorite;
 }
 
-export { getAllUsers, getUserById, createUser, updateUserInfo, deleteUser, loginUser };
+
+const checkLike = async(userId, fpId) => {
+    const user = await getUserById(userId);
+    if (user) {
+        return user.favorite.includes(fpId);
+    }
+    else {
+        return false;
+    }
+}
+
+/*const checkSave = async(userId, fpId, wardrobeId) => {
+    const user = await getUserById(userId);
+    if (user) {
+        for (drobe of user.wardrobes) {
+            if (drobe._id === wardrobeId){
+                return (drobe.)
+            }
+        }
+    }
+    return false;
+}*/
+
+
+
+export { getAllUsers, getUserById, createUser, updateUserInfo, deleteUser, loginUser, checkLike };

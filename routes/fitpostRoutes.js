@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import * as fp from '../data/fitposts.js';
+import * as user from '../data/users.js';
+
 import {validString, addSignedUrlsToFitPosts_in_fitposts, convertDate} from '../helper.js';
 // import { addSignedUrlsToFitPosts_in_wardrobe } from "../helper.js";
 

@@ -109,6 +109,37 @@ const addLike= async(id) => {
 }
 
 
+const removeLike= async(id) => {
+ 
+  id = validString(id);
+  const fitpostCollection = await fitposts();
+  const fp = await fitpostCollection.findOne({_id: new ObjectId(id)});
+  if (fp === null) throw 'No fitpost with that id';
+
+  // replaces ObjectId with string
+  fp._id = fp._id.toString();
+
+
+
+  const updatePost = {
+    likes: fp.likes - 1
+  }
+
+  const updatedInfo = await fitpostCollection.findOneAndUpdate(
+    {_id: new ObjectId(id)},
+    {$set: updatePost},
+    {returnDocument: 'after'}
+  );
+
+  if (!updatedInfo) {
+    throw 'could not update successfully';
+  }
+  updatedInfo._id = updatedInfo._id.toString();
+  return updatedInfo;
+
+}
+
+
 const addSave= async(id) => {
  
   id = validString(id);
@@ -191,4 +222,4 @@ const createFP = async (
   
   }
 
-export{getAll, latest, trending, searchByUID, searchByFPID, createFP, addLike, addSave}
+export{getAll, latest, trending, searchByUID, searchByFPID, createFP, addLike, addSave, removeLike}
