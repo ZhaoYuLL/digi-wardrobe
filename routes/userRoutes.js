@@ -139,6 +139,38 @@ router.delete("/fitposts/:id", async (req, res) => {
   }
 });
 
+router.post("/userprofile/update-fitpost", function (req, res) {
+  var fitpostId = req.body.fitpostId;
+  var headwearSelect = req.body.headwearSelect;
+  var bodywearSelect = req.body.bodywearSelect;
+  var legwearSelect = req.body.legwearSelect;
+  var footwearSelect = req.body.footwearSelect;
+
+  console.log("head: ", headwearSelect);
+  console.log("id: ", fitpostId);
+
+  // Perform the update operation in your database
+  // Example using Mongoose:
+  //   Fitpost.findByIdAndUpdate(
+  //     fitpostId,
+  //     {
+  //       headwear: headwearSelect,
+  //       bodywear: bodywearSelect,
+  //       legwear: legwearSelect,
+  //       footwear: footwearSelect,
+  //     },
+  //     { new: true },
+  //     function (err, updatedFitpost) {
+  //       if (err) {
+  //         console.error("Error updating fitpost:", err);
+  //         res.status(500).json({ error: "Failed to update fitpost" });
+  //       } else {
+  //         res.json(updatedFitpost);
+  //       }
+  //     }
+  //   );
+});
+
 router.route("/logout").get(async (req, res) => {
   //code here for GET
   req.session.destroy();
