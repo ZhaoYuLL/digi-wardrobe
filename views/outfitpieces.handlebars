@@ -1,7 +1,7 @@
 {{! POST request to upload a single file }}
 <form id="createOutfitPiece" action="/outfitpieces" method="POST" enctype="multipart/form-data">
 	<label for="image">Upload an image of your clothing item: </label>
-	<input type="file" id="image" name="image" accept="image/*" />
+	<input type="file" id="image" name="image" accept="image/*">
 	<label for="outfitType">Select clothing type: </label>
 	<select id="outfitType" name="outfitType">
 		<option value="headwear">Headwear</option>
@@ -10,9 +10,9 @@
 		<option value="footwear">Footwear</option>
 	</select>
 	<label for="caption">Description: </label>
-	<input type="text" id="caption" name="caption" placeholder="Write a description!">
+	<input type="text" id="caption" name="caption" placeholder="Write a description!" required>
 	<label for="link">Where did you get your clothing item from?</label>
-	<input type="text" id="link" name="link" placeholder="Clothing source link" />
+	<input type="text" id="link" name="link" placeholder="Clothing source link">
 	<button type="submit">Submit</button>
 </form>
 

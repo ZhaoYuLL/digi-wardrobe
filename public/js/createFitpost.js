@@ -99,28 +99,36 @@
         let errorCount = 0;
 
         const headwear = $('#headwear').val().trim();
+        headwear = validString(headwear);
         const head_id = $('#head_id').val().trim();
+        head_id = validString(head_id);
         if (!headwear || !head_id) {
             let error = "<div id='error'>Can't create fitpost with no headwear</div>";
             $('#headwear-slider').after(error);
             errorCount++;
         }
         const bodywear = $('#bodywear').val().trim();
+        bodywear = validString(bodywear);
         const body_id = $('#body_id').val().trim();
+        body_id = validString(body_id);
         if (!bodywear || !body_id) {
             let error = "<div id='error'>Can't create fitpost with no top</div>";
             $('#bodywear-slider').after(error);
             errorCount++;
         }
         const legwear = $('#legwear').val().trim();
+        legwear = validString(legwear);
         const leg_id = $('#leg_id').val().trim();
+        leg_id = validString(leg_id);
         if (!legwear || !leg_id) {
             let error = "<div id='error'>Can't create fitpost with no bottoms</div>";
             $('#legwear-slider').after(error);
             errorCount++;
         }
         const footwear = $('#footwear').val().trim();
+        footwear = validString(footwear);
         const foot_id = $('#foot_id').val().trim();
+        foot_id = validString(foot_id);
         if (!footwear || !foot_id) {
             let error = "<div id='error'>Can't create fitpost with no footwear</div>";
             $('#footwear-slider').after(error);
