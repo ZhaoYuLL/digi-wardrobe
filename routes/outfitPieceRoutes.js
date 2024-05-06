@@ -9,6 +9,7 @@ import {
 	addSignedUrlsToPosts,
 	uploadImageToS3,
 	deleteImageFromS3,
+	validString
 } from "../helper.js";
 // importing database manipulation functions
 import {
@@ -17,6 +18,7 @@ import {
 	getAllImages,
 	deleteImage,
 } from "../data/outfitPieces.js";
+import xss from 'xss';
 
 const router = Router();
 
@@ -37,7 +39,7 @@ router
 			//is just a temp place to display the images
 			//moidfy outfitpieces.handlebars to change what's sent
 			if (req.session.user) {
-				console.log("hi");
+				//console.log("hi");
 				console.log("user:", req.session.user);
 			} else {
 				console.log("no user");
@@ -50,8 +52,32 @@ router
 	})
 	//upload.single uploads a single image
 	.post(upload.single("image"), async (req, res) => {
+		if (!req.session || req.session.user) {
+			res.status(500).send("Not logged in");
+		}
+
 		const imageName = await generateFileName();
 		const img = await uploadImageToS3(req.file, 1920, 1080, imageName);
+
+		let data = req.body;
+		try {
+			data.caption = validString(data.caption);
+			data.caption = xss(data.caption);
+		} catch (e) {
+			res.status(400).send(e);
+		}
+		try {
+			data.link = validString(data.link);
+			data.link = xss(data.link);
+		} catch (e) {
+			res.status(400).send(e);
+		}
+		try {
+			data.outfitType = validString(data.outfitType);
+			data.outfitType = xss(data.outfitType);
+		} catch (e) {
+			res.status(400).send(e);
+		}
 
 		const post = await storeImage(
 			req.body.caption,
@@ -60,7 +86,7 @@ router
 			imageName,
 			req.session.user.username
 		);
-		res.redirect("/outfitpieces");
+		res.redirect("/fitposts/create");
 	});
 router.route("/:imageName").delete(async (req, res) => {
 	try {
