@@ -87,36 +87,36 @@ router.get("/favorites", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-router.post("/create-fitpost", async (req, res) => {
-  try {
-    const selectedOutfits = JSON.parse(req.body.msg);
-    console.log("Received selected outfits:", selectedOutfits);
+// router.post("/create-fitpost", async (req, res) => {
+//   try {
+//     const selectedOutfits = JSON.parse(req.body.msg);
+//     console.log("Received selected outfits:", selectedOutfits);
 
-    // Extract the outfit data from the selectedOutfits object
-    const { foot, body, leg, head } = selectedOutfits;
+//     // Extract the outfit data from the selectedOutfits object
+//     const { foot, body, leg, head } = selectedOutfits;
 
-    console.log("foot", foot);
-    console.log("body", body);
-    console.log("leg", leg);
-    console.log("head", head);
+//     console.log("foot", foot);
+//     console.log("body", body);
+//     console.log("leg", leg);
+//     console.log("head", head);
 
-    // Call the createFP function with the received data
-    const newFitpost = await createFP(
-      "user123", // Replace with the actual user ID
-      "johndoe", // Replace with the actual username
-      head,
-      body,
-      leg,
-      foot
-    );
+//     // Call the createFP function with the received data
+//     const newFitpost = await createFP(
+//       "user123", // Replace with the actual user ID
+//       "johndoe", // Replace with the actual username
+//       head,
+//       body,
+//       leg,
+//       foot
+//     );
 
-    // Send a success response back to the client as JSON
-    res.json({ message: "Fitpost created successfully", fitpost: newFitpost });
-  } catch (error) {
-    console.error("Error creating fitpost:", error);
-    res
-      .status(500)
-      .json({ message: "Error creating fitpost", error: error.message });
-  }
-});
+//     // Send a success response back to the client as JSON
+//     res.json({ message: "Fitpost created successfully", fitpost: newFitpost });
+//   } catch (error) {
+//     console.error("Error creating fitpost:", error);
+//     res
+//       .status(500)
+//       .json({ message: "Error creating fitpost", error: error.message });
+//   }
+// });
 export default router;

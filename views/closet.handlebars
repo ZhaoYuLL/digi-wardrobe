@@ -7,11 +7,16 @@
     <li><a href="./favorites">Favorites</a></li>
   </ul>
 </nav>
+
+{{!--
 <form action="/index/create-fitpost" method="post">
   <input type="hidden" name="msg" id="msgInput" />
   <button type="submit" id="sendToServerButton">Send to Server</button>
 </form>
+--}}
+
 <div class="outfits">
+  {{!--
   <div class="outfit-previews">
     <div class="preview-content-closet">
       <p>Selected Outfits:</p>
@@ -37,6 +42,7 @@
       </div>
     </div>
   </div>
+  --}}
 
   <div class="outfit-list">
     <!-- Outfit list will be populated dynamically -->
@@ -48,6 +54,7 @@
 
       var currentIndex = {};
 
+
       document.addEventListener("DOMContentLoaded", function () {
         // Initialize currentIndex for each outfit type
         var outfitTypes = Array.from(new Set(outfitpieces.map(outfit => outfit.outfitType)));
@@ -55,6 +62,7 @@
           currentIndex[type] = 0;
         });
 
+        /*
         var nextButtons = document.getElementsByClassName("next-button");
         for (var i = 0; i < nextButtons.length; i++) {
           nextButtons[i].addEventListener("click", nextOutfit);
@@ -64,11 +72,13 @@
         for (var i = 0; i < prevButtons.length; i++) {
           prevButtons[i].addEventListener("click", previousOutfit);
         }
-        var sendToServerButton = document.getElementById("sendToServerButton");
-        sendToServerButton.addEventListener("click", sendOutfitsToServer);
+        */
+        //var sendToServerButton = document.getElementById("sendToServerButton");
+        //sendToServerButton.addEventListener("click", sendOutfitsToServer);
 
-        updateOutfitPreviews();
+        //updateOutfitPreviews();
         populateOutfitList();
+
       });
 
       function nextOutfit(event) {
@@ -125,6 +135,6 @@
     console.log("Selected Outfits:", selectedOutfits);
 
     // Set the value of the hidden input field
-    document.getElementById("msgInput").value = JSON.stringify(selectedOutfits);
+    //document.getElementById("msgInput").value = JSON.stringify(selectedOutfits);
   }
 </script>
