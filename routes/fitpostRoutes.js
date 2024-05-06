@@ -123,11 +123,13 @@ router.post('/like', async (req, res) => {
     try {
         // like or unlike
         let updatedFitpost;
-        
+
         if (await user.checkLike(userId, data.fitpostId)) {
+            await user.removeLike(userId, data.fitpostId);
             updatedFitpost = await fp.removeLike(data.fitpostId);
         }
         else {
+            await user.addLike(userId, data.fitpostId);
             updatedFitpost = await fp.addLike(data.fitpostId);
         }
         res.status(200).json(updatedFitpost);

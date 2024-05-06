@@ -280,6 +280,36 @@ const addLike= async(userId, fpId) => {
   
   }
 
+  const removeLike = async (userId, fpId) => {
+    const userCollection = await users();
+    const user = await userCollection.findOne({ _id: new ObjectId(userId) });
+
+    if (user === null) throw 'No user with that id';
+
+    const index = user.favorite.indexOf(fpId);
+    if (index === -1) throw 'Fitpost not found in favorites';
+
+    user.favorite.splice(index, 1); 
+
+    const updateUser = {
+        favorite: user.favorite
+    };
+
+    const updatedInfo = await userCollection.findOneAndUpdate(
+        { _id: new ObjectId(userId) },
+        { $set: updateUser },
+        { returnDocument: 'after' }
+    );
+
+    if (!updatedInfo) {
+        throw 'Could not update user successfully';
+    }
+
+    updatedInfo._id = updatedInfo._id.toString();
+    return updatedInfo;
+};
+
+
 /*const checkSave = async(userId, fpId, wardrobeId) => {
     const user = await getUserById(userId);
     if (user) {
@@ -294,4 +324,4 @@ const addLike= async(userId, fpId) => {
 
 
 
-export { getAllUsers, getUserById, createUser, updateUserInfo, deleteUser, loginUser, checkLike };
+export { getAllUsers, getUserById, createUser, updateUserInfo, deleteUser, loginUser, checkLike, addLike, removeLike };
