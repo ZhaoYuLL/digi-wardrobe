@@ -301,7 +301,7 @@ export const checkIsProperString = (str, variableName) => {
 	for (let i = 0; i < fields.length; i++) {
 	  const check = stringTrimmer(fields[i]);
 	  fields[i] = check;
-	  checkIsProperString(check);
+	  checkIsProperString(check, check);
 	  checkIsProperLength(check, 1);
 	}
   };

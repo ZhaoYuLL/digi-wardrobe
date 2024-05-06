@@ -16,17 +16,25 @@ const getAllUsers = async () => {
 
 const getUserById = async (id) => {
     // TODO: validate id parameter
+    if (!ObjectId.isValid(id)) {
+        throw 'Invalid ObjectId';
+    }
     const userCollection = await users();
     const user = await userCollection.findOne({ _id: new ObjectId(id) }, { projection: { password: 0 } });
-    // if (!user) throw new Error(`Error getting user with id: ${id}`);
+    // if (!user) throw `Error getting user with id: ${id}`;
     return user;
 }
 
 const getUserByUsername = async (username) => {
     // Made this to check if a username already exists
     // TODO: validate username parameter
+    username = username.trim();
+    checkRequiredFields(
+		username
+	);
+    const lowercaseUsername = username.toLowerCase();
     const userCollection = await users();
-    const user = await userCollection.findOne({ username: username });
+    const user = await userCollection.findOne({ username: lowercaseUsername });
     // if (!user) throw new Error(`Error getting user with username: ${username}`);
     return user;
 }
@@ -34,8 +42,13 @@ const getUserByUsername = async (username) => {
 const getUserByEmail = async (email) => {
     // Made this to check if an account with the given email already exists
     // TODO: validate email parameter
+    email = email.trim();
+    checkRequiredFields(
+		email
+	);
+    const lowercaseEmail = email.toLowerCase();
     const userCollection = await users();
-    const user = await userCollection.findOne({ email: email });
+    const user = await userCollection.findOne({ email: lowercaseEmail });
     // if (!user) throw new Error(`Error getting user with email: ${email}`);
     return user;
 }
@@ -53,21 +66,30 @@ export const passwordMatch = async (input, hash) => {
     return match;
 }
 
-const createUser = async (username, firstName, lastName, age, email, password) => {
+const createUser = async (username, firstName, lastName, age, email, password, bio) => {
     // TODO: validate all parameters
-    const lowercaseUsername = username.toLowerCase();
-    const userExists = await getUserByUsername(lowercaseUsername);
-    if (userExists) throw `User with username ${username} already exists`;
+    console.log(firstName);
+    console.log(username);
+    console.log(lastName);
+    console.log(age);
+    console.log(email);
+    console.log(password);
 
-    const emailExists = await getUserByEmail(email);
-    // console.log(emailExists)
-    if (emailExists) throw `User with email ${email} already exists`;
+
     firstName = firstName.trim();
 	lastName = lastName.trim();
 	username = username.trim();
 	password = password.trim();
     email = email.trim();
     age = age.trim();
+
+    console.log(firstName);
+    console.log(username);
+    console.log(lastName);
+    console.log(age);
+    console.log(email);
+    console.log(password);
+
     checkRequiredFields(
 		firstName,
 		lastName,
@@ -84,6 +106,14 @@ const createUser = async (username, firstName, lastName, age, email, password) =
 		age, 
         email,
 	);
+    const lowercaseUsername = username.toLowerCase();
+    const userExists = await getUserByUsername(lowercaseUsername);
+    if (userExists) throw `User with username ${username} already exists`;
+    const lowercaseEmail = email.toLowerCase();
+
+    const emailExists = await getUserByEmail(lowercaseEmail);
+    // console.log(emailExists)
+    if (emailExists) throw `User with email ${email} already exists`;
     isValidEmail(email); 
     isValidPassword(password);
     isValidAge(age);
@@ -94,8 +124,9 @@ const createUser = async (username, firstName, lastName, age, email, password) =
         firstName: firstName,
         lastName: lastName,
         age: age,
-        email: email,
+        email: lowercaseEmail,
         password: passwordHash,
+        bio: bio,
         wardrobes: [],
         closet: [],
         favorite: [],
@@ -112,32 +143,46 @@ const updateUserInfo = async (id, userInfo) => {
     // Assuming wardrobes, closet, and favorites will be edited in a different file
     // TODO: input validation
     const changes = {};
-
+    if (!ObjectId.isValid(id)) {
+        throw new Error('Invalid ObjectId');
+    }
     if (userInfo.username) {
         // TODO: validate username
-        const userExists = await getUserByUsername(userInfo.username);
+        const newUsername = userInfo.username.trim().toLowerCase();
+        checkIfFieldsAreProperString(newUsername);        
+        const userExists = await getUserByUsername(newUsername);
         if (userExists) throw `User with username ${userInfo.username} already exists`;
         changes['username'] = userInfo.username;
     }
     if (userInfo.firstName) {
         // TODO: validate first name
-        changes['firstName'] = userInfo.firstName;
+        const newFirst = userInfo.firstName.trim();
+        checkIfFieldsAreProperString(newFirst); 
+        changes['firstName'] = newFirst;
     }
     if (userInfo.lastName) {
         // TODO: validate last name
-        changes['lastName'] = userInfo.lastName;
+        const newLast = userInfo.firstLast.trim();
+        checkIfFieldsAreProperString(newLast); 
+        changes['lastName'] = newLast;
     }
     if (userInfo.age) {
         // TODO: validate age
-        changes['age'] = userInfo.age;
+        const newAge = userInfo.age.trim(); 
+        isValidAge(newAge);
+        changes['age'] = newAge;
     }
     if (userInfo.email) {
         // TODO: validate email
-        changes['email'] = userInfo.email;
+        const newEmail = userInfo.email.trim();
+        isValidEmail(newEmail);
+        changes['email'] = userInfo.newEmail;
     }
     if (userInfo.password) {
         // TODO: validate password
-        const hash = passwordHelper(userInfo.password);
+        const newPassword = userInfo.password.trim();
+        checkIfFieldsAreProperString(newPassword);
+        const hash = passwordHelper(newPassword);
         changes['password'] = hash;
     }
 
@@ -154,6 +199,9 @@ const updateUserInfo = async (id, userInfo) => {
 
 const deleteUser = async (id) => {
     // TODO: validate id and that a user with that id exists
+    if (!ObjectId.isValid(id)) {
+        throw new Error('Invalid ObjectId');
+    }
     const userCollection = await users();
     const deletionInfo = await userCollection.findOneAndDelete({
         _id: new ObjectId(id)
@@ -184,13 +232,19 @@ const loginUser = async (username, password) => {
         username: foundUser.username,
         wardrobes: foundUser.wardrobes,
         closet: foundUser.closet,
-        favorite: foundUser.favorite
+        favorite: foundUser.favorite, 
+        bio: foundUser.bio
     }
     return userInfo;
 }
 
 const addUserOutfitPiece = async (outfitPieceId, userId) => {
-    // TODO: validate inputs
+    if (!ObjectId.isValid(userId)) {
+        throw new Error('Invalid User Id');
+    }
+    if (!ObjectId.isValid(outfitPieceId)) {
+        throw new Error('Invalid outfitPieceId');
+    }
     const user = await getUserById(userId);
     let userCloset = user.closet;
     userCloset.push(outfitPieceId);
@@ -210,7 +264,12 @@ const addUserOutfitPiece = async (outfitPieceId, userId) => {
 }
 
 const deleteUserOutfitPiece = async (outfitPieceId, userId) => {
-    // TODO: validate inputs
+    if (!ObjectId.isValid(userId)) {
+        throw new Error('Invalid User Id');
+    }
+    if (!ObjectId.isValid(outfitPieceId)) {
+        throw new Error('Invalid outfitPieceId');
+    }
     const user = await getUserById(userId);
     let userCloset = user.closet;
     const index = userCloset.indexOf(outfitPieceId);
@@ -233,7 +292,12 @@ const deleteUserOutfitPiece = async (outfitPieceId, userId) => {
 }
 
 const addUserFavorites = async (userId, fitpostId) => {
-    // TODO: validate inputs
+    if (!ObjectId.isValid(userId)) {
+        throw new Error('Invalid User Id');
+    }
+    if (!ObjectId.isValid(fitpostId)) {
+        throw new Error('Invalid fitpost Id');
+    }
     const user = await getUserById(userId);
     let userFavorites = user.favorite;
     userFavorites.push(fitpostId);
@@ -253,7 +317,12 @@ const addUserFavorites = async (userId, fitpostId) => {
 }
 
 const deleteUserFavorite = async (userId, fitpostId) => {
-    // TODO: validate inputs
+    if (!ObjectId.isValid(userId)) {
+        throw new Error('Invalid User Id');
+    }
+    if (!ObjectId.isValid(fitpostId)) {
+        throw new Error('Invalid fitpost Id');
+    }
     const user = await getUserById(userId);
     let userFavorites = user.favorite;
     const index = userFavorites.indexOf(fitpostId);
@@ -277,6 +346,12 @@ const deleteUserFavorite = async (userId, fitpostId) => {
 
 
 const checkLike = async(userId, fpId) => {
+    if (!ObjectId.isValid(userId)) {
+        throw new Error('Invalid User Id');
+    }
+    if (!ObjectId.isValid(fpId)) {
+        throw new Error('Invalid fitpost Id');
+    }
     const user = await getUserById(userId);
     if (user) {
         return user.favorite.includes(fpId);
@@ -289,7 +364,12 @@ const checkLike = async(userId, fpId) => {
 
 
 const addLike= async(userId, fpId) => {
-
+    if (!ObjectId.isValid(userId)) {
+        throw new Error('Invalid User Id');
+    }
+    if (!ObjectId.isValid(fpId)) {
+        throw new Error('Invalid fitpost Id');
+    }
     const userCollection = await users();
     const user = await userCollection.findOne({_id: new ObjectId(userId)});
 
@@ -320,6 +400,12 @@ const addLike= async(userId, fpId) => {
   }
 
   const removeLike = async (userId, fpId) => {
+    if (!ObjectId.isValid(userId)) {
+        throw new Error('Invalid User Id');
+    }
+    if (!ObjectId.isValid(fpId)) {
+        throw new Error('Invalid fitpost Id');
+    }
     const userCollection = await users();
     const user = await userCollection.findOne({ _id: new ObjectId(userId) });
 
