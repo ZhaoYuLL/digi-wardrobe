@@ -4,16 +4,13 @@
     <meta charset="utf-8" />
     <title>{{title}}</title>
     <link rel="stylesheet" href="/public/css/style.css" />
+    {{> navigation}}
   </head>
 
   <body>
-    <header>
-      {{> navigation}}
-      <p>I'm a header</p>
-    </header>
-
-    <p>I will be on every page of the site</p>
     <main>{{{body}}}</main>
-    <footer>I'm a footer</footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    {{#if script_partial}} {{> (lookup. "script_partial")}} {{/if}}
   </body>
 </html>

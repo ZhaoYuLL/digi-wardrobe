@@ -85,7 +85,7 @@
           if (outfits.length > 0) {
             var selectedOutfit = outfits[currentIndex[type]];
             var imageUrl = selectedOutfit.imageUrl;
-            var imageTag = '<img width="200px;" height="200px" src="' + imageUrl + '" alt="Outfit Image">';
+            var imageTag = '<img style="width: 200px; height: 200px" src="' + imageUrl + '" alt="Outfit Image">';
             document.querySelector(`.preview-outfit[data-type="${type}"]`).innerHTML = imageTag;
           }
         });
@@ -98,7 +98,7 @@
           outfitDiv.className = "outfit";
           outfitDiv.setAttribute("data-type", outfit.outfitType);
           outfitDiv.innerHTML = `
-            <img src="${outfit.imageUrl}" width="200px;" height="200px" alt="Outfit Image" margin="100px" />
+            <img src="${outfit.imageUrl}" style="width: 200px; height: 200px" alt="Outfit Image" margin="100px" />
             <p style="display: none;" data-image-name="${outfit._id}"></p>
           `;
           outfitList.appendChild(outfitDiv);

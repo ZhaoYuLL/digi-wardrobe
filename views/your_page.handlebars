@@ -1,0 +1,67 @@
+<h1>My Page</h1>
+
+<h2>Create a Fitpost</h2>
+<form id="createFitpost" method="POST" action="/fitposts/create">
+    <label for="headwear">Headwear</label>
+    <div id="headwear-slider">
+        <button type="button" class="slide-button" data-id="prev" data-part="headwear">Prev</button>
+        <button type="button" class="slide-button" data-id="next" data-part="headwear">Next</button>
+        <ul id="head">
+            {{#each head}}
+            <li class="slide">
+                <img data-id="{{_id}}" src="{{imageUrl}}" data-name="{{imageName}}">
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+    <input type="hidden" id="headwear" name="headwear" value="">
+    <input type="hidden" id="head_id" name="head_id" value="">
+    <label for="bodywear">Bodywear</label>
+    <div id="bodywear-slider">
+        <button type="button" class="slide-button" data-id="prev" data-part="bodywear">Prev</button>
+        <button type="button" class="slide-button" data-id="next" data-part="bodywear">Next</button>
+        <ul id="body">
+            {{#each body}}
+            <li class="slide">
+                <img data-id="{{this._id}}" src="{{this.imageUrl}}" data-name="{{imageName}}">
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+    <input type="hidden" id="bodywear" name="bodywear" value="">
+    <input type="hidden" id="body_id" name="body_id" value="">
+    <label for="legwear">Legwear</label>
+    <div id="legwear-slider">
+        <button type="button" class="slide-button" data-id="prev" data-part="legwear">Prev</button>
+        <button type="button" class="slide-button" data-id="next" data-part="legwear">Next</button>
+        <ul id="leg">
+            {{#each leg}}
+            <li class="slide">
+                <img data-id="{{this._id}}" src="{{this.imageUrl}}" data-name="{{imageName}}">
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+    <input type="hidden" id="legwear" name="legwear" value="">
+    <input type="hidden" id="leg_id" name="leg_id" value="">
+    <label for="footwear">Footwear</label>
+    <div id="footwear-slider">
+        <button type="button" class="slide-button" data-id="prev" data-part="footwear">Prev</button>
+        <button type="button" class="slide-button" data-id="next" data-part="footwear">Next</button>
+        <ul id="foot">
+            {{#each foot}}
+            <li class="slide">
+                <img data-id="{{this._id}}" src="{{this.imageUrl}}" data-name="{{imageName}}">
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+    <input type="hidden" id="footwear" name="footwear" value="">
+    <input type="hidden" id="foot_id" name="foot_id" value="">
+    <button type="submit">Create Fitpost</button>
+</form>
+
+<a href="/outfitpieces">Upload Clothes</a>
+<a href="/index/wardrobe">My Wardrobe</a>
+<a href="/index/closet">My Closet</a>
+<a href="/favorites">My Favorites</a>

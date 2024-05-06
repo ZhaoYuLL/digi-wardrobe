@@ -28,6 +28,19 @@
   margin-right: 20px;
 }
 
+.slide {
+  display: none;
+}
+
+.slide[data-active] {
+  display: block;
+}
+
+img {
+  width: 200px;
+  height: auto;
+}
+
 .outfit-list {
   display: flex;
   flex-wrap: wrap;
@@ -42,6 +55,7 @@
   height: 200px;
   object-fit: cover;
 }
+
 .outfit-list {
   display: flex;
   flex-wrap: wrap;
@@ -88,4 +102,3 @@
   text-decoration: none;
   cursor: pointer;
 }
-

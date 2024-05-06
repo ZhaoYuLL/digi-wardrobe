@@ -1,35 +1,48 @@
 {{! POST request to upload a single file }}
-<form action="/outfitpieces" method="POST" enctype="multipart/form-data">
-	<input type="file" name="image" accept="image/*" />
-	<input type="text" name="caption" placeholder="Caption" />
-	<input type="text" name="link" placeholder="link to where you got this from" />
-	<select name="type">
-		<option value="head">Headwear</option>
-		<option value="body">Tops</option>
-		<option value="leg">Bottoms</option>
-		<option value="foot">Footwear</option>
-	</select>
 
-
-	<button type="submit">Submit</button>
+<form
+  id="createOutfitPiece"
+  action="/outfitpieces"
+  method="POST"
+  enctype="multipart/form-data"
+>
+  <label for="image">Upload an image of your clothing item: </label>
+  <input type="file" id="image" name="image" accept="image/*" />
+  <br />
+  <label for="outfitType">Select clothing type: </label>
+  <select id="outfitType" name="outfitType">
+    <option value="head">Headwear</option>
+    <option value="body">Top</option>
+    <option value="leg">Bottom</option>
+    <option value="foot">Footwear</option>
+  </select>
+  <br />
+  <label for="caption">Description: </label>
+  <input
+    type="text"
+    id="caption"
+    name="caption"
+    placeholder="Write a description!"
+  />
+  <br />
+  <label for="link">Where did you get your clothing item from?</label>
+  <input type="text" id="link" name="link" placeholder="Clothing source link" />
+  <button type="submit">Submit</button>
 </form>
 
 {{! displays all posts sent here, posts sent here can be filted by username }}
 {{#each posts}}
-	<div class="post">
-		<img
-			src="{{this.imageUrl}}"
-			width="200px;"
-			height="200px"
-			alt="Fitpost Image"
-		/>
-		<p>{{this.caption}}</p>
-		<form
-			action="/fitposts/{{this.imageName}}?_method=DELETE"
-			method="POST"
-		>
-			<input type="hidden" name="_method" value="DELETE" />
-			<button type="submit" class="delete-button">Delete</button>
-		</form>
-	</div>
+<div class="post">
+  <img
+    src="{{this.imageUrl}}"
+    width="200px;"
+    height="200px"
+    alt="Fitpost Image"
+  />
+  <p>{{this.caption}}</p>
+  <form action="/fitposts/{{this.imageName}}?_method=DELETE" method="POST">
+    <input type="hidden" name="_method" value="DELETE" />
+    <button type="submit" class="delete-button">Delete</button>
+  </form>
+</div>
 {{/each}}
