@@ -97,9 +97,13 @@ router.route("/userProfile").get(async (req, res) => {
 
   try {
     // Get all fitposts for the user
-    const allFitposts = await searchByUID(userId);
+    // const allFitposts = await searchByUID(userId);
     //test for display
-    // const allFitposts = await getAll();
+    const allFitposts = await getAll();
+    const outfitpieces = await getAllOutfitPieces();
+    const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_closet(
+      outfitpieces
+    );
 
     // Add signed URLs to fitposts
     const fitpostsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
@@ -114,10 +118,23 @@ router.route("/userProfile").get(async (req, res) => {
       favorite,
       allFitposts: fitpostsWithSignedUrls,
       wardrobes,
+      wardrobes: postsWithSignedUrls,
+      outfitpiecesJson: JSON.stringify(postsWithSignedUrls),
     });
   } catch (error) {
     console.error("Error fetching user data:", error);
     res.status(500).send("An error occurred while fetching user data");
+  }
+});
+
+// Route for deleting a fitpost
+router.delete("/fitposts/:id", async (req, res) => {
+  try {
+    await deleteFitpost(req.params.id);
+    res.json({ message: "Fitpost deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
   }
 });
 

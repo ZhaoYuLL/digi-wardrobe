@@ -210,17 +210,6 @@ const createFP = async (
   //return newProduct;
 };
 
-export {
-  getAll,
-  latest,
-  trending,
-  searchByUID,
-  searchByFPID,
-  createFP,
-  addLike,
-  addSave,
-  removeLike,
-};
 const deleteFitpost = async (fitpost_id) => {
   fitpost_id = validString(fitpost_id);
 
@@ -234,4 +223,14 @@ const deleteFitpost = async (fitpost_id) => {
   }
 
   return { deleted: true };
+};
+
+export {
+  getAll,
+  latest,
+  trending,
+  searchByUID,
+  searchByFPID,
+  createFP,
+  deleteFitpost,
 };
