@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import * as fp from '../data/fitposts.js';
 import * as user from '../data/users.js';
+
 import { getOutfitPiecesByUserId } from '../data/outfitPieces.js';
 import { validString, addSignedUrlsToFitPosts_in_fitposts, convertDate, addSignedUrlsToPosts } from '../helper.js';
 import xss from 'xss';
+import { wardrobe } from '../config/mongoCollections.js';
 
 // import { addSignedUrlsToFitPosts_in_wardrobe } from "../helper.js";
 
@@ -19,7 +21,7 @@ router.route('/').get(async (req, res) => {
         for (const fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
-        return res.render('explore_page', { title: 'Explore', fitposts: fpList, user: req.session.user });
+        return res.render('explore_page', { title: 'Explore', fitposts: fpList, wardrobes: req.session.user.wardrobes });
     }
     catch (e) {
         return res.status(500).send(e);
@@ -161,7 +163,7 @@ router.route('/trending').get(async (req, res) => {
         for (const fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
-        return res.render('explore_page', { title: 'Trending', fitposts: postsWithSignedUrls });
+        return res.render('explore_page', { title: 'Trending', fitposts: postsWithSignedUrls, wardrobes: req.session.user.wardrobes });
     }
     catch (e) {
         return res.status(500).send(e);
@@ -178,7 +180,9 @@ router.route('/latest').get(async (req, res) => {
         for (const fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
-        return res.render('explore_page', { title: 'Latest', fitposts: postsWithSignedUrls });
+        console.log('wardrobes', req.session.user.wardrobes);
+
+        return res.render('explore_page', { title: 'Latest', fitposts: postsWithSignedUrls, wardrobes: req.session.user.wardrobes });
     }
     catch (e) {
         return res.status(500).send(e);
@@ -204,7 +208,7 @@ router.route('/user/:uid').get(async (req, res) => {
         for (const fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
-        return res.render('explore_page', { title: `${userId}'s FitPosts`, fitposts: postsWithSignedUrls });
+        return res.render('explore_page', { title: `${req.session.user.username}'s FitPosts`, fitposts: postsWithSignedUrls, wardrobes: req.session.user.wardrobes });
     } catch (e) {
         return res.status(500).send(e);
     }
@@ -227,7 +231,7 @@ router.route('/:id').get(async (req, res) => {
         for (const fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
-        return res.render('fitpost_page', { post: postsWithSignedUrls });
+        return res.render('fitpost_page', { post: postsWithSignedUrls});
         //return res.render('explore_page', {title: `${userId}'s FitPosts`, fitposts:  fpList});
 
     } catch (e) {
