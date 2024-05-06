@@ -1,28 +1,54 @@
 <h1>{{title}}</h1>
 
 <main>
-
-	<ol class="fitposts">
-		{{#each fitposts}}
-		<div class="fitpost" id={{this._id}}>
-			<h1>this is fitpost {{addOne @index}}</h1>
-			<p>headwear</p>
-			<img src="{{this.headUrl}}" width="200px;" height="200px" alt="head Image" />
-			<p>bodywear:</p>
-			<img src="{{this.bodyUrl}}" width="200px;" height="200px" alt="head Image" />
-			<p>legwear:</p>
-			<img src="{{this.legUrl}}" width="200px;" height="200px" alt="head Image" />
-			<p>footwear:</p>
-			<img src="{{this.footUrl}}" width="200px;" height="200px" alt="head Image" />
-			<button class="like" id="like-{{this._id}}">Like Button</button>
-			<button class="save" id="save-{{this._id}}">Save Button</button>
-			<p>likes: {{likes}}</p>
-			<p>saves: {{saves}}</p>
-
-			<p>Posted Date: {{postedDate}}</p>
-		</div>
-		{{/each}}
-	</ol>
+	
+		<ol class="fitposts">
+			{{#each fitposts}}
+			<div class="fitpost" id={{this._id}}>
+				<h1>this is fitpost {{addOne @index}}</h1>
+				<p>headwear</p>
+				<img
+				src="{{this.headUrl}}"
+				width="200px;"
+				height="200px"
+				alt="head Image"
+				/>
+				<p>bodywear:</p>
+				<img
+				src="{{this.bodyUrl}}"
+				width="200px;"
+				height="200px"
+				alt="head Image"
+				/>
+				<p>legwear:</p>
+				<img
+				src="{{this.legUrl}}"
+				width="200px;"
+				height="200px"
+				alt="head Image"
+				/>
+				<p>footwear:</p>
+				<img
+				src="{{this.footUrl}}"
+				width="200px;"
+				height="200px"
+				alt="head Image"
+				/>
+				<button class="like" id="like-{{this._id}}">Like Button</button>
+				<button class="save" id="save-{{this._id}}">Save Button</button>
+				<p class="like_num" id="like-{{this._id}}">likes: {{likes}}</p>
+				<p class="save_num" id="save-{{this._id}}">saves: {{saves}}</p>
+				
+				<p>Posted Date: {{postedDate}}</p>
+			</div>
+			{{/each}}
+		</ol>
+  	<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+     crossorigin="anonymous"></script>
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
+	<script src="../../public/js/explore_page_interactions.js"></script>
 
 </main>
 <script src="../../public/js/explore_page_interactions.js"></script>

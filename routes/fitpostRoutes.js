@@ -1,7 +1,11 @@
 import { Router } from 'express';
 import * as fp from '../data/fitposts.js';
+
+import * as user from '../data/users.js';
+
 import { getOutfitPiecesByUserId } from '../data/outfitPieces.js';
 import { validString, addSignedUrlsToFitPosts_in_fitposts, convertDate, addSignedUrlsToPosts } from '../helper.js';
+
 // import { addSignedUrlsToFitPosts_in_wardrobe } from "../helper.js";
 
 const router = Router();
@@ -222,6 +226,62 @@ router.route('/:id').get(async (req, res) => {
     } catch (e) {
         return res.status(500).send(e);
     }
+  });
+
+
+  // POST route for handling like action
+router.post('/like', async (req, res) => {
+    const data = req.body;
+
+    const userId = req.session.user.userId;
+    if (!data || Object.keys(data).length === 0) {
+        return res
+          .status(400)
+          .json({error: 'There are no fields in the request body'});
+    }
+    try {
+        // like or unlike
+        let updatedFitpost;
+
+        if (await user.checkLike(userId, data.fitpostId)) {
+            await user.removeLike(userId, data.fitpostId);
+            updatedFitpost = await fp.removeLike(data.fitpostId);
+        }
+        else {
+            await user.addLike(userId, data.fitpostId);
+            updatedFitpost = await fp.addLike(data.fitpostId);
+        }
+        res.status(200).json(updatedFitpost);
+        //res.redirect('back');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
 });
+
+// POST route for handling save action
+router.post('/save', async (req, res) => {
+    const data = req.body;
+    if (!data || Object.keys(data).length === 0) {
+        return res
+          .status(400)
+          .json({error: 'There are no fields in the request body'});
+    }
+    try {
+        const updatedFitpost = await fp.addSave(data.fitpostId);
+        res.status(200).json(updatedFitpost);
+        //res.redirect('back');
+    } 
+    catch(error){
+        console.log(error, 'oops');
+        res.status(500).send(error);
+    }
+});
+  
+
+
+
+});
+
 
 export default router;

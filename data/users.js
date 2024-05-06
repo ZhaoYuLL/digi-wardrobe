@@ -236,4 +236,92 @@ const deleteUserFavorite = async (userId, fitpostId) => {
     return updateInfo.favorite;
 }
 
-export { getAllUsers, getUserById, createUser, updateUserInfo, deleteUser, loginUser };
+
+const checkLike = async(userId, fpId) => {
+    const user = await getUserById(userId);
+    if (user) {
+        return user.favorite.includes(fpId);
+    }
+    else {
+        return false;
+    }
+}
+
+
+
+const addLike= async(userId, fpId) => {
+
+    const userCollection = await users();
+    const user = await userCollection.findOne({_id: new ObjectId(userId)});
+
+    if (user === null) throw 'No fitpost with that id';
+  
+    // replaces ObjectId with string
+    user._id = user._id.toString();
+  
+    user.favorite.push(fpId);
+  
+    let newFavorite = user.favorite;
+    const updateUser = {
+      favorite: newFavorite
+    }
+  
+    const updatedInfo = await userCollection.findOneAndUpdate(
+      {_id: new ObjectId(userId)},
+      {$set: updateUser},
+      {returnDocument: 'after'}
+    );
+  
+    if (!updatedInfo) {
+      throw 'could not update successfully';
+    }
+    updatedInfo._id = updatedInfo._id.toString();
+    return updatedInfo;
+  
+  }
+
+  const removeLike = async (userId, fpId) => {
+    const userCollection = await users();
+    const user = await userCollection.findOne({ _id: new ObjectId(userId) });
+
+    if (user === null) throw 'No user with that id';
+
+    const index = user.favorite.indexOf(fpId);
+    if (index === -1) throw 'Fitpost not found in favorites';
+
+    user.favorite.splice(index, 1); 
+
+    const updateUser = {
+        favorite: user.favorite
+    };
+
+    const updatedInfo = await userCollection.findOneAndUpdate(
+        { _id: new ObjectId(userId) },
+        { $set: updateUser },
+        { returnDocument: 'after' }
+    );
+
+    if (!updatedInfo) {
+        throw 'Could not update user successfully';
+    }
+
+    updatedInfo._id = updatedInfo._id.toString();
+    return updatedInfo;
+};
+
+
+/*const checkSave = async(userId, fpId, wardrobeId) => {
+    const user = await getUserById(userId);
+    if (user) {
+        for (drobe of user.wardrobes) {
+            if (drobe._id === wardrobeId){
+                return (drobe.)
+            }
+        }
+    }
+    return false;
+}*/
+
+
+
+export { getAllUsers, getUserById, createUser, updateUserInfo, deleteUser, loginUser, checkLike, addLike, removeLike };
