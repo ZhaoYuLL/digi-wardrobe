@@ -27,6 +27,17 @@ export const validString = (input) => {
 	}
 };
 
+const imageExists = async (imageName) => {
+	// checks if the image exists in the database
+	// this is for when a fitpost has a deleted outfit piece in it
+	try {
+		const post = await getImage(imageName);
+	} catch (e) {
+		return false;
+	}
+	return true;
+}
+
 //!start outfitpeices
 
 //secure way of accessing secret key
@@ -105,7 +116,7 @@ export const addSignedUrlsToOutfitPieces = async (posts) => {
 				}),
 				{ expiresIn: 6000 } // 6000 seconds
 			);
-
+			//console.log(signedUrl);
 			// Add the signed URL to the post object
 			post.imageUrl = signedUrl;
 			// console.log("image url:", post.imageUrl);
@@ -139,10 +150,28 @@ export const addSignedUrlsToFitPosts_in_wardrobe = async (outfits) => {
 				let legName = fitpost.legwear;
 				let footName = fitpost.footwear;
 
-				let headUrl = await addUrl(headName);
-				let bodyUrl = await addUrl(bodyName);
-				let legUrl = await addUrl(legName);
-				let footUrl = await addUrl(footName);
+				// checks if the outfit pieces still exist in the database
+				let headUrl, bodyUrl, legUrl, footUrl;
+				if (await imageExists(headName)) {
+					headUrl = await addUrl(headName);
+				}
+				else headUrl = "/public/no_image.jpg";
+
+				if (await imageExists(bodyName)) {
+					bodyUrl = await addUrl(bodyName);
+				}
+				else bodyUrl = "/public/no_image.jpg";
+
+				if (await imageExists(legName)) {
+					legUrl = await addUrl(legName);
+				}
+				else legUrl = "/public/no_image.jpg";
+
+				if (await imageExists(footName)) {
+					footUrl = await addUrl(footName);
+				}
+				else footUrl = "/public/no_image.jpg";
+
 				fitpost.headUrl = headUrl;
 				fitpost.bodyUrl = bodyUrl;
 				fitpost.legUrl = legUrl;
@@ -167,10 +196,28 @@ export const addSignedUrlsToFitPosts_in_fitposts = async (outfits) => {
 			let legName = fitpost.legwear;
 			let footName = fitpost.footwear;
 
-			let headUrl = await addUrl(headName);
-			let bodyUrl = await addUrl(bodyName);
-			let legUrl = await addUrl(legName);
-			let footUrl = await addUrl(footName);
+			// checks if the outfit pieces still exist in the database
+			let headUrl, bodyUrl, legUrl, footUrl;
+			if (await imageExists(headName)) {
+				headUrl = await addUrl(headName);
+			}
+			else headUrl = "/public/no_image.jpg";
+
+			if (await imageExists(bodyName)) {
+				bodyUrl = await addUrl(bodyName);
+			}
+			else bodyUrl = "/public/no_image.jpg";
+
+			if (await imageExists(legName)) {
+				legUrl = await addUrl(legName);
+			}
+			else legUrl = "/public/no_image.jpg";
+
+			if (await imageExists(footName)) {
+				footUrl = await addUrl(footName);
+			}
+			else footUrl = "/public/no_image.jpg";
+
 			fitpost.headUrl = headUrl;
 			fitpost.bodyUrl = bodyUrl;
 			fitpost.legUrl = legUrl;

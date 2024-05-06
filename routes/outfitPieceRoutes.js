@@ -7,6 +7,7 @@ import {
 	s3,
 	generateFileName,
 	addSignedUrlsToPosts,
+	addSignedUrlsToOutfitPieces,
 	uploadImageToS3,
 	deleteImageFromS3,
 	validString
@@ -16,6 +17,7 @@ import {
 	storeImage,
 	getImage,
 	getAllImages,
+	getOutfitPiecesByUsername,
 	deleteImage,
 } from "../data/outfitPieces.js";
 import xss from 'xss';
@@ -33,18 +35,15 @@ router
 	.route("/")
 	.get(async (req, res) => {
 		// addSignedUrlsToPosts;
+		if (!req.session || !req.session.user) {
+			res.status(500).send("Not logged in");
+		}
+
 		try {
-			const postsUrls = await addSignedUrlsToPosts();
-			//this render file can be changed to what it's supposed to be. right now it
-			//is just a temp place to display the images
-			//moidfy outfitpieces.handlebars to change what's sent
-			if (req.session.user) {
-				//console.log("hi");
-				console.log("user:", req.session.user);
-			} else {
-				console.log("no user");
-			}
-			res.render("outfitpieces", { title: "fitposts", posts: postsUrls, script_partial: "createOutfitPiece_script" });
+			const userOutfitPieces = await getOutfitPiecesByUsername(req.session.user.username);
+			let postsUrls = await addSignedUrlsToOutfitPieces(userOutfitPieces);
+
+			res.render("outfitpieces", { title: "My Clothes", posts: postsUrls, script_partial: "createOutfitPiece_script" });
 		} catch (error) {
 			console.error("Error rendering fitposts:", error);
 			res.status(500).send("Internal Server Error");
