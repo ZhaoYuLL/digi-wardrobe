@@ -261,3 +261,118 @@ export const convertDate = (fitpost) => {
 
 //!please do export const instead of this export {...func names}
 // export { validString };
+export const checkIsProperString = (str, variableName) => {
+	if (!str && str !== "") {
+	  throw `ERR: ${variableName || "Provided Variable"} is not a string`;
+	}
+	if (typeof str !== "string" && !(str instanceof String)) {
+	  throw `ERR: ${variableName || "Provided Variable"} is not an string`;
+	}
+  };
+  
+  export const stringTrimmer = (str) => {
+	if ((!str && str !== "") || typeof str !== "string") {
+	  throw "Input is not a String";
+	}
+	return str.trim();
+  };
+  
+  export const checkIsProperLength = (str, len, variableName, type) => {
+	if (str.length < len) {
+	  throw `ERR: ${
+		variableName || "Provided Variable"
+	  } cannot be less than ${len} ${type}`;
+	}
+  };
+  export const checkMaxLength = (str, len, variableName) => {
+	if (str.length > len) {
+	  throw `ERR: ${
+		variableName || "Provided Variable"
+	  } cannot greater than ${len} ${type}`;
+	}
+  };
+  
+  export const checkIfContainsNumber = (str, variableName) => {
+	if (/\d/.test(str)) {
+	  throw `ERR: ${variableName || "Provided Variable"} cannot contain number`;
+	}
+  };
+  export const checkIfFieldsAreProperString = (...fields) => {
+	for (let i = 0; i < fields.length; i++) {
+	  const check = stringTrimmer(fields[i]);
+	  fields[i] = check;
+	  checkIsProperString(check);
+	  checkIsProperLength(check, 1);
+	}
+  };
+  
+  export const checkRequiredFields = (...fields) => {
+	for (const field of fields) {
+	  if (
+		field === undefined ||
+		field === null ||
+		Number.isNaN(field) ||
+		!(
+		  typeof field === "string" ||
+		  typeof field === "number" ||
+		  typeof field === "boolean" ||
+		  Array.isArray(field)
+		)
+	  ) {
+		throw "All fields need to be supplied";
+	  }
+	}
+  };
+  export const isValidEmail = (email) => {
+    // Regular expression for basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        throw 'Invalid email format';
+    }
+    return true;
+};
+
+export const isValidPassword = (password) => {
+    // Regular expressions for password validation
+    const lowercaseRegex = /[a-z]/;
+    const uppercaseRegex = /[A-Z]/;
+    const symbolRegex = /[$&+,:;=?_@#|'<>.^*()%!-]/;
+    const numberRegex = /[0-9]/;
+
+    // Check if password meets all criteria
+    const hasLowercase = lowercaseRegex.test(password);
+    const hasUppercase = uppercaseRegex.test(password);
+    const hasSymbol = symbolRegex.test(password);
+    const hasNumber = numberRegex.test(password);
+    const isLengthValid = password.length >= 8;
+
+    if (!hasLowercase) {
+        throw 'Password must contain at least one lowercase letter';
+    }
+    if (!hasUppercase) {
+        throw 'Password must contain at least one uppercase letter';
+    }
+    if (!hasSymbol) {
+        throw 'Password must contain at least one symbol';
+    }
+    if (!hasNumber) {
+        throw 'Password must contain at least one number';
+    }
+    if (!isLengthValid) {
+        throw 'Password must be at least 8 characters long';
+    }
+
+    return true;
+};
+export const isValidAge = (age) => {
+    if (!age || isNaN(age)) {
+        throw 'Age must be provided and must be a number.';
+    }
+
+    const parsedAge = parseInt(age);
+    if (parsedAge < 13) {
+        throw 'Age must be at least 13 years old.';
+    }
+
+    return true;
+};

@@ -1,6 +1,13 @@
 import { ObjectId } from "mongodb";
 import { users } from "../config/mongoCollections.js";
 import bcrypt from "bcrypt";
+import {
+	checkRequiredFields,
+	checkIfFieldsAreProperString,
+    isValidEmail, 
+    isValidPassword, 
+    isValidAge
+} from "../helper.js";
 
 const getAllUsers = async () => {
     const userCollection = await users();
@@ -48,16 +55,42 @@ export const passwordMatch = async (input, hash) => {
 
 const createUser = async (username, firstName, lastName, age, email, password) => {
     // TODO: validate all parameters
-    const userExists = await getUserByUsername(username);
-    if (userExists) throw new Error(`User with username ${username} already exists`);
+    const lowercaseUsername = username.toLowerCase();
+    const userExists = await getUserByUsername(lowercaseUsername);
+    if (userExists) throw `User with username ${username} already exists`;
 
     const emailExists = await getUserByEmail(email);
     // console.log(emailExists)
-    if (emailExists) throw new Error(`User with email ${email} already exists`);
+    if (emailExists) throw `User with email ${email} already exists`;
+    firstName = firstName.trim();
+	lastName = lastName.trim();
+	username = username.trim();
+	password = password.trim();
+    email = email.trim();
+    age = age.trim();
+    checkRequiredFields(
+		firstName,
+		lastName,
+		username,
+		password,
+		age, 
+        email,
+	);
+	checkIfFieldsAreProperString(
+		firstName,
+		lastName,
+		username,
+		password,
+		age, 
+        email,
+	);
+    isValidEmail(email); 
+    isValidPassword(password);
+    isValidAge(age);
 
     const passwordHash = await passwordHelper(password);
     const newUser = {
-        username: username,
+        username: lowercaseUsername,
         firstName: firstName,
         lastName: lastName,
         age: age,
@@ -70,7 +103,7 @@ const createUser = async (username, firstName, lastName, age, email, password) =
     }
     const userCollection = await users();
     const newInsertInformation = await userCollection.insertOne(newUser);
-    if (!newInsertInformation.insertedId) throw new Error("Error creating new user");
+    if (!newInsertInformation.insertedId) throw "Error creating new user";
     return getUserById(newInsertInformation.insertedId);
 }
 
@@ -83,7 +116,7 @@ const updateUserInfo = async (id, userInfo) => {
     if (userInfo.username) {
         // TODO: validate username
         const userExists = await getUserByUsername(userInfo.username);
-        if (userExists) throw new Error(`User with username ${userInfo.username} already exists`);
+        if (userExists) throw `User with username ${userInfo.username} already exists`;
         changes['username'] = userInfo.username;
     }
     if (userInfo.firstName) {
@@ -114,7 +147,7 @@ const updateUserInfo = async (id, userInfo) => {
         { $set: changes },
         { returnDocument: 'after' }
     );
-    if (!updateInfo) throw new Error('Error updating user info');
+    if (!updateInfo) throw 'Error updating user info';
 
     return updateInfo;
 }
@@ -132,11 +165,17 @@ const deleteUser = async (id) => {
 
 const loginUser = async (username, password) => {
     // TODO: validate inputs
+    username = username.trim();
+	password = password.trim();
+
+	checkRequiredFields(username, password);
+    const lowercaseUsername = username.toLowerCase();
+
     const userCollection = await users();
-    const foundUser = await userCollection.findOne({ username: username });
-    if (!foundUser) throw new Error(`Either the username or password is invalid`);
+    const foundUser = await userCollection.findOne({ username: lowercaseUsername });
+    if (!foundUser) throw `Either the username or password is invalid`;
     const match = await passwordMatch(password, foundUser.password);
-    if (!match) throw new Error(`Either the username or password is invalid`);
+    if (!match) throw `Either the username or password is invalid`;
 
     const userInfo = {
         userId: foundUser._id, // Include userId in the returned userInfo object
@@ -165,7 +204,7 @@ const addUserOutfitPiece = async (outfitPieceId, userId) => {
         { $set: changes },
         { returnDocument: 'after' }
     );
-    if (!updateInfo) throw new Error(`Error updating user ${userId} closet with outfit piece ${outfitPieceId}`);
+    if (!updateInfo) throw `Error updating user ${userId} closet with outfit piece ${outfitPieceId}`;
 
     return updateInfo.closet;
 }
@@ -188,7 +227,7 @@ const deleteUserOutfitPiece = async (outfitPieceId, userId) => {
         { $set: updatedCloset },
         { returnDocument: 'after' }
     );
-    if (!updateInfo) throw new Error(`Error removing outfit piece ${outfitPieceId} from user ${userId}'s closet`);
+    if (!updateInfo) throw `Error removing outfit piece ${outfitPieceId} from user ${userId}'s closet`;
 
     return updateInfo.closet;
 }
@@ -208,7 +247,7 @@ const addUserFavorites = async (userId, fitpostId) => {
         { $set: updatedFavorites },
         { returnDocument: 'after' }
     );
-    if (!updateInfo) throw new Error(`Error updating user ${userId} favorites with fitpost ${outfitPieceId}`);
+    if (!updateInfo) throw `Error updating user ${userId} favorites with fitpost ${outfitPieceId}`;
 
     return updateInfo.favorite;
 }
@@ -231,7 +270,7 @@ const deleteUserFavorite = async (userId, fitpostId) => {
         { $set: updatedFavorites },
         { returnDocument: 'after' }
     );
-    if (!updateInfo) throw new Error(`Error updating user ${userId} favorites with fitpost ${outfitPieceId}`);
+    if (!updateInfo) throw `Error updating user ${userId} favorites with fitpost ${outfitPieceId}`;
 
     return updateInfo.favorite;
 }
