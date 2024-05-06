@@ -1,10 +1,9 @@
 import { Router } from 'express';
 import * as fp from '../data/fitposts.js';
-
 import * as user from '../data/users.js';
-
 import { getOutfitPiecesByUserId } from '../data/outfitPieces.js';
 import { validString, addSignedUrlsToFitPosts_in_fitposts, convertDate, addSignedUrlsToPosts } from '../helper.js';
+import xss from 'xss';
 
 // import { addSignedUrlsToFitPosts_in_wardrobe } from "../helper.js";
 
@@ -83,41 +82,49 @@ router.route('/create')
 
             try {
                 data.headwear = validString(data.headwear);
+                data.headwear = xss(data.headwear);
             } catch (e) {
                 res.status(400).json({ error: e });
             }
             try {
                 data.head_id = validString(data.head_id);
+                data.head_id = xss(data.head_id);
             } catch (e) {
                 res.status(400).json({ error: e });
             }
             try {
                 data.bodywear = validString(data.bodywear);
+                data.bodywear = xss(data.bodywear);
             } catch (e) {
                 res.status(400).json({ error: e });
             }
             try {
                 data.body_id = validString(data.body_id);
+                data.body_id = xss(data.body_id);
             } catch (e) {
                 res.status(400).json({ error: e });
             }
             try {
                 data.legwear = validString(data.legwear);
+                data.legwear = xss(data.legwear);
             } catch (e) {
                 res.status(400).json({ error: e });
             }
             try {
                 data.leg_id = validString(data.leg_id);
+                data.leg_id = xss(data.leg_id);
             } catch (e) {
                 res.status(400).json({ error: e });
             }
             try {
                 data.footwear = validString(data.footwear);
+                data.footwear = xss(data.footwear);
             } catch (e) {
                 res.status(400).json({ error: e });
             }
             try {
                 data.foot_id = validString(data.foot_id);
+                data.foot_id = xss(data.foot_id);
             } catch (e) {
                 res.status(400).json({ error: e });
             }
@@ -226,18 +233,18 @@ router.route('/:id').get(async (req, res) => {
     } catch (e) {
         return res.status(500).send(e);
     }
-  });
+});
 
 
-  // POST route for handling like action
+// POST route for handling like action
 router.post('/like', async (req, res) => {
     const data = req.body;
 
     const userId = req.session.user.userId;
     if (!data || Object.keys(data).length === 0) {
         return res
-          .status(400)
-          .json({error: 'There are no fields in the request body'});
+            .status(400)
+            .json({ error: 'There are no fields in the request body' });
     }
     try {
         // like or unlike
@@ -264,23 +271,18 @@ router.post('/save', async (req, res) => {
     const data = req.body;
     if (!data || Object.keys(data).length === 0) {
         return res
-          .status(400)
-          .json({error: 'There are no fields in the request body'});
+            .status(400)
+            .json({ error: 'There are no fields in the request body' });
     }
     try {
         const updatedFitpost = await fp.addSave(data.fitpostId);
         res.status(200).json(updatedFitpost);
         //res.redirect('back');
-    } 
-    catch(error){
+    }
+    catch (error) {
         console.log(error, 'oops');
         res.status(500).send(error);
     }
 });
-  
-
-
-
-
 
 export default router;

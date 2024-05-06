@@ -9,6 +9,7 @@ import {
   addSignedUrlsToFitPosts_in_closet,
   addSignedUrlsToFitPosts_in_fitposts,
 } from "../helper.js";
+import xss from 'xss';
 
 const router = Router();
 
