@@ -1,5 +1,6 @@
 <h1>My Page</h1>
 
+<h2>Create a Fitpost</h2>
 <form id="createFitpost" method="POST" action="/fitposts/create">
     <label for="headwear">Headwear</label>
     <div id="headwear-slider">
@@ -31,7 +32,7 @@
     <input type="hidden" id="body_id" name="body_id" value="">
     <label for="legwear">Legwear</label>
     <div id="legwear-slider">
-        <button type="button" class="slide-button" data-idn="prev" data-part="legwear">Prev</button>
+        <button type="button" class="slide-button" data-id="prev" data-part="legwear">Prev</button>
         <button type="button" class="slide-button" data-id="next" data-part="legwear">Next</button>
         <ul id="leg">
             {{#each leg}}
@@ -59,3 +60,8 @@
     <input type="hidden" id="foot_id" name="foot_id" value="">
     <button type="submit">Create Fitpost</button>
 </form>
+
+<a href="/outfitpieces">Upload Clothes</a>
+<a href="/index/wardrobe">My Wardrobe</a>
+<a href="/index/closet">My Closet</a>
+<a href="/favorites">My Favorites</a>

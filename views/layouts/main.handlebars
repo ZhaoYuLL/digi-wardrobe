@@ -12,7 +12,9 @@
   <main>{{{body}}}</main>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="/public/js/createFitpost.js"></script>
+  {{#if script_partial}}
+  {{> (lookup. "script_partial")}}
+  {{/if}}
 </body>
 
 </html>
