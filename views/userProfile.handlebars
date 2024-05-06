@@ -21,7 +21,7 @@
     <div class="fitposts-container">
       <h1>My fitposts</h1>
       {{#each allFitposts}}
-      <div class="fitpost" data-fitpost-id="{{@index}}">
+      <div class="fitpost" data-fitpost-id="{{_id}}">
         <h1>Fitpost {{addOne @index}}</h1>
         <p>Headwear:</p>
         <img
@@ -29,6 +29,7 @@
           width="200px;"
           height="200px"
           alt="Head Image"
+          data-headid="{{this.headid}}"
         />
         <p>Bodywear:</p>
         <img
@@ -36,6 +37,7 @@
           width="200px;"
           height="200px"
           alt="Body Image"
+          data-bodyid="{{this.bodyid}}"
         />
         <p>Legwear:</p>
         <img
@@ -43,6 +45,7 @@
           width="200px;"
           height="200px"
           alt="Leg Image"
+          data-legid="{{this.legid}}"
         />
         <p>Footwear:</p>
         <img
@@ -50,12 +53,13 @@
           width="200px;"
           height="200px"
           alt="Foot Image"
+          data-footid="{{this.footid}}"
         />
+        <p>Likes: {{this.likes}}</p>
+        <p>Saves: {{this.saves}}</p>
 
-        <button class="edit-fitpost" data-fitpost-id="{{@index}}">Edit</button>
-        <button class="delete-fitpost" data-fitpost-id="{{@index}}">
-          Delete
-        </button>
+        <button class="edit-fitpost" data-fitpost-id="{{_id}}">Edit</button>
+        <button class="delete-fitpost" data-fitpost-id="{{_id}}">Delete</button>
       </div>
       {{/each}}
     </div>
@@ -87,7 +91,8 @@
         // Add event listener to the "Edit" button
         $(".edit-fitpost").on("click", function () {
           var fitpostId = $(this).data("fitpost-id");
-          openEditModal(fitpostId);
+          var fitpostIndex = $(this).closest(".fitpost").index();
+          openEditModal(fitpostId, fitpostIndex);
         });
 
         // Function to handle the update fitpost form submission
@@ -95,17 +100,17 @@
           event.preventDefault();
 
           var fitpostId = $("#editFitpostId").val();
-          var headwearSelect = $("#editHeadwearSelect").val();
-          var bodywearSelect = $("#editBodywearSelect").val();
-          var legwearSelect = $("#editLegwearSelect").val();
-          var footwearSelect = $("#editFootwearSelect").val();
+          var headwearSelect = $("#editHeadwearSelect");
+          var bodywearSelect = $("#editBodywearSelect");
+          var legwearSelect = $("#editLegwearSelect");
+          var footwearSelect = $("#editFootwearSelect");
 
           var formData = {
             fitpostId: fitpostId,
-            headwearSelect: headwearSelect,
-            bodywearSelect: bodywearSelect,
-            legwearSelect: legwearSelect,
-            footwearSelect: footwearSelect,
+            headid: headwearSelect.val(),
+            bodyid: bodywearSelect.val(),
+            legid: legwearSelect.val(),
+            footid: footwearSelect.val(),
           };
 
           $.ajax({
@@ -124,9 +129,13 @@
             },
           });
         });
+
+        // Close the modal when the close button is clicked
+        $(".close").on("click", closeModal);
       });
 
-      function openEditModal(fitpostId) {
+      function openEditModal(fitpostId, fitpostIndex) {
+        $("#editFitpostModal h2").text("Edit Fitpost " + fitpostIndex);
         var headwearSelect = $("#editHeadwearSelect");
         var bodywearSelect = $("#editBodywearSelect");
         var legwearSelect = $("#editLegwearSelect");
@@ -138,65 +147,89 @@
         legwearSelect.empty();
         footwearSelect.empty();
 
-        // Find the corresponding fitpost
-        var fitpost = $('.fitpost[data-fitpost-id="' + fitpostId + '"]');
-
-        // Get the image URLs for the selected fitpost
-        var headUrl = fitpost.find('img[alt="Head Image"]').attr("src");
-        var bodyUrl = fitpost.find('img[alt="Body Image"]').attr("src");
-        var legUrl = fitpost.find('img[alt="Leg Image"]').attr("src");
-        var footUrl = fitpost.find('img[alt="Foot Image"]').attr("src");
-
         // Populate dropdown menus with images from all fitposts
         $(".fitpost").each(function (index) {
-          var fitpostIndex = $(this).data("fitpost-id");
-          var headImg = $(this).find('img[alt="Head Image"]');
-          var bodyImg = $(this).find('img[alt="Body Image"]');
-          var legImg = $(this).find('img[alt="Leg Image"]');
-          var footImg = $(this).find('img[alt="Foot Image"]');
+          var fitpostElement = $(this);
+          var headUrl = fitpostElement
+            .find('img[alt="Head Image"]')
+            .attr("src");
+          var bodyUrl = fitpostElement
+            .find('img[alt="Body Image"]')
+            .attr("src");
+          var legUrl = fitpostElement.find('img[alt="Leg Image"]').attr("src");
+          var footUrl = fitpostElement
+            .find('img[alt="Foot Image"]')
+            .attr("src");
+          var headId = fitpostElement
+            .find('img[alt="Head Image"]')
+            .data("headid");
+          var bodyId = fitpostElement
+            .find('img[alt="Body Image"]')
+            .data("bodyid");
+          var legId = fitpostElement.find('img[alt="Leg Image"]').data("legid");
+          var footId = fitpostElement
+            .find('img[alt="Foot Image"]')
+            .data("footid");
 
           headwearSelect.append(
             '<option value="' +
-              fitpostIndex +
+              headId +
               '" data-image="' +
-              headImg.attr("src") +
+              headUrl +
               '">Fitpost ' +
-              (fitpostIndex + 1) +
-              "</option>"
+              (index + 1) +
+              " Headwear</option>"
           );
           bodywearSelect.append(
             '<option value="' +
-              fitpostIndex +
+              bodyId +
               '" data-image="' +
-              bodyImg.attr("src") +
+              bodyUrl +
               '">Fitpost ' +
-              (fitpostIndex + 1) +
-              "</option>"
+              (index + 1) +
+              " Bodywear</option>"
           );
           legwearSelect.append(
             '<option value="' +
-              fitpostIndex +
+              legId +
               '" data-image="' +
-              legImg.attr("src") +
+              legUrl +
               '">Fitpost ' +
-              (fitpostIndex + 1) +
-              "</option>"
+              (index + 1) +
+              " Legwear</option>"
           );
           footwearSelect.append(
             '<option value="' +
-              fitpostIndex +
+              footId +
               '" data-image="' +
-              footImg.attr("src") +
+              footUrl +
               '">Fitpost ' +
-              (fitpostIndex + 1) +
-              "</option>"
+              (index + 1) +
+              " Footwear</option>"
           );
         });
 
-        headwearSelect.val(fitpostId);
-        bodywearSelect.val(fitpostId);
-        legwearSelect.val(fitpostId);
-        footwearSelect.val(fitpostId);
+        // Set the selected values based on the fitpost being edited
+        var selectedFitpost = $(
+          '.fitpost[data-fitpost-id="' + fitpostId + '"]'
+        );
+        var selectedHeadId = selectedFitpost
+          .find('img[alt="Head Image"]')
+          .data("headid");
+        var selectedBodyId = selectedFitpost
+          .find('img[alt="Body Image"]')
+          .data("bodyid");
+        var selectedLegId = selectedFitpost
+          .find('img[alt="Leg Image"]')
+          .data("legid");
+        var selectedFootId = selectedFitpost
+          .find('img[alt="Foot Image"]')
+          .data("footid");
+
+        headwearSelect.val(selectedHeadId);
+        bodywearSelect.val(selectedBodyId);
+        legwearSelect.val(selectedLegId);
+        footwearSelect.val(selectedFootId);
 
         // Customize the appearance of the dropdown options
         $("select").each(function () {
@@ -209,16 +242,17 @@
             padding: "10px",
           });
 
+          // Set the initial background image based on the selected option
+          var selectedOption = $(this).find("option:selected");
+          var imageUrl = selectedOption.data("image");
+          $(this).css("background-image", 'url("' + imageUrl + '")');
+
+          // Update the background image when the selected option changes
           $(this).on("change", function () {
             var selectedOption = $(this).find("option:selected");
             var imageUrl = selectedOption.data("image");
             $(this).css("background-image", 'url("' + imageUrl + '")');
           });
-
-          // Set the initial background image based on the selected option
-          var selectedOption = $(this).find("option:selected");
-          var imageUrl = selectedOption.data("image");
-          $(this).css("background-image", 'url("' + imageUrl + '")');
         });
 
         // Show the edit modal
@@ -254,11 +288,6 @@
 
         $(".container").append(imgElement);
       }
-
-      // Example usage of displayImage function
-      var imageUrl =
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRS1u05OPc7MSt9f5Dg2QMSbRPu_FHowIjog-jxeSwHIw&s";
-      displayImage(imageUrl);
     </script>
   </body>
 </html>
