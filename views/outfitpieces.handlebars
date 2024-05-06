@@ -1,26 +1,22 @@
 {{! POST request to upload a single file }}
 <form action="/outfitpieces" method="POST" enctype="multipart/form-data">
-	<input type="file" name="image" accept="image/*" />
-	<input type="text" name="caption" placeholder="Caption" />
-	<button type="submit">Submit</button>
+  <input type="file" name="image" accept="image/*" />
+  <input type="text" name="caption" placeholder="Caption" />
+  <button type="submit">Submit</button>
 </form>
 
 {{! displays all posts sent here, posts sent here can be filted by username }}
 {{#each posts}}
-	<div class="post">
-		<img
-			src="{{this.imageUrl}}"
-			width="200px;"
-			height="200px"
-			alt="Fitpost Image"
-		/>
-		<p>{{this.caption}}</p>
-		<form
-			action="/fitposts/{{this.imageName}}?_method=DELETE"
-			method="POST"
-		>
-			<input type="hidden" name="_method" value="DELETE" />
-			<button type="submit" class="delete-button">Delete</button>
-		</form>
-	</div>
+<div class="post">
+  <img
+    src="{{this.imageUrl}}"
+    style="width: 200px; height: 200px"
+    alt="Fitpost Image"
+  />
+  <p>{{this.caption}}</p>
+  <form action="/fitposts/{{this.imageName}}?_method=DELETE" method="POST">
+    <input type="hidden" name="_method" value="DELETE" />
+    <button type="submit" class="delete-button">Delete</button>
+  </form>
+</div>
 {{/each}}

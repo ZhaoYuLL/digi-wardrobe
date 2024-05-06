@@ -7,6 +7,7 @@ import { ObjectId } from "mongodb";
 import {
   addSignedUrlsToFitPosts_in_wardrobe,
   addSignedUrlsToFitPosts_in_closet,
+  addSignedUrlsToFitPosts_in_fitposts,
 } from "../helper.js";
 
 const router = Router();
@@ -52,24 +53,19 @@ router.get("/favorites", async (req, res) => {
         { username: username },
         { favorite: 1 }
       );
-      const favoriteIds = user.favorite;
-
-      // const favoriteObjectIds = favoriteIds.map((id) => ObjectId(id));
-      const favoriteObjectIds = [
-        "6636680810f9a9c05bbc4378",
-        "66366b215854d21501aac7eb",
-      ];
-
+      //   const favoriteIds = user.favorite;
+      console.log("user:", user);
+      // Convert favoriteIds to ObjectId
+      const favoriteIds = ["6638dc15cdc617f979c324e8"];
+      const favoriteObjectIds = favoriteIds.map((id) => new ObjectId(id));
+      console.log("ids:", favoriteObjectIds);
       // Find the fitposts that match the favorite IDs
       const fitpostCollection = await fitposts();
-      const favoriteFitposts = [];
-
-      for (const objectId of favoriteObjectIds) {
-        const fitpost = await fitpostCollection.findOne({ _id: objectId });
-        if (fitpost) {
-          favoriteFitposts.push(fitpost);
-        }
-      }
+      const favoriteFitposts = await fitpostCollection
+        .find({
+          _id: { $in: favoriteObjectIds },
+        })
+        .toArray();
 
       return favoriteFitposts;
     } catch (error) {
@@ -81,8 +77,11 @@ router.get("/favorites", async (req, res) => {
   try {
     const favorites = await getFavoriteFitposts(req.session.user.username);
     // Handle the favorites data as needed
-    console.log(favorites);
-    res.json(favorites); // Send the favorites as JSON response
+    const favWithUrl = await addSignedUrlsToFitPosts_in_fitposts(favorites);
+    res.render("favorites", {
+      title: "Favorites Page",
+      fitposts: favWithUrl,
+    });
   } catch (error) {
     console.error("Error retrieving favorites:", error);
     res.status(500).json({ error: "Internal Server Error" });

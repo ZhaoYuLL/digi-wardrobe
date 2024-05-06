@@ -62,40 +62,29 @@
         <p>headwear</p>
         <img
           src="{{this.headUrl}}"
-          width="200px;"
-          height="200px"
+          style="width: 200px; height: 200px"
           alt="head Image"
         />
         <p>bodywear:</p>
         <img
           src="{{this.bodyUrl}}"
-          width="200px;"
-          height="200px"
+          style="width: 200px; height: 200px"
           alt="head Image"
         />
         <p>legwear:</p>
         <img
           src="{{this.legUrl}}"
-          width="200px;"
-          height="200px"
+          style="width: 200px; height: 200px"
           alt="head Image"
         />
         <p>footwear:</p>
         <img
           src="{{this.footUrl}}"
-          width="200px;"
-          height="200px"
+          style="width: 200px; height: 200px"
           alt="head Image"
         />
         <p>likes: {{likes}}</p>
         <p>saves: {{saves}}</p>
-        <p>example of an image working inside fitpost</p>
-        <img
-          src="{{this.imageUrl}}"
-          width="200px;"
-          height="200px"
-          alt="Fitpost Image"
-        />
         <p>Posted Date: {{postedDate}}</p>
       </div>
       {{/each}}
@@ -167,7 +156,7 @@
       for (var j = 0; j < parts.length; j++) {
         var part = parts[j];
         var imageUrl = ward[i].fitposts[currentIndex[i][part]][part + "Url"];
-        var imageTag = '<img width="200px;" height="200px" src="' + imageUrl + '" alt="' + part + ' Image">';
+        var imageTag = '<img style="width: 200px; height: 200px" src="' + imageUrl + '" alt="' + part + ' Image">';
         document.getElementById("preview-" + part + "-" + i).innerHTML = imageTag;
       }
     }
