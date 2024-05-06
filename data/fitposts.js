@@ -56,16 +56,16 @@ const searchByUID = async (uid) => {
   // remove later
   console.log("uid", fpList);
 
-    return fpList;
+  return fpList;
 
 }
 
-const searchByFPID = async(id) => {
- 
-    id = validString(id);
-    const fitpostCollection = await fitposts();
-    const fp = await fitpostCollection.findOne({_id: new ObjectId(id)});
-    if (fp === null) throw 'No fitpost with that id';
+const searchByFPID = async (id) => {
+
+  id = validString(id);
+  const fitpostCollection = await fitposts();
+  const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
+  if (fp === null) throw 'No fitpost with that id';
 
   // replaces ObjectId with string
   fp._id = fp._id.toString();
@@ -73,16 +73,16 @@ const searchByFPID = async(id) => {
   // remove later
   console.log(fp);
 
-    return fp;
- 
+  return fp;
+
 }
 
 
-const addLike= async(id) => {
- 
+const addLike = async (id) => {
+
   id = validString(id);
   const fitpostCollection = await fitposts();
-  const fp = await fitpostCollection.findOne({_id: new ObjectId(id)});
+  const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
   if (fp === null) throw 'No fitpost with that id';
 
   // replaces ObjectId with string
@@ -95,9 +95,9 @@ const addLike= async(id) => {
   }
 
   const updatedInfo = await fitpostCollection.findOneAndUpdate(
-    {_id: new ObjectId(id)},
-    {$set: updatePost},
-    {returnDocument: 'after'}
+    { _id: new ObjectId(id) },
+    { $set: updatePost },
+    { returnDocument: 'after' }
   );
 
   if (!updatedInfo) {
@@ -107,6 +107,7 @@ const addLike= async(id) => {
   return updatedInfo;
 
 }
+
 
 
 const removeLike= async(id) => {
@@ -180,7 +181,11 @@ const createFP = async (
   headwear,
   bodywear,
   legwear,
-  footwear
+  footwear,
+  head_id,
+  body_id,
+  leg_id,
+  foot_id,
 ) => {
   // find a way to validate these ids
   user_id = validString(user_id);
@@ -189,37 +194,44 @@ const createFP = async (
   bodywear = validString(bodywear);
   legwear = validString(legwear);
   footwear = validString(footwear);
+  head_id = validString(head_id);
+  body_id = validString(body_id);
+  leg_id = validString(leg_id);
+  foot_id = validString(foot_id);
 
-    let likes = 0;
-    let saves = 0;
-  
+  let likes = 0;
+  let saves = 0;
 
-    let date = new Date();
+  let date = new Date();
 
-    //let formattedDate = date.toISOString().split('T')[0];
-    
-    let newFP = {
-      user_id,
-      postedDate: date,
-      headwear,
-      bodywear,
-      legwear,
-      footwear,
-      likes,
-      saves
-    };
-   
-    const fitpostCollection = await fitposts();
-    const insertInfo = await fitpostCollection.insertOne(newFP);
-    if (!insertInfo.acknowledged || !insertInfo.insertedId)
-      throw 'could not add fitpost womp womp';
-  
-    // converts id to string to get the product object
-    const newId = insertInfo.insertedId.toString();
-    const fp = await searchByFPID(newId);
-    return fp;
-    //return newProduct;
-  
-  }
+  //let formattedDate = date.toISOString().split('T')[0];
+
+  let newFP = {
+    user_id,
+    postedDate: date,
+    headwear,
+    bodywear,
+    legwear,
+    footwear,
+    head_id,
+    body_id,
+    leg_id,
+    foot_id,
+    likes,
+    saves
+  };
+
+  const fitpostCollection = await fitposts();
+  const insertInfo = await fitpostCollection.insertOne(newFP);
+  if (!insertInfo.acknowledged || !insertInfo.insertedId)
+    throw 'could not add fitpost womp womp';
+
+  // converts id to string to get the product object
+  const newId = insertInfo.insertedId.toString();
+  const fp = await searchByFPID(newId);
+  return fp;
+  //return newProduct;
+}
 
 export{getAll, latest, trending, searchByUID, searchByFPID, createFP, addLike, addSave, removeLike}
+

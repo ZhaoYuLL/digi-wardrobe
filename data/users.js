@@ -10,7 +10,7 @@ const getAllUsers = async () => {
 const getUserById = async (id) => {
     // TODO: validate id parameter
     const userCollection = await users();
-    const user = await userCollection.findOne({ _id: new ObjectId(id) });
+    const user = await userCollection.findOne({ _id: new ObjectId(id) }, { projection: { password: 0 } });
     // if (!user) throw new Error(`Error getting user with id: ${id}`);
     return user;
 }
@@ -200,7 +200,7 @@ const addUserFavorites = async (userId, fitpostId) => {
     userFavorites.push(fitpostId);
 
     updatedFavorites = {
-        closet: userFavorites
+        favorite: userFavorites
     };
     const userCollection = await users();
     const updateInfo = await userCollection.findOneAndUpdate(
@@ -223,7 +223,7 @@ const deleteUserFavorite = async (userId, fitpostId) => {
     }
 
     updatedFavorites = {
-        closet: userFavorites
+        favorite: userFavorites
     };
     const userCollection = await users();
     const updateInfo = await userCollection.findOneAndUpdate(
