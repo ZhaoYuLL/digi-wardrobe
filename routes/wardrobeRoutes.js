@@ -1,7 +1,9 @@
 import { Router } from "express";
 import { getAllOutfits } from "../data/testwardrobe.js";
 import { getAllOutfitPieces } from "../data/testCloset.js";
-import { createFP } from "../data/fitposts.js";
+import { createFP, getAll } from "../data/fitposts.js";
+import { fitposts, users } from "../config/mongoCollections.js";
+import { ObjectId } from "mongodb";
 import {
   addSignedUrlsToFitPosts_in_wardrobe,
   addSignedUrlsToFitPosts_in_closet,
@@ -39,9 +41,52 @@ router.get("/wardrobe", async (req, res) => {
     wardrobesJson: JSON.stringify(postsWithSignedUrls),
   });
 });
-router.get("/favorites", (req, res) => {
+router.get("/favorites", async (req, res) => {
   // Render your sign-in page
-  res.render("favorites", { title: "Favorite Page" });
+
+  async function getFavoriteFitposts(username) {
+    try {
+      // Get the user's favorite array
+      const usersCollection = await users();
+      const user = await usersCollection.findOne(
+        { username: username },
+        { favorite: 1 }
+      );
+      const favoriteIds = user.favorite;
+
+      // const favoriteObjectIds = favoriteIds.map((id) => ObjectId(id));
+      const favoriteObjectIds = [
+        "6636680810f9a9c05bbc4378",
+        "66366b215854d21501aac7eb",
+      ];
+
+      // Find the fitposts that match the favorite IDs
+      const fitpostCollection = await fitposts();
+      const favoriteFitposts = [];
+
+      for (const objectId of favoriteObjectIds) {
+        const fitpost = await fitpostCollection.findOne({ _id: objectId });
+        if (fitpost) {
+          favoriteFitposts.push(fitpost);
+        }
+      }
+
+      return favoriteFitposts;
+    } catch (error) {
+      console.error("Error retrieving favorite fitposts:", error);
+      throw error;
+    }
+  }
+
+  try {
+    const favorites = await getFavoriteFitposts(req.session.user.username);
+    // Handle the favorites data as needed
+    console.log(favorites);
+    res.json(favorites); // Send the favorites as JSON response
+  } catch (error) {
+    console.error("Error retrieving favorites:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 router.post("/create-fitpost", async (req, res) => {
   try {
