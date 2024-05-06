@@ -3,7 +3,8 @@ const router = Router();
 // import data from users 
 import { createUser, loginUser } from "../data/users.js";
 import { getAll, searchByUID } from "../data/fitposts.js";
-import { addSignedUrlsToFitPosts_in_fitposts } from "../helper.js";
+import { addSignedUrlsToFitPosts_in_fitposts, validString } from "../helper.js";
+import xss from 'xss';
 
 router.route('/').get(async (req, res) => {
   //code here for GET THIS ROUTE SHOULD NEVER FIRE BECAUSE OF MIDDLEWARE #1 IN SPECS.
@@ -23,6 +24,50 @@ router
   .post(async (req, res) => {
     //code here for POST
     const { userName, firstName, lastName, age, email, password, confirmPassword } = req.body;
+
+    try {
+      userName = validString(userName);
+      userName = xss(userName);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+    try {
+      firstName = validString(firstName);
+      firstName = xss(firstName);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+    try {
+      lastName = validString(lastName);
+      lastName = xss(lastName);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+    try {
+      age = validString(age);
+      age = xss(age);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+    try {
+      email = validString(email);
+      email = xss(email);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+    try {
+      password = validString(password);
+      password = xss(password);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+    try {
+      confirmPassword = validString(confirmPassword);
+      confirmPassword = xss(confirmPassword);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+
     if (password !== confirmPassword) {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -50,6 +95,20 @@ router
     const { userName, password } = req.body;
     try {
       const user = await loginUser(userName, password);
+
+      try {
+        userName = validString(userName);
+        userName = xss(userName);
+      } catch (e) {
+        res.status(400).send(e);
+      }
+      try {
+        password = validString(password);
+        password = xss(password);
+      } catch (e) {
+        res.status(400).send(e);
+      }
+
       req.session.user = {
         username: user.username,
         firstName: user.firstName,

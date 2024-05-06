@@ -1,20 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/public/css/style.css" />
+    {{> navigation}}
+  </head>
 
-<head>
-  <meta charset="utf-8" />
-  <title>{{title}}</title>
-  <link rel="stylesheet" href="/public/css/style.css" />
-</head>
+  <body>
+    <main>{{{body}}}</main>
 
-<body>
-
-  <main>{{{body}}}</main>
-
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  {{#if script_partial}}
-  {{> (lookup. "script_partial")}}
-  {{/if}}
-</body>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    {{#if script_partial}} {{> (lookup. "script_partial")}} {{/if}}
+  </body>
 </html>

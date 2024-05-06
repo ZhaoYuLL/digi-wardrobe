@@ -1,35 +1,48 @@
+<title>My User Profile</title>
 
+<div class="profile picture">
+  <div class="profile-pic"></div>
+</div>
+<div>
+  <p id="welcome">Welcome {{firstName}} {{lastName}}</p>
+  <h2 id="userName">{{userName}}</h2>
+</div>
+<div></div>
+<div class="container">
+  <section class="profile"></section>
+  <div class="bio"></div>
+</div>
 
-    <title>My User Profile</title>
-
-    <div class = "profile picture">
-            <div class = "profile-pic"></div>
-    </div>
-    <div>
-        <p id="welcome">Welcome {{firstName}} {{lastName}}</p>
-        <h2 id="userName">{{userName}}</h2>
-    </div>
-    <div></div>
-    <div class = "container"> 
-        <section class = "profile"></section>
-            <div class = "bio"></div>
-    </div>
-    
 <div class="fitposts-container">
   <h1>All Fitposts</h1>
   {{#each allFitposts}}
-    <div class="fitpost">
-      <h1>Fitpost {{addOne @index}}</h1>
-      <p>Headwear:</p>
-      <img src="{{this.headUrl}}" width="200px;" height="200px" alt="Head Image" />
-      <p>Bodywear:</p>
-      <img src="{{this.bodyUrl}}" width="200px;" height="200px" alt="Body Image" />
-      <p>Legwear:</p>
-      <img src="{{this.legUrl}}" width="200px;" height="200px" alt="Leg Image" />
-      <p>Footwear:</p>
-      <img src="{{this.footUrl}}" width="200px;" height="200px" alt="Foot Image" />
-    </div>
+  <div class="fitpost">
+    <h1>Fitpost {{addOne @index}}</h1>
+    <p>Headwear:</p>
+    <img
+      src="{{this.headUrl}}"
+      style="width: 200px; height: 200px"
+      alt="Head Image"
+    />
+    <p>Bodywear:</p>
+    <img
+      src="{{this.bodyUrl}}"
+      style="width: 200px; height: 200px"
+      alt="Body Image"
+    />
+    <p>Legwear:</p>
+    <img
+      src="{{this.legUrl}}"
+      style="width: 200px; height: 200px"
+      alt="Leg Image"
+    />
+    <p>Footwear:</p>
+    <img
+      src="{{this.footUrl}}"
+      style="width: 200px; height: 200px"
+      alt="Foot Image"
+    />
+  </div>
   {{/each}}
 </div>
-    <a id="logoutLink" href="/logout">Logout</a>
-
+<a id="logoutLink" href="/logout">Logout</a>
