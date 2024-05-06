@@ -63,7 +63,7 @@ router.route('/create')
         // TODO: input validation
         console.log("found the post route!");
         if (req.session && req.session.user) {
-            const data = req.body;
+            let data = req.body;
             const user = req.session.user;
             //console.log(user);
 
