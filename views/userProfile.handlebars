@@ -11,7 +11,6 @@
 <div class="container">
   <section class="profile"></section>
   <div class="bio"></div>
-  Ã¥
 </div>
 
 <div class="fitposts-container">
@@ -50,6 +49,7 @@
   </div>
   {{/each}}
 </div>
+
 <!-- Edit Fitpost Modal -->
 <div id="editFitpostModal" class="modal">
   <div class="modal-content">
@@ -76,88 +76,100 @@
 <script src="/public/js/ajax_jquery.js"></script>
 
 <script>
-    var outfitpieces = {{{outfitpiecesJson}}}
+  var outfitpieces = {{{outfitpiecesJson}}};
+
+  document.addEventListener("DOMContentLoaded", function () {
     // Add event listener to the "Edit" button
-      var editButtons = document.querySelectorAll(".edit-fitpost");
-      editButtons.forEach(function (button) {
-        button.addEventListener("click", function () {
-          var fitpostId = button.dataset.fitpostId;
-          openEditModal(fitpostId);
-        });
-      });
-
-    document.addEventListener("DOMContentLoaded", function () {
-      // Initialize currentIndex for each outfit type
-      var outfitTypes = Array.from(new Set(outfitpieces.map(outfit => outfit.outfitType)));
-      outfitTypes.forEach(type => {
-        currentIndex[type] = 0;
-      });
-
-      // Call the function to populate dropdowns
-      populateDropdowns();
-
-
-
-      // Add event listener to the form submission
-      var editFitpostForm = document.getElementById("editFitpostForm");
-      editFitpostForm.addEventListener("submit", function(event) {
-        event.preventDefault(); // Prevent default form submission
-
-        // Here you can handle the form submission, e.g., sending data to the server via AJAX
-        var fitpostId = document.getElementById("editFitpostId").value;
-        var headwearSelectValue = document.getElementById("editHeadwearSelect").value;
-        var bodywearSelectValue = document.getElementById("editBodywearSelect").value;
-        var legwearSelectValue = document.getElementById("editLegwearSelect").value;
-        var footwearSelectValue = document.getElementById("editFootwearSelect").value;
-
-        // Example AJAX request (you can modify this according to your backend setup)
-        var formData = {
-          fitpostId: fitpostId,
-          headwear: headwearSelectValue,
-          bodywear: bodywearSelectValue,
-          legwear: legwearSelectValue,
-          footwear: footwearSelectValue
-        };
-
-        // Perform AJAX request
-        $.ajax({
-          url: "/api/edit-fitpost",
-          method: "POST",
-          data: formData,
-          success: function(response) {
-            console.log("Fitpost updated successfully:", response);
-            // Optionally, you can close the modal after successful submission
-            var modal = document.getElementById("editFitpostModal");
-            modal.style.display = "none";
-          },
-          error: function(xhr, status, error) {
-            console.error("Error updating fitpost:", error);
-            // Optionally, display an error message to the user
-          }
-        });
+    var editButtons = document.querySelectorAll(".edit-fitpost");
+    editButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        var fitpostId = button.dataset.fitpostId;
+        openEditModal(fitpostId);
       });
     });
 
-    function openEditModal(fitpostId) {
-    // Create the fitpostData object using the outfitpieces array
-    var fitpostData = {
-      headwearOptions: outfitpieces.filter(outfit => outfit.outfitType === "head"),
-      bodywearOptions: outfitpieces.filter(outfit => outfit.outfitType === "body"),
-      legwearOptions: outfitpieces.filter(outfit => outfit.outfitType === "leg"),
-      footwearOptions: outfitpieces.filter(outfit => outfit.outfitType === "foot")
-    };
+    // Add event listener to the form submission
+    var editFitpostForm = document.getElementById("editFitpostForm");
+    editFitpostForm.addEventListener("submit", function (event) {
+      event.preventDefault(); // Prevent default form submission
 
+      // Here you can handle the form submission, e.g., sending data to the server via AJAX
+      var fitpostId = document.getElementById("editFitpostId").value;
+      var headwearSelectValue = document.getElementById("editHeadwearSelect").value;
+      var bodywearSelectValue = document.getElementById("editBodywearSelect").value;
+      var legwearSelectValue = document.getElementById("editLegwearSelect").value;
+      var footwearSelectValue = document.getElementById("editFootwearSelect").value;
+
+      // Example AJAX request (you can modify this according to your backend setup)
+      var formData = {
+        fitpostId: fitpostId,
+        headwear: headwearSelectValue,
+        bodywear: bodywearSelectValue,
+        legwear: legwearSelectValue,
+        footwear: footwearSelectValue,
+      };
+
+      // Perform AJAX request
+      $.ajax({
+        url: "/api/edit-fitpost",
+        method: "POST",
+        data: formData,
+        success: function (response) {
+          console.log("Fitpost updated successfully:", response);
+          // Optionally, you can close the modal after successful submission
+          var modal = document.getElementById("editFitpostModal");
+          modal.style.display = "none";
+        },
+        error: function (xhr, status, error) {
+          console.error("Error updating fitpost:", error);
+          // Optionally, display an error message to the user
+        },
+      });
+    });
+  });
+
+  function openEditModal(fitpostId) {
     // Get the select element references
     var headwearSelect = document.getElementById("editHeadwearSelect");
     var bodywearSelect = document.getElementById("editBodywearSelect");
     var legwearSelect = document.getElementById("editLegwearSelect");
     var footwearSelect = document.getElementById("editFootwearSelect");
 
+    // Clear existing options
+    headwearSelect.innerHTML = "";
+    bodywearSelect.innerHTML = "";
+    legwearSelect.innerHTML = "";
+    footwearSelect.innerHTML = "";
+
     // Populate dropdown menus with images
-    populateDropdown(headwearSelect, fitpostData.headwearOptions);
-    populateDropdown(bodywearSelect, fitpostData.bodywearOptions);
-    populateDropdown(legwearSelect, fitpostData.legwearOptions);
-    populateDropdown(footwearSelect, fitpostData.footwearOptions);
+    var fitpostCount = document.querySelectorAll(".fitpost").length;
+    for (var i = 1; i <= fitpostCount; i++) {
+      var optionElement = document.createElement("option");
+      optionElement.value = "fitpost" + i;
+      optionElement.setAttribute("data-image", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRS1u05OPc7MSt9f5Dg2QMSbRPu_FHowIjog-jxeSwHIw&s");
+      optionElement.textContent = "Fitpost " + i;
+      headwearSelect.appendChild(optionElement.cloneNode(true));
+      bodywearSelect.appendChild(optionElement.cloneNode(true));
+      legwearSelect.appendChild(optionElement.cloneNode(true));
+      footwearSelect.appendChild(optionElement.cloneNode(true));
+    }
+
+    // Customize the appearance of the dropdown options
+    var selectElements = document.querySelectorAll("select");
+    selectElements.forEach(function (selectElement) {
+      selectElement.style.width = "200px";
+      selectElement.style.height = "200px";
+      selectElement.style.backgroundSize = "cover";
+      selectElement.style.backgroundRepeat = "no-repeat";
+      selectElement.style.backgroundPosition = "center";
+      selectElement.style.padding = "10px";
+
+      selectElement.addEventListener("change", function () {
+        var selectedOption = this.options[this.selectedIndex];
+        var imageUrl = selectedOption.getAttribute("data-image");
+        this.style.backgroundImage = "url('" + imageUrl + "')";
+      });
+    });
 
     // Show the edit modal
     var modal = document.getElementById("editFitpostModal");
@@ -167,26 +179,26 @@
     document.getElementById("editFitpostId").value = fitpostId;
   }
 
-    // Function to populate dropdown with images
-    function populateDropdown(selectElement, options) {
-    selectElement.innerHTML = ""; // Clear existing options
-    options.forEach(function (option) {
-      var optionElement = document.createElement("option");
-      var imgElement = document.createElement("img");
-      imgElement.src = option.imageUrl; // Assuming the imageUrl property exists on each option
-      imgElement.alt = option.name; // Assuming the name property exists on each option
-      imgElement.width = 100; // Adjust as needed
-      imgElement.height = 100; // Adjust as needed
-      optionElement.value = option._id; // Assuming option has an _id property
-      optionElement.appendChild(imgElement);
-      selectElement.appendChild(optionElement);
-    });
+  // Close the modal when the close button is clicked
+  var closeBtn = document.getElementsByClassName("close")[0];
+  closeBtn.onclick = function () {
+    var modal = document.getElementById("editFitpostModal");
+    modal.style.display = "none";
+  };
+
+  // Function to display the image dynamically
+  function displayImage(imageUrl) {
+    var imgElement = document.createElement("img");
+    imgElement.src = imageUrl;
+    imgElement.alt = "Dynamic Image";
+    imgElement.width = 200;
+    imgElement.height = 200;
+
+    var container = document.querySelector(".container");
+    container.appendChild(imgElement);
   }
 
-    // Close the modal when the close button is clicked
-    var closeBtn = document.getElementsByClassName("close")[0];
-    closeBtn.onclick = function() {
-      var modal = document.getElementById("editFitpostModal");
-      modal.style.display = "none";
-    }
+  // Example usage of displayImage function
+  var imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRS1u05OPc7MSt9f5Dg2QMSbRPu_FHowIjog-jxeSwHIw&s";
+  displayImage(imageUrl);
 </script>

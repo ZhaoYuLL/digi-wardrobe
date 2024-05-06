@@ -111,6 +111,7 @@ router.route("/userProfile").get(async (req, res) => {
     );
 
     res.render("userProfile", {
+      title: "User Profile",
       userName: username,
       firstName,
       lastName,
