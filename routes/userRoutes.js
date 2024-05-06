@@ -23,7 +23,7 @@ router
   })
   .post(async (req, res) => {
     //code here for POST
-    const { userName, firstName, lastName, age, email, password, confirmPassword } = req.body;
+    let { userName, firstName, lastName, age, email, password, confirmPassword } = req.body;
 
     try {
       userName = validString(userName);
