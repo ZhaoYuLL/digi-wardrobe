@@ -57,13 +57,15 @@ const searchByUID = async (uid) => {
   console.log("uid", fpList);
 
   return fpList;
-};
+
+}
 
 const searchByFPID = async (id) => {
+
   id = validString(id);
   const fitpostCollection = await fitposts();
   const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
-  if (fp === null) throw "No fitpost with that id";
+  if (fp === null) throw 'No fitpost with that id';
 
   // replaces ObjectId with string
   fp._id = fp._id.toString();
@@ -72,7 +74,106 @@ const searchByFPID = async (id) => {
   console.log(fp);
 
   return fp;
-};
+
+}
+
+
+const addLike = async (id) => {
+
+  id = validString(id);
+  const fitpostCollection = await fitposts();
+  const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
+  if (fp === null) throw 'No fitpost with that id';
+
+  // replaces ObjectId with string
+  fp._id = fp._id.toString();
+
+
+
+  const updatePost = {
+    likes: fp.likes + 1
+  }
+
+  const updatedInfo = await fitpostCollection.findOneAndUpdate(
+    { _id: new ObjectId(id) },
+    { $set: updatePost },
+    { returnDocument: 'after' }
+  );
+
+  if (!updatedInfo) {
+    throw 'could not update successfully';
+  }
+  updatedInfo._id = updatedInfo._id.toString();
+  return updatedInfo;
+
+}
+
+
+
+const removeLike= async(id) => {
+ 
+  id = validString(id);
+  const fitpostCollection = await fitposts();
+  const fp = await fitpostCollection.findOne({_id: new ObjectId(id)});
+  if (fp === null) throw 'No fitpost with that id';
+
+  // replaces ObjectId with string
+  fp._id = fp._id.toString();
+
+
+
+  const updatePost = {
+    likes: fp.likes - 1
+  }
+
+  const updatedInfo = await fitpostCollection.findOneAndUpdate(
+    {_id: new ObjectId(id)},
+    {$set: updatePost},
+    {returnDocument: 'after'}
+  );
+
+  if (!updatedInfo) {
+    throw 'could not update successfully';
+  }
+  updatedInfo._id = updatedInfo._id.toString();
+  return updatedInfo;
+
+}
+
+
+const addSave= async(id) => {
+ 
+  id = validString(id);
+  const fitpostCollection = await fitposts();
+  const fp = await fitpostCollection.findOne({_id: new ObjectId(id)});
+  if (fp === null) throw 'No fitpost with that id';
+
+  // replaces ObjectId with string
+  fp._id = fp._id.toString();
+
+ 
+
+  const updatePost = {
+    saves: fp.saves + 1
+  }
+
+  const updatedInfo = await fitpostCollection.findOneAndUpdate(
+    {_id: new ObjectId(id)},
+    {$set: updatePost},
+    {returnDocument: 'after'}
+  );
+
+  if (!updatedInfo) {
+    throw 'could not update successfully';
+  }
+  updatedInfo._id = updatedInfo._id.toString();
+  return updatedInfo;
+
+}
+
+
+
+
 
 const createFP = async (
   user_id,
@@ -80,7 +181,11 @@ const createFP = async (
   headwear,
   bodywear,
   legwear,
-  footwear
+  footwear,
+  head_id,
+  body_id,
+  leg_id,
+  foot_id,
 ) => {
   // find a way to validate these ids
   user_id = validString(user_id);
@@ -89,35 +194,44 @@ const createFP = async (
   bodywear = validString(bodywear);
   legwear = validString(legwear);
   footwear = validString(footwear);
+  head_id = validString(head_id);
+  body_id = validString(body_id);
+  leg_id = validString(leg_id);
+  foot_id = validString(foot_id);
 
   let likes = 0;
   let saves = 0;
 
   let date = new Date();
 
-  let formattedDate = date.toISOString().split("T")[0];
+  //let formattedDate = date.toISOString().split('T')[0];
 
   let newFP = {
     user_id,
-    postedDate: formattedDate,
+    postedDate: date,
     headwear,
     bodywear,
     legwear,
     footwear,
+    head_id,
+    body_id,
+    leg_id,
+    foot_id,
     likes,
-    saves,
+    saves
   };
 
   const fitpostCollection = await fitposts();
   const insertInfo = await fitpostCollection.insertOne(newFP);
   if (!insertInfo.acknowledged || !insertInfo.insertedId)
-    throw "could not add fitpost womp womp";
+    throw 'could not add fitpost womp womp';
 
   // converts id to string to get the product object
   const newId = insertInfo.insertedId.toString();
   const fp = await searchByFPID(newId);
   return fp;
   //return newProduct;
-};
+}
 
-export { getAll, latest, trending, searchByUID, searchByFPID, createFP };
+export{getAll, latest, trending, searchByUID, searchByFPID, createFP, addLike, addSave, removeLike}
+

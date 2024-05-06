@@ -74,6 +74,27 @@ app.use("/user", (req, res, next) => {
 		next();
 	}
 });
+app.use("/fitposts", (req, res, next) => {
+	if (!req.session.user) {
+		return res.redirect("/login");
+	} else {
+		next();
+	}
+})
+app.use("/outfitpieces", (req, res, next) => {
+	if (!req.session.user) {
+		return res.redirect("/login");
+	} else {
+		next();
+	}
+})
+app.use("/index", (req, res, next) => {
+	if (!req.session.user) {
+		return res.redirect("/login");
+	} else {
+		next();
+	}
+})
 app.use("/logout", (req, res, next) => {
 	if (!req.session.user) {
 		return res.redirect("/login");
