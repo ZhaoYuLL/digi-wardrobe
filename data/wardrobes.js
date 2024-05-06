@@ -9,8 +9,8 @@ const getAllWardrobes = async () => {
 const getWardrobeById = async (id) => {
     // TODO: validate id parameter
     const wardrobeCollection = await wardrobe();
-    const wardrobe = await wardrobeCollection.findOne({ _id: new ObjectId(id) }, { projection: { password: 0 } });
-    return user;
+    const drobe = await wardrobeCollection.findOne({ _id: new ObjectId(id) }, { projection: { password: 0 } });
+    return drobe;
 }
 
 const getWardrobesByIds = async (ids) => {

@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import * as fp from '../data/fitposts.js';
 import * as user from '../data/users.js';
+import * as wardrobe from '../data/wardrobes.js';
 
 import { getOutfitPiecesByUserId } from '../data/outfitPieces.js';
 import { validString, addSignedUrlsToFitPosts_in_fitposts, convertDate, addSignedUrlsToPosts } from '../helper.js';
 import xss from 'xss';
-import { wardrobe } from '../config/mongoCollections.js';
+// import { wardrobe } from '../config/mongoCollections.js'; idk wahtthis is commenting it out
 
 // import { addSignedUrlsToFitPosts_in_wardrobe } from "../helper.js";
 
@@ -21,8 +22,9 @@ router.route('/').get(async (req, res) => {
         for (const fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
-        return res.render('explore_page', { title: 'Explore', fitposts: fpList, wardrobes: req.session.user.wardrobes });
-    }
+        let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
+
+        return res.render('explore_page', { title: 'Latest', fitposts: postsWithSignedUrls, wardrobes: drobes });    }
     catch (e) {
         return res.status(500).send(e);
     }
@@ -163,8 +165,8 @@ router.route('/trending').get(async (req, res) => {
         for (const fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
-        return res.render('explore_page', { title: 'Trending', fitposts: postsWithSignedUrls, wardrobes: req.session.user.wardrobes });
-    }
+        let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
+        return res.render('explore_page', { title: 'Latest', fitposts: postsWithSignedUrls, wardrobes: drobes });    }
     catch (e) {
         return res.status(500).send(e);
     }
@@ -180,9 +182,11 @@ router.route('/latest').get(async (req, res) => {
         for (const fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
-        console.log('wardrobes', req.session.user.wardrobes);
+        let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
+        console.log('wardrobes', drobes);
+        console.log('fps', postsWithSignedUrls);
 
-        return res.render('explore_page', { title: 'Latest', fitposts: postsWithSignedUrls, wardrobes: req.session.user.wardrobes });
+        return res.render('explore_page', { title: 'Latest', fitposts: postsWithSignedUrls, wardrobes: drobes });
     }
     catch (e) {
         return res.status(500).send(e);
@@ -202,13 +206,13 @@ router.route('/user/:uid').get(async (req, res) => {
     try {
         let fpList = await fp.searchByUID(userId);
         // will need to change later to show user name and not user id
-        const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
-            fpList
-        );
+        const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(fpList);
         for (const fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
-        return res.render('explore_page', { title: `${req.session.user.username}'s FitPosts`, fitposts: postsWithSignedUrls, wardrobes: req.session.user.wardrobes });
+        let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
+
+        return res.render('explore_page', { title: `${req.session.user.username}'s FitPosts`, fitposts: postsWithSignedUrls, wardrobes: drobes });
     } catch (e) {
         return res.status(500).send(e);
     }

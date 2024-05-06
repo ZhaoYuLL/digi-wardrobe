@@ -33,16 +33,16 @@
 				<button class="save" id="save-{{this._id}}">Save Button</button>
 				<p class="like_num" id="likenum-{{this._id}}">likes: {{likes}}</p>
 				<!--<p class="save_num" id="savenum-{{this._id}}">saves: {{saves}}</p>-->
-
 				<select class="wardrobe-select">
-					<option value="new">Create New Folder</option>
-					{{#each wardrobes}}
-					<option value="{{this._id}}">{{this.wardrobeName}}</option>
+					<option value="new">Create New Wardrobe</option>
+					{{#each ../wardrobes}}
+						<option value="{{this._id}}">{{this.wardrobeName}}</option>
 					{{/each}}
 				</select>
+				
 
 				<!-- New Folder Input (Hidden by default) -->
-				<input type="text" class="new-folder-input" placeholder="Enter folder name" style="display: none;">
+				<input type="text" class="new-wardrobe-input" placeholder="Enter wardrobe name" style="display: none;">
 				
 				<p>Posted Date: {{postedDate}}</p>
 			</li>
