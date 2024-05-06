@@ -28,7 +28,7 @@ router.route('/create')
         // need to change so that it only gets outfit pieces that the user has in their closet
         try {
             const postsUrls = await addSignedUrlsToPosts();
-            //console.log(postsUrls);
+            console.log(postsUrls);
 
             let headwear = postsUrls.filter((element) => {
                 return element.outfitType === "head"
@@ -49,7 +49,8 @@ router.route('/create')
                 head: headwear,
                 body: bodywear,
                 leg: legwear,
-                foot: footwear
+                foot: footwear,
+                script_partial: "createFP_script"
             });
         } catch (e) {
             return res.status(500).send(e.message);

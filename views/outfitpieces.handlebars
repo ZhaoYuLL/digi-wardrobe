@@ -2,15 +2,18 @@
 <form id="createOutfitPiece" action="/outfitpieces" method="POST" enctype="multipart/form-data">
 	<label for="image">Upload an image of your clothing item: </label>
 	<input type="file" id="image" name="image" accept="image/*">
+	<br>
 	<label for="outfitType">Select clothing type: </label>
 	<select id="outfitType" name="outfitType">
-		<option value="headwear">Headwear</option>
-		<option value="bodywear">Top</option>
-		<option value="legwear">Bottom</option>
-		<option value="footwear">Footwear</option>
+		<option value="head">Headwear</option>
+		<option value="body">Top</option>
+		<option value="leg">Bottom</option>
+		<option value="foot">Footwear</option>
 	</select>
+	<br>
 	<label for="caption">Description: </label>
-	<input type="text" id="caption" name="caption" placeholder="Write a description!" required>
+	<input type="text" id="caption" name="caption" placeholder="Write a description!">
+	<br>
 	<label for="link">Where did you get your clothing item from?</label>
 	<input type="text" id="link" name="link" placeholder="Clothing source link">
 	<button type="submit">Submit</button>
@@ -27,5 +30,3 @@
 	</form>
 </div>
 {{/each}}
-
-<script></script>

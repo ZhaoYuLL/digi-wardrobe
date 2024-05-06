@@ -33,6 +33,7 @@
     }
 
     // initialize which outfit pieces are displayed and input values
+    console.log($("#head").children().first());
     let initialHead = $("#head").children().first().attr('data-active', 'true');
     let head_id = initialHead[0].children[0].getAttribute('data-id');
     let head_url = initialHead[0].children[0].getAttribute('data-name');
@@ -94,7 +95,7 @@
     })
 
     $("#createFitpost").on("submit", (event) => {
-        $('#error').remove();
+        $('.error').remove();
 
         let errorCount = 0;
 
@@ -103,7 +104,7 @@
         const head_id = $('#head_id').val().trim();
         head_id = validString(head_id);
         if (!headwear || !head_id) {
-            let error = "<div id='error'>Can't create fitpost with no headwear</div>";
+            let error = "<div class='error'>Can't create fitpost with no headwear</div>";
             $('#headwear-slider').after(error);
             errorCount++;
         }
@@ -112,7 +113,7 @@
         const body_id = $('#body_id').val().trim();
         body_id = validString(body_id);
         if (!bodywear || !body_id) {
-            let error = "<div id='error'>Can't create fitpost with no top</div>";
+            let error = "<div class='error'>Can't create fitpost with no top</div>";
             $('#bodywear-slider').after(error);
             errorCount++;
         }
@@ -121,7 +122,7 @@
         const leg_id = $('#leg_id').val().trim();
         leg_id = validString(leg_id);
         if (!legwear || !leg_id) {
-            let error = "<div id='error'>Can't create fitpost with no bottoms</div>";
+            let error = "<div class='error'>Can't create fitpost with no bottoms</div>";
             $('#legwear-slider').after(error);
             errorCount++;
         }
@@ -130,7 +131,7 @@
         const foot_id = $('#foot_id').val().trim();
         foot_id = validString(foot_id);
         if (!footwear || !foot_id) {
-            let error = "<div id='error'>Can't create fitpost with no footwear</div>";
+            let error = "<div class='error'>Can't create fitpost with no footwear</div>";
             $('#footwear-slider').after(error);
             errorCount++;
         }

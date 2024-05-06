@@ -42,7 +42,7 @@ router
 			} else {
 				console.log("no user");
 			}
-			res.render("outfitpieces", { title: "fitposts", posts: postsUrls });
+			res.render("outfitpieces", { title: "fitposts", posts: postsUrls, script_partial: "createOutfitPiece_script" });
 		} catch (error) {
 			console.error("Error rendering fitposts:", error);
 			res.status(500).send("Internal Server Error");
@@ -60,7 +60,7 @@ router
 			imageName,
 			req.session.user.username
 		);
-		res.render("outfitpieces", { title: "fitposts" });
+		res.redirect("/");
 	});
 router.route("/:imageName").delete(async (req, res) => {
 	try {
