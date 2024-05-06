@@ -247,6 +247,39 @@ const checkLike = async(userId, fpId) => {
     }
 }
 
+
+
+const addLike= async(userId, fpId) => {
+
+    const userCollection = await users();
+    const user = await userCollection.findOne({_id: new ObjectId(userId)});
+
+    if (user === null) throw 'No fitpost with that id';
+  
+    // replaces ObjectId with string
+    user._id = user._id.toString();
+  
+    user.favorite.push(fpId);
+  
+    let newFavorite = user.favorite;
+    const updateUser = {
+      favorite: newFavorite
+    }
+  
+    const updatedInfo = await userCollection.findOneAndUpdate(
+      {_id: new ObjectId(userId)},
+      {$set: updateUser},
+      {returnDocument: 'after'}
+    );
+  
+    if (!updatedInfo) {
+      throw 'could not update successfully';
+    }
+    updatedInfo._id = updatedInfo._id.toString();
+    return updatedInfo;
+  
+  }
+
 /*const checkSave = async(userId, fpId, wardrobeId) => {
     const user = await getUserById(userId);
     if (user) {

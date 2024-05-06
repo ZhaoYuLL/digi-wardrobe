@@ -113,13 +113,23 @@ router.route('/user/:uid').get(async (req, res) => {
   // POST route for handling like action
 router.post('/like', async (req, res) => {
     const data = req.body;
+
+    const userId = req.session.user.userId;
     if (!data || Object.keys(data).length === 0) {
         return res
           .status(400)
           .json({error: 'There are no fields in the request body'});
     }
     try {
-        const updatedFitpost = await fp.addLike(data.fitpostId);
+        // like or unlike
+        let updatedFitpost;
+        
+        if (await user.checkLike(userId, data.fitpostId)) {
+            updatedFitpost = await fp.removeLike(data.fitpostId);
+        }
+        else {
+            updatedFitpost = await fp.addLike(data.fitpostId);
+        }
         res.status(200).json(updatedFitpost);
         //res.redirect('back');
     } catch (error) {
