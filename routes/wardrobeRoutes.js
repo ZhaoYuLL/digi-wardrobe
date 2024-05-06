@@ -9,6 +9,7 @@ import {
   addSignedUrlsToFitPosts_in_closet,
   addSignedUrlsToFitPosts_in_fitposts,
 } from "../helper.js";
+import xss from 'xss';
 
 const router = Router();
 
@@ -87,6 +88,7 @@ router.get("/favorites", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+/*
 router.post("/create-fitpost", async (req, res) => {
   try {
     const selectedOutfits = JSON.parse(req.body.msg);
@@ -118,5 +120,5 @@ router.post("/create-fitpost", async (req, res) => {
       .status(500)
       .json({ message: "Error creating fitpost", error: error.message });
   }
-});
+});*/
 export default router;

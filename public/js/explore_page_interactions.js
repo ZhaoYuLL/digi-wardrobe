@@ -25,9 +25,9 @@ import * as fp from '../../data/fitposts.js';*/
 
         $.ajax(requestConfig).then(function (response) { 
             //let likenum = $(`.like_num#like-${currentId}`);
-            let likenum = document.querySelector(`.like_num#like-${currentId}`);
+            let likenum = document.querySelector(`.like_num#likenum-${currentId}`);
             likenum.innerHTML = `likes: ${response.likes}`;
-            console.log('likenum', likenum);
+            //console.log('likenum', likenum);
 
         });
     });
@@ -47,7 +47,7 @@ import * as fp from '../../data/fitposts.js';*/
 
         $.ajax(requestConfig).then(function (response) { 
             //let savenum = $(`.like_num#like-${currentId}`);
-            let savenum = document.querySelector(`.save_num#save-${currentId}`);
+            let savenum = document.querySelector(`.save_num#savenum-${currentId}`);
             savenum.innerHTML = `saves: ${response.saves}`;
 
         });
