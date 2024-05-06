@@ -60,7 +60,7 @@ router
 			imageName,
 			req.session.user.username
 		);
-		res.redirect("/");
+		res.redirect("/outfitpieces");
 	});
 router.route("/:imageName").delete(async (req, res) => {
 	try {
