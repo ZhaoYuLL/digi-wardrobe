@@ -92,22 +92,22 @@ router
   })
   .post(async (req, res) => {
     //code here for POST
-    const { userName, password } = req.body;
+    let { userName, password } = req.body;
+
+    try {
+      userName = validString(userName);
+      userName = xss(userName);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+    try {
+      password = validString(password);
+      password = xss(password);
+    } catch (e) {
+      res.status(400).send(e);
+    }
     try {
       const user = await loginUser(userName, password);
-
-      try {
-        userName = validString(userName);
-        userName = xss(userName);
-      } catch (e) {
-        res.status(400).send(e);
-      }
-      try {
-        password = validString(password);
-        password = xss(password);
-      } catch (e) {
-        res.status(400).send(e);
-      }
 
       req.session.user = {
         username: user.username,
