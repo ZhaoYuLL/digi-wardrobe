@@ -1,5 +1,3 @@
-{{! POST request to upload a single file }}
-
 <form id="createOutfitPiece" action="/outfitpieces" method="POST" enctype="multipart/form-data">
 	<label for="image">Upload an image of your clothing item: </label>
 	<input type="file" id="image" name="image" accept="image/*">
@@ -22,12 +20,9 @@
 
 {{! displays all posts sent here, posts sent here can be filted by username }}
 {{#each posts}}
-<div class="post">
-	<img src="{{this.imageUrl}}" width="200px;" height="200px" alt="Fitpost Image" />
+<div class="outfit-piece" id="{{this._id}}">
+	<img src="{{this.imageUrl}}" alt="{{this.caption}}" />
 	<p>{{this.caption}}</p>
-	<form action="/fitposts/{{this.imageName}}?_method=DELETE" method="POST">
-		<input type="hidden" name="_method" value="DELETE" />
-		<button type="submit" class="delete-button">Delete</button>
-	</form>
+	<button type="button" class="delete-button" id="{{this.imageName}}">Delete</button>
 </div>
 {{/each}}

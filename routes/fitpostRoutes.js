@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as fp from '../data/fitposts.js';
 import * as user from '../data/users.js';
-import { getOutfitPiecesByUserId } from '../data/outfitPieces.js';
+import { getOutfitPiecesByUsername } from '../data/outfitPieces.js';
 import { validString, addSignedUrlsToFitPosts_in_fitposts, convertDate, addSignedUrlsToPosts } from '../helper.js';
 import xss from 'xss';
 
@@ -31,7 +31,7 @@ router.route('/create')
         // need to change so that it only gets outfit pieces that the user has in their closet
         try {
             const postsUrls = await addSignedUrlsToPosts();
-            console.log(postsUrls);
+            //console.log(postsUrls);
 
             let headwear = postsUrls.filter((element) => {
                 return element.outfitType === "head"
@@ -61,7 +61,7 @@ router.route('/create')
     })
     .post(async (req, res) => {
         // TODO: input validation
-        console.log("found the post route!");
+        //console.log("found the post route!");
         if (req.session && req.session.user) {
             let data = req.body;
             const user = req.session.user;
@@ -188,7 +188,7 @@ router.route('/latest').get(async (req, res) => {
 
 router.route('/user/:uid').get(async (req, res) => {
     //code here for GET a single movie
-    console.log(req.params.uid);
+    //console.log(req.params.uid);
     let userId = req.params.uid;
     try {
         userId = validString(userId);
@@ -212,7 +212,7 @@ router.route('/user/:uid').get(async (req, res) => {
 
 router.route('/:id').get(async (req, res) => {
     //code here for GET a single movie
-    console.log(req.params.id);
+    //console.log(req.params.id);
     let fpid = req.params.id;
     try {
         fpid = validString(fpid);

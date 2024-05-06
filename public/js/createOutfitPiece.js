@@ -12,6 +12,21 @@
         }
     };
 
+    $('.delete-button').on("click", function () {
+
+        const imageName = $(this).attr('id');
+        // console.log(imageName);
+        let requestConfig = {
+            method: "DELETE",
+            url: '/outfitpieces/' + imageName
+        }
+        $(this).parent().remove();
+        $.ajax(requestConfig).then(function (responseMessage) {
+            console.log(responseMessage);
+            $(this).parent().remove();
+        })
+    });
+
     $('#createOutfitPiece').on("submit", function (event) {
         $('.error').remove();
 
