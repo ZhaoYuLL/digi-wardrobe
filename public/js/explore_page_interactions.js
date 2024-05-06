@@ -10,7 +10,7 @@ import * as fp from '../../data/fitposts.js';*/
         saveButtons = $('.save')
         dropdown = $('.wardrobe-select');
 
-    dropdown.hide();
+    //dropdown.hide();
         
 
 
@@ -42,23 +42,82 @@ import * as fp from '../../data/fitposts.js';*/
     saveButtons.on('click', function(event) {
         event.preventDefault();
         let currentId = $(this).attr('id').substring(5);
-        console.log(currentId);
-        let requestConfig = {
-            method: 'POST',
-            url: `${routing}/save`,
-            contentType: 'application/json',
-            data: JSON.stringify({ fitpostId: currentId })
+        //console.log(currentId);
+        let dropdown = $(`.wardrobe-select#dropdown-${currentId}`);
+        let drobeId = dropdown.val();
+        console.log(dropdown.val());
+        let newWardrobeName = '';
+
+        if (drobeId === 'new') {
+            let input = $(`.new-wardrobe-input#input-${currentId}`);
+            input.val('');
+            input.show();
+            newWardrobeName = input.val();
+            input.focus(); 
+            // wait for user input
+            input.keypress(function(event) {
+                if (event.which === 13) { // when enter is clicked
+                    event.preventDefault();
+                    let newWardrobeName = input.val();
+                    console.log(newWardrobeName);
+                    if (typeof newWardrobeName !== "string" || !newWardrobeName) {
+                        alert('invalid naming');
+                    } else {
+                        let inputTrim = newWardrobeName.trim();
+                        if (inputTrim.length === 0) {
+                            alert('no name was entered');
+                        }
+                        newWardrobeName = inputTrim;
+                    }
+                    input.hide();
+                    let requestData = {
+                        fitpostId: currentId,
+                        wardrobeId: drobeId,
+                        newName: newWardrobeName
+                    };
+                
+                    let requestConfig = {
+                        method: 'POST',
+                        url: `${routing}/save`,
+                        contentType: 'application/json',
+                        data: JSON.stringify(requestData)
+                    };
+                    $.ajax(requestConfig).then(function (response) { 
+                        console.log('this ohsuld print',response);
+                    });
+                }
+                
+        
+            });
+        }
+        else {
+            let requestData = {
+                fitpostId: currentId,
+                wardrobeId: drobeId,
+                newName: newWardrobeName
             };
+        
+            let requestConfig = {
+                method: 'POST',
+                url: `${routing}/save`,
+                contentType: 'application/json',
+                data: JSON.stringify(requestData)
+            };
+            $.ajax(requestConfig).then(function (response) { 
+                //let savenum = $(`.like_num#like-${currentId}`);
+                //let savenum = document.querySelector(`.save_num#savenum-${currentId}`);
+                //savenum.innerHTML = `saves: ${response.saves}`;
+                console.log('second ajax req');
+                console.log('this ohsuld print',response);
+                //dropdown.show();
+                
+    
+    
+            });
+        }
 
-        $.ajax(requestConfig).then(function (response) { 
-            //let savenum = $(`.like_num#like-${currentId}`);
-            let savenum = document.querySelector(`.save_num#savenum-${currentId}`);
-            //savenum.innerHTML = `saves: ${response.saves}`;
-            console.log('this ohsuld print');
-            dropdown.show();
-
-
-        });
+        
+         
     });
 
 })(window.jQuery);

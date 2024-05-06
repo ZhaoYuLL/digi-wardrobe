@@ -183,8 +183,7 @@ router.route('/latest').get(async (req, res) => {
             fit.postedDate = convertDate(fit);
         }
         let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
-        console.log('wardrobes', drobes);
-        console.log('fps', postsWithSignedUrls);
+    
 
         return res.render('explore_page', { title: 'Latest', fitposts: postsWithSignedUrls, wardrobes: drobes });
     }
@@ -196,7 +195,7 @@ router.route('/latest').get(async (req, res) => {
 
 router.route('/user/:uid').get(async (req, res) => {
     //code here for GET a single movie
-    console.log(req.params.uid);
+    //console.log(req.params.uid);
     let userId = req.params.uid;
     try {
         userId = validString(userId);
@@ -220,7 +219,7 @@ router.route('/user/:uid').get(async (req, res) => {
 
 router.route('/:id').get(async (req, res) => {
     //code here for GET a single movie
-    console.log(req.params.id);
+    //console.log(req.params.id);
     let fpid = req.params.id;
     try {
         fpid = validString(fpid);
@@ -283,6 +282,22 @@ router.post('/save', async (req, res) => {
             .json({ error: 'There are no fields in the request body' });
     }
     try {
+        if (data.wardrobeId === 'new') {
+            
+            //make new wardrobe, req.session.user.userId, data.newName, data.fitpostId
+            //add wardrobe under user
+            console.log('not added yet');
+            let newDrobeId = await wardrobe.createNewWardrobe(data.newName, data.fitpostId, req.session.user.userId);
+            console.log('succ added');
+            await user.addWardrobe(req.session.user.userId, newDrobeId);
+            return res.status(200).json(data.newName);
+
+
+        }
+        else {
+            //add to existing wardrobe,  req.session.user.userId, data.wardrobeId, data.fitpostId
+            //check if fitpost exists in wardrobe alreadyl
+        }
         const updatedFitpost = await fp.addSave(data.fitpostId);
         res.status(200).json(updatedFitpost);
         //res.redirect('back');
