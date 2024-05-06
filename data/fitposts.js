@@ -119,5 +119,19 @@ const createFP = async (
   return fp;
   //return newProduct;
 };
+const deleteFitpost = async (fitpost_id) => {
+  fitpost_id = validString(fitpost_id);
 
-export { getAll, latest, trending, searchByUID, searchByFPID, createFP };
+  const fitpostCollection = await fitposts();
+  const deletionInfo = await fitpostCollection.deleteOne({
+    _id: new ObjectId(fitpost_id),
+  });
+
+  if (deletionInfo.deletedCount === 0) {
+    throw `Could not delete fitpost with id of ${fitpost_id}`;
+  }
+
+  return { deleted: true };
+};
+
+export { getAll, latest, trending, searchByUID, searchByFPID, createFP, deleteFitpost };
