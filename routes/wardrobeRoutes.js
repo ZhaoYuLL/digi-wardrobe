@@ -53,10 +53,10 @@ router.get("/favorites", async (req, res) => {
         { username: username },
         { favorite: 1 }
       );
-      //   const favoriteIds = user.favorite;
+      const favoriteIds = user.favorite;
       console.log("user:", user);
       // Convert favoriteIds to ObjectId
-      const favoriteIds = ["6638dc15cdc617f979c324e8"];
+      //   const favoriteIds = ["6638dc15cdc617f979c324e8"];
       const favoriteObjectIds = favoriteIds.map((id) => new ObjectId(id));
       console.log("ids:", favoriteObjectIds);
       // Find the fitposts that match the favorite IDs
