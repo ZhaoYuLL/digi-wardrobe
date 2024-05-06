@@ -2,8 +2,13 @@ import { Router } from "express";
 const router = Router();
 // import data from users 
 import { createUser, loginUser } from "../data/users.js";
-import { getAll, searchByUID } from "../data/fitposts.js";
+import { getAll, deleteFitpost } from "../data/fitposts.js";
 import { addSignedUrlsToFitPosts_in_fitposts } from "../helper.js";
+import { getAllOutfitPieces } from "../data/testCloset.js";
+import {
+  addSignedUrlsToFitPosts_in_wardrobe,
+  addSignedUrlsToFitPosts_in_closet,
+} from "../helper.js";
 
 router.route('/').get(async (req, res) => {
     //code here for GET THIS ROUTE SHOULD NEVER FIRE BECAUSE OF MIDDLEWARE #1 IN SPECS.
@@ -72,14 +77,18 @@ router
       if (!req.session.user) {
         return res.redirect('/login');
       }
-    
+      
       const { username, firstName, lastName, wardrobes, closet, favorite, userId } = req.session.user;
       
       try {
         // Get all fitposts for the user
-        const allFitposts = await searchByUID(userId);
+        // const allFitposts = await searchByUID(userId);
         //test for display
-        // const allFitposts = await getAll();
+        const allFitposts = await getAll();
+        const outfitpieces = await getAllOutfitPieces();
+        const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_closet(
+          outfitpieces
+        );
     
         // Add signed URLs to fitposts
         const fitpostsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(allFitposts);
@@ -92,14 +101,26 @@ router
           favorite,
           allFitposts: fitpostsWithSignedUrls,
           wardrobes,
+          wardrobes: postsWithSignedUrls,
+          outfitpiecesJson: JSON.stringify(postsWithSignedUrls),
         });
       } catch (error) {
         console.error('Error fetching user data:', error);
         res.status(500).send('An error occurred while fetching user data');
       }
     });
-    
-      
+
+// Route for deleting a fitpost
+router.delete('/fitposts/:id', async (req, res) => {
+  try {
+    await deleteFitpost(req.params.id);
+    res.json({ message: 'Fitpost deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 router.route('/logout').get(async (req, res) => {
         //code here for GET
     req.session.destroy();

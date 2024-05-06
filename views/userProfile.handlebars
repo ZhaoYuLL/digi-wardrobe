@@ -12,7 +12,7 @@
     <div></div>
     <div class = "container"> 
         <section class = "profile"></section>
-            <div class = "bio"></div>
+            <div class = "bio"></div>å
     </div>
     
 <div class="fitposts-container">
@@ -28,8 +28,149 @@
       <img src="{{this.legUrl}}" width="200px;" height="200px" alt="Leg Image" />
       <p>Footwear:</p>
       <img src="{{this.footUrl}}" width="200px;" height="200px" alt="Foot Image" />
+
+      <button class="edit-fitpost" data-fitpost-id="{{this._id}}">Edit</button>
+      <button class="delete-fitpost" data-fitpost-id="{{this._id}}">Delete</button>
     </div>
   {{/each}}
 </div>
+<!-- Edit Fitpost Modal -->
+<div id="editFitpostModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Edit Fitpost</h2>
+    <form id="editFitpostForm">
+      <input type="hidden" id="editFitpostId" name="fitpostId" />
+      <label for="editHeadwearSelect">Headwear:</label>
+      <select id="editHeadwearSelect" name="headwearSelect"></select>
+      <label for="editBodywearSelect">Bodywear:</label>
+      <select id="editBodywearSelect" name="bodywearSelect"></select>
+      <label for="editLegwearSelect">Legwear:</label>
+      <select id="editLegwearSelect" name="legwearSelect"></select>
+      <label for="editFootwearSelect">Footwear:</label>
+      <select id="editFootwearSelect" name="footwearSelect"></select>
+      <button type="submit">Update Fitpost</button>
+    </form>
+  </div>
+</div>
+
     <a id="logoutLink" href="/logout">Logout</a>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="/public/js/ajax_jquery.js"></script>
+
+<script>
+  var outfitpieces = {{{outfitpiecesJson}}}
+  // Add event listener to the "Edit" button
+    var editButtons = document.querySelectorAll(".edit-fitpost");
+    editButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        var fitpostId = button.dataset.fitpostId;
+        openEditModal(fitpostId);
+      });
+    });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Initialize currentIndex for each outfit type
+    var outfitTypes = Array.from(new Set(outfitpieces.map(outfit => outfit.outfitType)));
+    outfitTypes.forEach(type => {
+      currentIndex[type] = 0;
+    });
+
+    // Call the function to populate dropdowns
+    populateDropdowns();
+
+    
+
+    // Add event listener to the form submission
+    var editFitpostForm = document.getElementById("editFitpostForm");
+    editFitpostForm.addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent default form submission
+
+      // Here you can handle the form submission, e.g., sending data to the server via AJAX
+      var fitpostId = document.getElementById("editFitpostId").value;
+      var headwearSelectValue = document.getElementById("editHeadwearSelect").value;
+      var bodywearSelectValue = document.getElementById("editBodywearSelect").value;
+      var legwearSelectValue = document.getElementById("editLegwearSelect").value;
+      var footwearSelectValue = document.getElementById("editFootwearSelect").value;
+
+      // Example AJAX request (you can modify this according to your backend setup)
+      var formData = {
+        fitpostId: fitpostId,
+        headwear: headwearSelectValue,
+        bodywear: bodywearSelectValue,
+        legwear: legwearSelectValue,
+        footwear: footwearSelectValue
+      };
+
+      // Perform AJAX request
+      $.ajax({
+        url: "/api/edit-fitpost",
+        method: "POST",
+        data: formData,
+        success: function(response) {
+          console.log("Fitpost updated successfully:", response);
+          // Optionally, you can close the modal after successful submission
+          var modal = document.getElementById("editFitpostModal");
+          modal.style.display = "none";
+        },
+        error: function(xhr, status, error) {
+          console.error("Error updating fitpost:", error);
+          // Optionally, display an error message to the user
+        }
+      });
+    });
+  });
+
+  function openEditModal(fitpostId) {
+  // Create the fitpostData object using the outfitpieces array
+  var fitpostData = {
+    headwearOptions: outfitpieces.filter(outfit => outfit.outfitType === "head"),
+    bodywearOptions: outfitpieces.filter(outfit => outfit.outfitType === "body"),
+    legwearOptions: outfitpieces.filter(outfit => outfit.outfitType === "leg"),
+    footwearOptions: outfitpieces.filter(outfit => outfit.outfitType === "foot")
+  };
+
+  // Get the select element references
+  var headwearSelect = document.getElementById("editHeadwearSelect");
+  var bodywearSelect = document.getElementById("editBodywearSelect");
+  var legwearSelect = document.getElementById("editLegwearSelect");
+  var footwearSelect = document.getElementById("editFootwearSelect");
+
+  // Populate dropdown menus with images
+  populateDropdown(headwearSelect, fitpostData.headwearOptions);
+  populateDropdown(bodywearSelect, fitpostData.bodywearOptions);
+  populateDropdown(legwearSelect, fitpostData.legwearOptions);
+  populateDropdown(footwearSelect, fitpostData.footwearOptions);
+
+  // Show the edit modal
+  var modal = document.getElementById("editFitpostModal");
+  modal.style.display = "block";
+
+  // Set the fitpost ID in the hidden input field
+  document.getElementById("editFitpostId").value = fitpostId;
+}
+
+  // Function to populate dropdown with images
+  function populateDropdown(selectElement, options) {
+  selectElement.innerHTML = ""; // Clear existing options
+  options.forEach(function (option) {
+    var optionElement = document.createElement("option");
+    var imgElement = document.createElement("img");
+    imgElement.src = option.imageUrl; // Assuming the imageUrl property exists on each option
+    imgElement.alt = option.name; // Assuming the name property exists on each option
+    imgElement.width = 100; // Adjust as needed
+    imgElement.height = 100; // Adjust as needed
+    optionElement.value = option._id; // Assuming option has an _id property
+    optionElement.appendChild(imgElement);
+    selectElement.appendChild(optionElement);
+  });
+}
+
+  // Close the modal when the close button is clicked
+  var closeBtn = document.getElementsByClassName("close")[0];
+  closeBtn.onclick = function() {
+    var modal = document.getElementById("editFitpostModal");
+    modal.style.display = "none";
+  }
+</script>
