@@ -19,7 +19,7 @@ router.route('/').get(async (req, res) => {
         for (const fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
-        return res.render('explore_page', { title: 'Explore', fitposts: fpList });
+        return res.render('explore_page', { title: 'Explore', fitposts: fpList, user: req.session.user });
     }
     catch (e) {
         return res.status(500).send(e);

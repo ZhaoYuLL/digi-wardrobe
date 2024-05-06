@@ -7,7 +7,12 @@ import * as fp from '../../data/fitposts.js';*/
 (function ($) {
     const routing = '/fitposts';
     let likeButtons = $('.like'),
-        saveButtons = $('.save');
+        saveButtons = $('.save')
+        dropdown = $('.wardrobe-select');
+
+    dropdown.hide();
+        
+
 
   
 
@@ -48,7 +53,10 @@ import * as fp from '../../data/fitposts.js';*/
         $.ajax(requestConfig).then(function (response) { 
             //let savenum = $(`.like_num#like-${currentId}`);
             let savenum = document.querySelector(`.save_num#savenum-${currentId}`);
-            savenum.innerHTML = `saves: ${response.saves}`;
+            //savenum.innerHTML = `saves: ${response.saves}`;
+            console.log('this ohsuld print');
+            dropdown.show();
+
 
         });
     });
