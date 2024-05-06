@@ -129,9 +129,11 @@ router.route("/userProfile").get(async (req, res) => {
 });
 
 // Route for deleting a fitpost
-router.delete("/fitposts/:id", async (req, res) => {
+router.post("/userprofile/delete-fitpost", async (req, res) => {
   try {
-    await deleteFitpost(req.params.id);
+    const { fitpostId } = req.body;
+    console.log(fitpostId);
+    await deleteFitpost(fitpostId);
     res.json({ message: "Fitpost deleted successfully" });
   } catch (error) {
     console.error(error);

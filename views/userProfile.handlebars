@@ -95,6 +95,12 @@
           openEditModal(fitpostId, fitpostIndex);
         });
 
+        // Add event listener to the "Delete" button
+        $(".delete-fitpost").on("click", function () {
+          var fitpostId = $(this).data("fitpost-id");
+          deleteFitpost(fitpostId);
+        });
+
         // Function to handle the update fitpost form submission
         $("#editFitpostForm").on("submit", function (event) {
           event.preventDefault();
@@ -275,6 +281,24 @@
         var fitpostElement = $('.fitpost[data-fitpost-id="' + fitpostId + '"]');
         // Update the fitpost element with the updated data
         // ...
+      }
+
+      // Function to delete a fitpost
+      function deleteFitpost(fitpostId) {
+        $.ajax({
+          url: "/userprofile/delete-fitpost",
+          method: "POST",
+          data: { fitpostId: fitpostId },
+          success: function (response) {
+            console.log("Fitpost deleted successfully:", response);
+            // Remove the deleted fitpost from the UI
+            $('.fitpost[data-fitpost-id="' + fitpostId + '"]').remove();
+          },
+          error: function (xhr, status, error) {
+            console.error("Error deleting fitpost:", error);
+            // Optionally, display an error message to the user
+          },
+        });
       }
 
       // Function to display the image dynamically

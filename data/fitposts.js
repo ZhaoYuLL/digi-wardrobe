@@ -211,7 +211,7 @@ const createFP = async (
 };
 
 const deleteFitpost = async (fitpost_id) => {
-  fitpost_id = validString(fitpost_id);
+  //   fitpost_id = validString(fitpost_id);
 
   const fitpostCollection = await fitposts();
   const deletionInfo = await fitpostCollection.deleteOne({
