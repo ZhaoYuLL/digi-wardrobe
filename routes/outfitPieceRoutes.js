@@ -55,6 +55,8 @@ router
 
 		const post = await storeImage(
 			req.body.caption,
+			req.body.link,
+			req.body.outfitType,
 			imageName,
 			req.session.user.username
 		);

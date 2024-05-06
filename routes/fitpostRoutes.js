@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import * as fp from '../data/fitposts.js';
+import { getOutfitPiecesByUserId } from '../data/outfitPieces.js';
 import { validString, addSignedUrlsToFitPosts_in_fitposts, convertDate, addSignedUrlsToPosts } from '../helper.js';
 // import { addSignedUrlsToFitPosts_in_wardrobe } from "../helper.js";
-
 
 const router = Router();
 
@@ -44,7 +44,13 @@ router.route('/create')
                 return element.outfitType === "foot"
             })
 
-            res.render('your_page', { title: "Create Fitpost", head: headwear, body: bodywear, leg: legwear, foot: footwear });
+            res.render('your_page', {
+                title: "Create Fitpost",
+                head: headwear,
+                body: bodywear,
+                leg: legwear,
+                foot: footwear
+            });
         } catch (e) {
             return res.status(500).send(e.message);
         }
@@ -216,8 +222,5 @@ router.route('/:id').get(async (req, res) => {
         return res.status(500).send(e);
     }
 });
-
-
-
 
 export default router;
