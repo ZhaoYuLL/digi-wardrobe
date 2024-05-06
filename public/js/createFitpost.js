@@ -33,7 +33,6 @@
     }
 
     // initialize which outfit pieces are displayed and input values
-    console.log($("#head").children().first());
     let initialHead = $("#head").children().first().attr('data-active', 'true');
     let head_id = initialHead[0].children[0].getAttribute('data-id');
     let head_url = initialHead[0].children[0].getAttribute('data-name');
@@ -70,23 +69,24 @@
         const button = $(this);
         const buttonType = button.data('id');
         const offset = buttonType === "prev" ? -1 : 1;
+        //console.log(offset);
 
         const slides = button.closest('div').find('li');
         if (slides.length > 1) {
             const activeSlide = findElementWithAttribute(slides, 'data-active');
             // loop through all outfit pieces
-            let newIndex = $('li').index(activeSlide) + offset;
+            let newIndex = button.closest('div').find('li').index(activeSlide) + offset;
             if (newIndex < 0) newIndex = slides.length - 1;
             if (newIndex >= slides.length) newIndex = 0;
-
+            //console.log("from " + button.closest('div').find('li').index(activeSlide) + " to " + newIndex);
             // reassign the data-active attribute to the new selected outfit piece
             let newActive = slides[newIndex];
             newActive.setAttribute('data-active', 'true');
+            console.log(activeSlide);
             activeSlide.removeAttribute('data-active');
 
             const currentId = newActive.children[0].getAttribute('data-id');
             const currentUrl = newActive.children[0].getAttribute('data-name');
-            //console.log(currentId);
             const outfitType = button.data('part');
 
             changeInputValue(outfitType, currentId, currentUrl);
