@@ -2,7 +2,13 @@ import { outfitPieces } from "../config/mongoCollections.js";
 // import { outfitPieces } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 
-export const storeImage = async (caption, link, outfitType, imageName, username) => {
+export const storeImage = async (
+	caption,
+	link,
+	outfitType,
+	imageName,
+	username
+) => {
 	const outfitPiecesCollection = await outfitPieces();
 
 	// Create a new document with the provided caption and imageName
@@ -19,7 +25,7 @@ export const storeImage = async (caption, link, outfitType, imageName, username)
 
 	// Check if the insertion was successful
 	if (result.insertedId) {
-		//console.log("Image stored successfully");
+		// console.log("Image stored successfully");
 		return result.insertedId;
 	} else {
 		throw new Error("Failed to store image");
@@ -49,7 +55,7 @@ export const getAllImages = async () => {
 	// Find all documents in the outfitPieces collection
 	const images = await outfitPiecesCollection.find({}).toArray();
 
-	//console.log(`Found ${images.length} images`);
+	// console.log(`Found ${images.length} images`);
 	return images;
 };
 //console.log(await getImage("435c29542cc36cbfc5bb32b578915f0585917c83c333c27655deb5411ecefc4f"));
@@ -62,6 +68,7 @@ export const deleteImage = async (imageName) => {
 	return deletionInfo;
 };
 
+
 export const getOutfitPiecesByUsername = async (username) => {
 	// get all outfit pieces owned by user
 	const outfitPiecesCollection = await outfitPieces();
@@ -69,4 +76,4 @@ export const getOutfitPiecesByUsername = async (username) => {
 	if (!userOutfitPieces) throw new Error(`Error getting outfit pieces for user ${username}`);
 
 	return userOutfitPieces;
-}
+};

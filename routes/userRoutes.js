@@ -1,18 +1,31 @@
 import { Router } from "express";
 const router = Router();
-// import data from users 
+// import data from users
 import { createUser, loginUser } from "../data/users.js";
-import { getAll, searchByUID } from "../data/fitposts.js";
+
+import {
+  getAll,
+  deleteFitpost,
+  updateFitpost,
+  searchByFPID,
+} from "../data/fitposts.js";
+import { getAllOutfitPieces } from "../data/testCloset.js";
+import {
+  addSignedUrlsToFitPosts_in_wardrobe,
+  addSignedUrlsToFitPosts_in_closet,
+} from "../helper.js";
+
 import { addSignedUrlsToFitPosts_in_fitposts, validString } from "../helper.js";
 import xss from 'xss';
 
-router.route('/').get(async (req, res) => {
+
+router.route("/").get(async (req, res) => {
   //code here for GET THIS ROUTE SHOULD NEVER FIRE BECAUSE OF MIDDLEWARE #1 IN SPECS.
-  return res.json({ error: 'YOU SHOULD NOT BE HERE!' });
+  return res.json({ error: "YOU SHOULD NOT BE HERE!" });
 });
 // POST route for handling sign-in form submission
 router
-  .route('/register')
+  .route("/register")
   .get(async (req, res) => {
     //code here for GET
     if (req.session.user) {
@@ -69,7 +82,7 @@ router
     }
 
     if (password !== confirmPassword) {
-      return res.status(500).json({ error: 'Internal Server Error' });
+      return res.status(500).json({ error: "Internal Server Error" });
     }
     try {
       const newUser = await createUser(userName, firstName, lastName, age, email, password, bio);
@@ -83,12 +96,12 @@ router
   });
 
 router
-  .route('/login')
+  .route("/login")
   .get(async (req, res) => {
     if (req.session.user) {
       res.redirect("/user");
     }
-    res.render('login', { pageTitle: 'Login' });
+    res.render("login", { pageTitle: "Login" });
   })
   .post(async (req, res) => {
     //code here for POST
@@ -119,8 +132,7 @@ router
         bio: user.bio,
         userId: user.userId
       };
-      res.redirect('/userProfile');
-
+      res.redirect("/userProfile");
     } catch (err) {
       res.status(400).render("login", {
         error: err,
@@ -128,22 +140,31 @@ router
     }
   });
 
-router.route('/userProfile').get(async (req, res) => {
+router.route("/userProfile").get(async (req, res) => {
   if (!req.session.user) {
-    return res.redirect('/login');
+    return res.redirect("/login");
   }
 
-  const { username, firstName, lastName, wardrobes, closet, favorite, userId, bio } = req.session.user;
+
+  const { username, firstName, lastName, wardrobes, closet, favorite, _id, bio } = req.session.user;
+  const userId = _id;
   try {
     // Get all fitposts for the user
-    const allFitposts = await searchByUID(userId);
+    // const allFitposts = await searchByUID(userId);
     //test for display
-    // const allFitposts = await getAll();
+    const allFitposts = await getAll();
+    const outfitpieces = await getAllOutfitPieces();
+    const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_closet(
+      outfitpieces
+    );
 
     // Add signed URLs to fitposts
-    const fitpostsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(allFitposts);
+    const fitpostsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
+      allFitposts
+    );
 
-    res.render('userProfile', {
+    res.render("userProfile", {
+      title: "User Profile",
       userName: username,
       firstName,
       lastName,
@@ -152,20 +173,63 @@ router.route('/userProfile').get(async (req, res) => {
       bio: bio,
       allFitposts: fitpostsWithSignedUrls,
       wardrobes,
+      wardrobes: postsWithSignedUrls,
+      outfitpiecesJson: JSON.stringify(postsWithSignedUrls),
     });
   } catch (error) {
-    console.error('Error fetching user data:', error);
-    res.status(500).send('An error occurred while fetching user data');
+    console.error("Error fetching user data:", error);
+    res.status(500).send("An error occurred while fetching user data");
   }
 });
 
-
-router.route('/logout').get(async (req, res) => {
-  //code here for GET
-  req.session.destroy();
-  res.render('logout', { pageTitle: "Logout Page" });
+// Route for deleting a fitpost
+router.post("/userprofile/delete-fitpost", async (req, res) => {
+  try {
+    const { fitpostId } = req.body;
+    console.log(fitpostId);
+    await deleteFitpost(fitpostId);
+    res.json({ message: "Fitpost deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
+router.post("/userprofile/update-fitpost", async function (req, res) {
+  const {
+    fitpostId,
+    headid,
+    bodyid,
+    legid,
+    footid,
+    headwear,
+    bodywear,
+    legwear,
+    footwear,
+  } = req.body;
+  console.log(fitpostId);
+  console.log(headid);
+  console.log("headid: ", headid);
+  console.log("headwearname: ", headwear);
 
+  await updateFitpost(fitpostId, "headid", headid);
+  await updateFitpost(fitpostId, "headwear", headwear);
+  await updateFitpost(fitpostId, "bodywear", bodywear);
+  await updateFitpost(fitpostId, "bodyid", bodyid);
+  await updateFitpost(fitpostId, "legid", legid);
+  await updateFitpost(fitpostId, "legwear", legwear);
+  await updateFitpost(fitpostId, "footid", footid);
+  await updateFitpost(fitpostId, "footwear", footwear);
+  const updatedFitpost = await searchByFPID(fitpostId);
+
+  // Send the updated fitpost as the response
+  res.json(updatedFitpost);
+});
+
+router.route("/logout").get(async (req, res) => {
+  //code here for GET
+  req.session.destroy();
+  res.render("logout", { pageTitle: "Logout Page" });
+});
 
 export default router;
