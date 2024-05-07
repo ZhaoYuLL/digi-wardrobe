@@ -41,7 +41,6 @@ const trending = async () => {
   // some formula to find most trending
   fpList.sort((a, b) => b.likes + b.saves - (a.likes + a.saves));
 
-
   return fpList;
 };
 
@@ -50,8 +49,6 @@ const searchByUID = async (uid) => {
   let fpList = await latest();
   fpList = fpList.filter((fp) => fp.user_id === uid);
   if (!fpList) throw "There are no user of that id";
-
-
 
   return fpList;
 };
@@ -64,8 +61,6 @@ const searchByFPID = async (id) => {
 
   // replaces ObjectId with string
   fp._id = fp._id.toString();
-
-
 
   return fp;
 };
@@ -97,11 +92,10 @@ const addLike = async (id) => {
 };
 
 const removeLike = async (id) => {
-
   id = validString(id);
   const fitpostCollection = await fitposts();
   const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
-  if (fp === null) throw 'No fitpost with that id';
+  if (fp === null) throw "No fitpost with that id";
 
   // replaces ObjectId with string
   fp._id = fp._id.toString();
@@ -114,7 +108,7 @@ const removeLike = async (id) => {
     { _id: new ObjectId(id) },
     { $set: updatePost },
 
-    { returnDocument: 'after' }
+    { returnDocument: "after" }
   );
 
   if (!updatedInfo) {
@@ -124,13 +118,11 @@ const removeLike = async (id) => {
   return updatedInfo;
 };
 
-
 const addSave = async (id) => {
-
   id = validString(id);
   const fitpostCollection = await fitposts();
   const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
-  if (fp === null) throw 'No fitpost with that id';
+  if (fp === null) throw "No fitpost with that id";
 
   // replaces ObjectId with string
   fp._id = fp._id.toString();
@@ -141,7 +133,7 @@ const addSave = async (id) => {
   const updatedInfo = await fitpostCollection.findOneAndUpdate(
     { _id: new ObjectId(id) },
     { $set: updatePost },
-    { returnDocument: 'after' }
+    { returnDocument: "after" }
   );
 
   if (!updatedInfo) {
@@ -149,8 +141,7 @@ const addSave = async (id) => {
   }
   updatedInfo._id = updatedInfo._id.toString();
   return updatedInfo;
-
-}
+};
 
 const createFP = async (
   user_id,
@@ -228,7 +219,6 @@ const deleteFitpost = async (fitpost_id) => {
 const updateFitpost = async (fitpost_id, attribute, changed_to) => {
   const fitpostCollection = await fitposts();
 
-
   try {
     const result = await fitpostCollection.updateOne(
       { _id: new ObjectId(fitpost_id) },
@@ -269,4 +259,7 @@ export {
   createFP,
   deleteFitpost,
   updateFitpost,
+  addLike,
+  removeLike,
+  addSave,
 };
