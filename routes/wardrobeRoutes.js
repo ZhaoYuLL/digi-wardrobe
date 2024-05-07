@@ -11,6 +11,7 @@ import {
 } from "../helper.js";
 import xss from 'xss';
 import { getAllFromCloset } from "../data/outfitPieces.js";
+import { getAllWardrobes, getWardrobesByUsername } from "../data/wardrobes.js";
 
 const router = Router();
 
@@ -50,12 +51,13 @@ router.get("/wardrobe", async (req, res) => {
     res.status(500).send("Not logged in");
   }
   try {
-    const outfits = await getAllOutfits();
+    const outfits = await getWardrobesByUsername(req.session.user.username);
+    console.log(outfits);
     const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_wardrobe(
       outfits
     );
     //   console.log(postsWithSignedUrls[0].wardrobeName);
-    // console.log(postsWithSignedUrls.fitposts);
+    console.log(postsWithSignedUrls.fitposts);
     res.render("wardrobe", {
       title: "Wardrobe Page",
       wardrobes: postsWithSignedUrls,
