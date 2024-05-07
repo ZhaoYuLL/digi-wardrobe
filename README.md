@@ -1,4 +1,8 @@
 546-final
+https://github.com/ZhaoYuLL/digi-wardrobe
+
+To start, run "npm start"
+
 Log In:
 
 - log in with your username and password after registering
