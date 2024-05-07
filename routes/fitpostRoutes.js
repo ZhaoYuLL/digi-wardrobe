@@ -310,9 +310,9 @@ router.post("/save", async (req, res) => {
             let newDrobeId = await wardrobe.createNewWardrobe(
                 data.newName,
                 data.fitpostId,
-                req.session.user._id
+                req.session.user.userId
             );
-            await user.addWardrobe(req.session.user._id, newDrobeId);
+            await user.addWardrobe(req.session.user.userId, newDrobeId);
             let addedWardrobe = await wardrobe.getWardrobeById(newDrobeId);
             return res.status(200).json(addedWardrobe);
         } else {
@@ -338,7 +338,7 @@ router.post("/save", async (req, res) => {
 
 router.post("/closet", async (req, res) => {
     const data = req.body;
-    const userId = req.session.user._id;
+    const userId = req.session.user.userId;
     let currentUser = await user.getUserById(userId);
     if (currentUser.closet.includes(data.pid)) {
         return res.status(400).json({ error: "already saved" });
