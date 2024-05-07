@@ -1,4 +1,5 @@
 import { wardrobe } from "../config/mongoCollections.js";
+import { checkRequiredFields, checkIfFieldsAreProperString } from "../helper.js";
 
 export const getAllOutfits = async () => {
   const wardrobeCollection = await wardrobe();
