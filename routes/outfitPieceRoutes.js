@@ -55,7 +55,7 @@ router
 	})
 	//upload.single uploads a single image
 	.post(upload.single("image"), async (req, res) => {
-		if (!req.session || req.session.user) {
+		if (!req.session || !req.session.user) {
 			console.log(req.session.user);
 			res.status(500).send("Not logged in");
 		}
