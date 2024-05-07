@@ -225,6 +225,40 @@ const deleteFitpost = async (fitpost_id) => {
   return { deleted: true };
 };
 
+const updateFitpost = async (fitpost_id, attribute, changed_to) => {
+  const fitpostCollection = await fitposts();
+
+  try {
+    const result = await fitpostCollection.updateOne(
+      { _id: new ObjectId(fitpost_id) },
+      { $set: { [attribute]: changed_to } }
+    );
+
+    if (result.modifiedCount === 1) {
+      console.log(`Successfully updated fitpost with ID: ${fitpost_id}`);
+    } else {
+      console.log(`No fitpost found with ID: ${fitpost_id}`);
+    }
+  } catch (error) {
+    console.error(`Error updating fitpost: ${error}`);
+  }
+};
+
+const searchBySID = async (id) => {
+  id = validString(id);
+  const fitpostCollection = await fitposts();
+  const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
+  if (fp === null) throw "No fitpost with that id";
+
+  // replaces ObjectId with string
+  fp._id = fp._id.toString();
+
+  // remove later
+  console.log(fp);
+
+  return fp;
+};
+
 export {
   getAll,
   latest,
@@ -233,4 +267,5 @@ export {
   searchByFPID,
   createFP,
   deleteFitpost,
+  updateFitpost,
 };

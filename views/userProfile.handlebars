@@ -30,6 +30,7 @@
           height="200px"
           alt="Head Image"
           data-headid="{{this.headid}}"
+          data-headwear="{{this.headwear}}"
         />
         <p>Bodywear:</p>
         <img
@@ -38,6 +39,7 @@
           height="200px"
           alt="Body Image"
           data-bodyid="{{this.bodyid}}"
+          data-bodywear="{{this.bodywear}}"
         />
         <p>Legwear:</p>
         <img
@@ -46,6 +48,7 @@
           height="200px"
           alt="Leg Image"
           data-legid="{{this.legid}}"
+          data-legwear="{{this.legwear}}"
         />
         <p>Footwear:</p>
         <img
@@ -54,6 +57,7 @@
           height="200px"
           alt="Foot Image"
           data-footid="{{this.footid}}"
+          data-footwear="{{this.footwear}}"
         />
         <p>Likes: {{this.likes}}</p>
         <p>Saves: {{this.saves}}</p>
@@ -117,6 +121,10 @@
             bodyid: bodywearSelect.val(),
             legid: legwearSelect.val(),
             footid: footwearSelect.val(),
+            headwear: headwearSelect.find("option:selected").data("headwear"),
+            bodywear: bodywearSelect.find("option:selected").data("bodywear"),
+            legwear: legwearSelect.find("option:selected").data("legwear"),
+            footwear: footwearSelect.find("option:selected").data("footwear"),
           };
 
           $.ajax({
@@ -176,12 +184,26 @@
           var footId = fitpostElement
             .find('img[alt="Foot Image"]')
             .data("footid");
+          var headwear = fitpostElement
+            .find('img[alt="Head Image"]')
+            .data("headwear");
+          var bodywear = fitpostElement
+            .find('img[alt="Body Image"]')
+            .data("bodywear");
+          var legwear = fitpostElement
+            .find('img[alt="Leg Image"]')
+            .data("legwear");
+          var footwear = fitpostElement
+            .find('img[alt="Foot Image"]')
+            .data("footwear");
 
           headwearSelect.append(
             '<option value="' +
               headId +
               '" data-image="' +
               headUrl +
+              '" data-headwear="' +
+              headwear +
               '">Fitpost ' +
               (index + 1) +
               " Headwear</option>"
@@ -191,6 +213,8 @@
               bodyId +
               '" data-image="' +
               bodyUrl +
+              '" data-bodywear="' +
+              bodywear +
               '">Fitpost ' +
               (index + 1) +
               " Bodywear</option>"
@@ -200,6 +224,8 @@
               legId +
               '" data-image="' +
               legUrl +
+              '" data-legwear="' +
+              legwear +
               '">Fitpost ' +
               (index + 1) +
               " Legwear</option>"
@@ -209,6 +235,8 @@
               footId +
               '" data-image="' +
               footUrl +
+              '" data-footwear="' +
+              footwear +
               '">Fitpost ' +
               (index + 1) +
               " Footwear</option>"
@@ -278,9 +306,50 @@
 
       // Function to update the fitpost UI after successful update
       function updateFitpostUI(fitpostId, updatedFitpost) {
+        console.log("Updating fitpost UI with data:", updatedFitpost);
+
         var fitpostElement = $('.fitpost[data-fitpost-id="' + fitpostId + '"]');
+
         // Update the fitpost element with the updated data
-        // ...
+        fitpostElement
+          .find('img[alt="Head Image"]')
+          .prop("src", updatedFitpost.headUrl)
+          .data("headid", updatedFitpost.headid)
+          .data("headwear", updatedFitpost.headwear);
+        console.log(
+          "Updated head image:",
+          fitpostElement.find('img[alt="Head Image"]')
+        );
+
+        fitpostElement
+          .find('img[alt="Body Image"]')
+          .prop("src", updatedFitpost.bodyUrl)
+          .data("bodyid", updatedFitpost.bodyid)
+          .data("bodywear", updatedFitpost.bodywear);
+        console.log(
+          "Updated body image:",
+          fitpostElement.find('img[alt="Body Image"]')
+        );
+
+        fitpostElement
+          .find('img[alt="Leg Image"]')
+          .prop("src", updatedFitpost.legUrl)
+          .data("legid", updatedFitpost.legid)
+          .data("legwear", updatedFitpost.legwear);
+        console.log(
+          "Updated leg image:",
+          fitpostElement.find('img[alt="Leg Image"]')
+        );
+
+        fitpostElement
+          .find('img[alt="Foot Image"]')
+          .prop("src", updatedFitpost.footUrl)
+          .data("footid", updatedFitpost.footid)
+          .data("footwear", updatedFitpost.footwear);
+        console.log(
+          "Updated foot image:",
+          fitpostElement.find('img[alt="Foot Image"]')
+        );
       }
 
       // Function to delete a fitpost

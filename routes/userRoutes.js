@@ -2,7 +2,12 @@ import { Router } from "express";
 const router = Router();
 // import data from users
 import { createUser, loginUser } from "../data/users.js";
-import { getAll, deleteFitpost } from "../data/fitposts.js";
+import {
+  getAll,
+  deleteFitpost,
+  updateFitpost,
+  searchByFPID,
+} from "../data/fitposts.js";
 import { addSignedUrlsToFitPosts_in_fitposts } from "../helper.js";
 import { getAllOutfitPieces } from "../data/testCloset.js";
 import {
@@ -141,36 +146,35 @@ router.post("/userprofile/delete-fitpost", async (req, res) => {
   }
 });
 
-router.post("/userprofile/update-fitpost", function (req, res) {
-  var fitpostId = req.body.fitpostId;
-  var headwearSelect = req.body.headwearSelect;
-  var bodywearSelect = req.body.bodywearSelect;
-  var legwearSelect = req.body.legwearSelect;
-  var footwearSelect = req.body.footwearSelect;
+router.post("/userprofile/update-fitpost", async function (req, res) {
+  const {
+    fitpostId,
+    headid,
+    bodyid,
+    legid,
+    footid,
+    headwear,
+    bodywear,
+    legwear,
+    footwear,
+  } = req.body;
+  console.log(fitpostId);
+  console.log(headid);
+  console.log("headid: ", headid);
+  console.log("headwearname: ", headwear);
 
-  console.log("head: ", headwearSelect);
-  console.log("id: ", fitpostId);
+  await updateFitpost(fitpostId, "headid", headid);
+  await updateFitpost(fitpostId, "headwear", headwear);
+  await updateFitpost(fitpostId, "bodywear", bodywear);
+  await updateFitpost(fitpostId, "bodyid", bodyid);
+  await updateFitpost(fitpostId, "legid", legid);
+  await updateFitpost(fitpostId, "legwear", legwear);
+  await updateFitpost(fitpostId, "footid", footid);
+  await updateFitpost(fitpostId, "footwear", footwear);
+  const updatedFitpost = await searchByFPID(fitpostId);
 
-  // Perform the update operation in your database
-  // Example using Mongoose:
-  //   Fitpost.findByIdAndUpdate(
-  //     fitpostId,
-  //     {
-  //       headwear: headwearSelect,
-  //       bodywear: bodywearSelect,
-  //       legwear: legwearSelect,
-  //       footwear: footwearSelect,
-  //     },
-  //     { new: true },
-  //     function (err, updatedFitpost) {
-  //       if (err) {
-  //         console.error("Error updating fitpost:", err);
-  //         res.status(500).json({ error: "Failed to update fitpost" });
-  //       } else {
-  //         res.json(updatedFitpost);
-  //       }
-  //     }
-  //   );
+  // Send the updated fitpost as the response
+  res.json(updatedFitpost);
 });
 
 router.route("/logout").get(async (req, res) => {
