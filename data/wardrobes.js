@@ -24,6 +24,14 @@ const getWardrobesByIds = async (ids) => {
     return wardrobeObjects;
 }
 
+const getWardrobesByUsername = async (username) => {
+    const wardrobeCollection = await wardrobe();
+    const userWardrobes = await wardrobeCollection.find({ username: username }).toArray();
+    if (!userWardrobes) throw new Error(`Error getting ${username}'s wardrobes`);
+
+    return userWardrobes;
+}
+
 const createNewWardrobe = async (wardrobeName, fpId, uId) => {
     let fitpost = await fp.searchByFPID(fpId);
     let currentUser = await user.getUserById(uId);
@@ -35,7 +43,7 @@ const createNewWardrobe = async (wardrobeName, fpId, uId) => {
 
     // check if name is already in use
 
-    const userWardrobes = currentUser.wardrobes; 
+    const userWardrobes = currentUser.wardrobes;
     for (const wardrobeId of userWardrobes) {
         const wardrobeObject = await getWardrobeById(wardrobeId);
         if (wardrobeObject.wardrobeName === wardrobeName) {
@@ -62,7 +70,7 @@ const addFitpost = async (drobeId, fpId) => {
     let newFp = await fp.searchByFPID(fpId);
     fps.push(newFp);
 
-    
+
 
     const updateDrobe = {
         fitposts: fps
@@ -83,5 +91,5 @@ const addFitpost = async (drobeId, fpId) => {
 
 }
 
-export { getAllWardrobes, getWardrobeById, getWardrobesByIds, createNewWardrobe, addFitpost };
+export { getAllWardrobes, getWardrobeById, getWardrobesByIds, getWardrobesByUsername, createNewWardrobe, addFitpost };
 
