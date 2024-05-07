@@ -57,18 +57,18 @@
                 errorCount++;
             }
         }
-        let caption = $('#caption').val();
-        if (!caption) {
-            let error = "<div class='error'>Please include a caption or description</div>";
-            $('#caption').after(error);
+        let description = $('#description').val();
+        if (!description) {
+            let error = "<div class='error'>Please include a description</div>";
+            $('#description').after(error);
             errorCount++;
         }
         else {
             try {
-                caption = validString(caption);
+                description = validString(description);
             } catch (e) {
                 let error = "<div class='error'>Please input a valid string</div>";
-                $('#caption').after(error);
+                $('#description').after(error);
                 errorCount++;
             }
         }

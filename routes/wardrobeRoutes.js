@@ -8,6 +8,7 @@ import {
   addSignedUrlsToFitPosts_in_wardrobe,
   addSignedUrlsToFitPosts_in_closet,
   addSignedUrlsToFitPosts_in_fitposts,
+  addDescLinksForFitposts_inWardrobes,
 } from "../helper.js";
 import xss from 'xss';
 import { getAllFromCloset } from "../data/outfitPieces.js";
@@ -52,15 +53,18 @@ router.get("/wardrobe", async (req, res) => {
   }
   try {
     const outfits = await getWardrobesByUsername(req.session.user.username);
-    console.log(outfits);
+    //console.log(outfits);
     const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_wardrobe(
       outfits
     );
     //   console.log(postsWithSignedUrls[0].wardrobeName);
-    console.log(postsWithSignedUrls.fitposts);
+    //console.log(postsWithSignedUrls.fitposts);
+    const postsWithDescLinks = await addDescLinksForFitposts_inWardrobes(postsWithSignedUrls);
+    //console.log(postsWithDescLinks);
+
     res.render("wardrobe", {
       title: "Wardrobe Page",
-      wardrobes: postsWithSignedUrls,
+      wardrobes: postsWithDescLinks,
       wardrobesJson: JSON.stringify(postsWithSignedUrls),
     });
   } catch (error) {

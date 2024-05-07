@@ -128,6 +128,8 @@
       outfitDiv.innerHTML = `
             <img src="${outfit.imageUrl}" style="width: 200px; height: 200px" alt="Outfit Image" margin="100px" />
             <p style="display: none;" data-image-name="${outfit._id}"></p>
+            <p>Description: ${outfit.description}</p>
+            <p>Clothing Source: ${outfit.link}</p>
           `;
       outfitList.appendChild(outfitDiv);
     });

@@ -56,7 +56,7 @@ router
 	//upload.single uploads a single image
 	.post(upload.single("image"), async (req, res) => {
 		if (!req.session || !req.session.user) {
-			res.status(500).send("Not logged in");
+			return res.status(500).send("Not logged in");
 		}
 		else {
 
@@ -65,34 +65,38 @@ router
 
 			let data = req.body;
 			try {
-				data.caption = validString(data.caption);
-				data.caption = xss(data.caption);
+				data.description = validString(data.description);
+				data.description = xss(data.description);
 			} catch (e) {
-				res.status(400).send(e);
+				return res.status(400).send(e);
 			}
 			try {
 				data.link = validString(data.link);
 				data.link = xss(data.link);
 			} catch (e) {
-				res.status(400).send(e);
+				return res.status(400).send(e);
 			}
 			try {
 				data.outfitType = validString(data.outfitType);
 				data.outfitType = xss(data.outfitType);
 			} catch (e) {
-				res.status(400).send(e);
+				return res.status(400).send(e);
 			}
 
-			const postId = await storeImage(
-				req.body.caption,
-				req.body.link,
-				req.body.outfitType,
-				imageName,
-				req.session.user.username
-			);
-			const updatedCloset = await addUserOutfitPiece(postId.toString(), req.session.user._id);
-			//console.log(updatedCloset);
-			res.redirect("/fitposts/create");
+			try {
+				const postId = await storeImage(
+					req.body.description,
+					req.body.link,
+					req.body.outfitType,
+					imageName,
+					req.session.user.username
+				);
+				const updatedCloset = await addUserOutfitPiece(postId.toString(), req.session.user._id);
+				//console.log(updatedCloset);
+				return res.status(200).redirect("/fitposts/create");
+			} catch (e) {
+				return res.status(500).send(e);
+			}
 		}
 	});
 router.route("/:imageName").delete(async (req, res) => {
@@ -108,7 +112,7 @@ router.route("/:imageName").delete(async (req, res) => {
 
 		const updatedCloset = await deleteUserOutfitPiece(deleted._id.toString(), req.session.user._id);
 
-		res.send("Post deleted successfully");
+		res.status(200).send("Post deleted successfully");
 	} catch (error) {
 		console.error("Error deleting post:", error);
 		res.status(500).send("Internal Server Error");
