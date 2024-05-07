@@ -183,13 +183,6 @@
       }
     }
 
-    let profilePicture = $('#profilePicture').val();
-    if (!profilePicture) {
-      let error = "<div class='error'>Please upload a profile picture</div>";
-      $('#profilePicture').after(error);
-      errorCount++;
-    }
-
     if (errorCount > 0) {
       event.preventDefault();
     }

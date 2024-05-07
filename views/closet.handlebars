@@ -38,6 +38,7 @@
     <option value="body">Body</option>
     <option value="leg">Leg</option>
     <option value="foot">Foot</option>
+    <option value="owned">Owned</option>
   </select>
 </div>
 
@@ -81,7 +82,7 @@
 
           outfitDivs.forEach(function (outfitDiv) {
             var outfitType = outfitDiv.getAttribute("data-type");
-            if (selectedType === "all" || outfitType === selectedType) {
+            if (selectedType === "all" || outfitType === selectedType || (selectedType === "owned" && outfitDiv.getAttribute("data-owner") === "true")) {
               outfitDiv.style.display = "inline-block";
             } else {
               outfitDiv.style.display = "none";
@@ -123,6 +124,7 @@
           var outfitDiv = document.createElement("div");
           outfitDiv.className = "outfit";
           outfitDiv.setAttribute("data-type", outfit.outfitType);
+          outfitDiv.setAttribute("data-owner", outfit.username === "{{username}}" ? "true" : "false");
           outfitDiv.innerHTML = `
             <img src="${outfit.imageUrl}" style="width: 200px; height: 200px" alt="Outfit Image" margin="100px" />
             <p style="display: none;" data-image-name="${outfit._id}"></p>
