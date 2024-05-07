@@ -6,14 +6,16 @@
         <h2>Log In</h2>
         <form id="log-form" method="POST" action="/login">
             <label for="userName">Username:</label>
-            <input type="userName" id="userName" name="userName" required>
+            <input type="userName" id="userName" name="userName">
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password">
             <button type="submit">Sign In</button>
         </form>
         <p id="errorMessage">{{error}}</p>
 
     </main>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/public/js/clientVal.js"></script>
 
 <p>Don't have an account? <a href="/register">Click here to register!</a></p>
 
