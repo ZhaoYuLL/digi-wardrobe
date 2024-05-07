@@ -41,8 +41,6 @@ const trending = async () => {
   // some formula to find most trending
   fpList.sort((a, b) => b.likes + b.saves - (a.likes + a.saves));
 
-  // remove later
-  //console.log("trending", fpList);
 
   return fpList;
 };
@@ -53,8 +51,7 @@ const searchByUID = async (uid) => {
   fpList = fpList.filter((fp) => fp.user_id === uid);
   if (!fpList) throw "There are no user of that id";
 
-  // remove later
-  //console.log("uid", fpList);
+
 
   return fpList;
 
@@ -70,8 +67,7 @@ const searchByFPID = async (id) => {
   // replaces ObjectId with string
   fp._id = fp._id.toString();
 
-  // remove later
-  //console.log(fp);
+
 
   return fp;
 
@@ -174,7 +170,6 @@ const addSave = async (id) => {
 
 
 
-
 const createFP = async (
   user_id,
   username,
@@ -233,5 +228,7 @@ const createFP = async (
   //return newProduct;
 }
 
+
 export { getAll, latest, trending, searchByUID, searchByFPID, createFP, addLike, addSave, removeLike }
+
 
