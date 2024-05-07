@@ -303,7 +303,7 @@ const newUser = {
     "101a24a197aa3b5a1c314702",
     "101a24a197aa3b5a1c314703",
     "101a24a197aa3b5a1c314704",
-    "101a24a197aa3b5a1c314705st",
+    "101a24a197aa3b5a1c314705",
   ],
   favorite: ["721a24a197aa3b5a1c314701"],
 };
