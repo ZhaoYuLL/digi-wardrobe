@@ -105,7 +105,7 @@
             // reassign the data-active attribute to the new selected outfit piece
             let newActive = slides[newIndex];
             newActive.setAttribute('data-active', 'true');
-            console.log(activeSlide);
+            //console.log(activeSlide);
             activeSlide.removeAttribute('data-active');
 
             let currentId = newActive.children[0].getAttribute('data-id');

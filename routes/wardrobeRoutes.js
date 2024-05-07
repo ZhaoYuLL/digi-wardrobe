@@ -27,6 +27,7 @@ router.get("/closet", async (req, res) => {
     res.status(500).send("Not logged in");
   }
   try {
+    //console.log(req.session.user.username);
     const outfitpieces = await getAllFromCloset(req.session.user.username);
     const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_closet(
       outfitpieces
@@ -40,7 +41,7 @@ router.get("/closet", async (req, res) => {
       outfitpiecesJson: JSON.stringify(postsWithSignedUrls),
     });
   } catch (error) {
-    res.send(500).send(error);
+    res.status(500).send(error);
   }
 
 });

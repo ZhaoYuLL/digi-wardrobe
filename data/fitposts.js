@@ -245,7 +245,7 @@ const searchBySID = async (id) => {
   fp._id = fp._id.toString();
 
   // remove later
-  console.log(fp);
+  //console.log(fp);
 
   return fp;
 };
