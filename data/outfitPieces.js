@@ -1,6 +1,7 @@
 import { outfitPieces } from "../config/mongoCollections.js";
 // import { outfitPieces } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
+import { getUserByUsername } from "./users.js";
 
 export const storeImage = async (
 	caption,
@@ -49,6 +50,23 @@ export const getImage = async (imageName) => {
 	}
 };
 
+export const getImageById = async (id) => {
+	const outfitPiecesCollection = await outfitPieces();
+
+	// Find the document with the provided imageName
+	const image = await outfitPiecesCollection.findOne({
+		_id: new ObjectId(id),
+	});
+
+	// Check if the image exists
+	if (image) {
+		//console.log("Image found");
+		return image;
+	} else {
+		throw new Error("Image not found");
+	}
+};
+
 export const getAllImages = async () => {
 	const outfitPiecesCollection = await outfitPieces();
 
@@ -77,3 +95,17 @@ export const getOutfitPiecesByUsername = async (username) => {
 
 	return userOutfitPieces;
 };
+
+export const getAllFromCloset = async (username) => {
+	// get all of the outfit pieces from ur closet
+	let user = await getUserByUsername(username);
+	let closet = user.closet;
+	let closetOutfitPieces = [];
+
+	for (let i = 0; i < closet.length; i++) {
+		let outfitPiece = await getImageById(closet[i]);
+		closetOutfitPieces.push(outfitPiece);
+	}
+
+	return closetOutfitPieces;
+}
