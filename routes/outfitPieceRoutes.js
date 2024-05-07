@@ -10,7 +10,8 @@ import {
 	addSignedUrlsToOutfitPieces,
 	uploadImageToS3,
 	deleteImageFromS3,
-	validString
+	validString,
+	validURL,
 } from "../helper.js";
 // importing database manipulation functions
 import {
@@ -20,11 +21,8 @@ import {
 	getOutfitPiecesByUsername,
 	deleteImage,
 } from "../data/outfitPieces.js";
-import {
-	addUserOutfitPiece,
-	deleteUserOutfitPiece
-} from "../data/users.js";
-import xss from 'xss';
+import { addUserOutfitPiece, deleteUserOutfitPiece } from "../data/users.js";
+import xss from "xss";
 
 const router = Router();
 
@@ -44,10 +42,16 @@ router
 		}
 
 		try {
-			const userOutfitPieces = await getOutfitPiecesByUsername(req.session.user.username);
+			const userOutfitPieces = await getOutfitPiecesByUsername(
+				req.session.user.username
+			);
 			let postsUrls = await addSignedUrlsToOutfitPieces(userOutfitPieces);
 
-			res.render("outfitpieces", { title: "My Clothes", posts: postsUrls, script_partial: "createOutfitPiece_script" });
+			res.render("outfitpieces", {
+				title: "My Clothes",
+				posts: postsUrls,
+				script_partial: "createOutfitPiece_script",
+			});
 		} catch (error) {
 			console.error("Error rendering fitposts:", error);
 			res.status(500).send("Internal Server Error");
@@ -57,9 +61,7 @@ router
 	.post(upload.single("image"), async (req, res) => {
 		if (!req.session || !req.session.user) {
 			return res.status(500).send("Not logged in");
-		}
-		else {
-
+		} else {
 			const imageName = await generateFileName();
 			const img = await uploadImageToS3(req.file, 1920, 1080, imageName);
 
@@ -67,6 +69,7 @@ router
 			try {
 				data.description = validString(data.description);
 				data.description = xss(data.description);
+				validURL(data.description);
 			} catch (e) {
 				return res.status(400).send(e);
 			}
@@ -91,7 +94,10 @@ router
 					imageName,
 					req.session.user.username
 				);
-				const updatedCloset = await addUserOutfitPiece(postId.toString(), req.session.user._id);
+				const updatedCloset = await addUserOutfitPiece(
+					postId.toString(),
+					req.session.user._id
+				);
 				//console.log(updatedCloset);
 				return res.status(200).redirect("/fitposts/create");
 			} catch (e) {
@@ -110,7 +116,10 @@ router.route("/:imageName").delete(async (req, res) => {
 		// example usage: delete from s3, then delete from database
 		let deleted = await deleteImageFromS3(s3_image_name);
 
-		const updatedCloset = await deleteUserOutfitPiece(deleted._id.toString(), req.session.user._id);
+		const updatedCloset = await deleteUserOutfitPiece(
+			deleted._id.toString(),
+			req.session.user._id
+		);
 
 		res.status(200).send("Post deleted successfully");
 	} catch (error) {
