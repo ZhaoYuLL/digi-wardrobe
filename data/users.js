@@ -2,10 +2,10 @@ import { ObjectId } from "mongodb";
 import { users } from "../config/mongoCollections.js";
 import bcrypt from "bcrypt";
 import {
-	checkRequiredFields,
-	checkIfFieldsAreProperString,
-    isValidEmail, 
-    isValidPassword, 
+    checkRequiredFields,
+    checkIfFieldsAreProperString,
+    isValidEmail,
+    isValidPassword,
     isValidAge
 } from "../helper.js";
 
@@ -30,8 +30,8 @@ const getUserByUsername = async (username) => {
     // TODO: validate username parameter
     username = username.trim();
     checkRequiredFields(
-		username
-	);
+        username
+    );
     const lowercaseUsername = username.toLowerCase();
     const userCollection = await users();
     const user = await userCollection.findOne({ username: lowercaseUsername });
@@ -44,8 +44,8 @@ const getUserByEmail = async (email) => {
     // TODO: validate email parameter
     email = email.trim();
     checkRequiredFields(
-		email
-	);
+        email
+    );
     const lowercaseEmail = email.toLowerCase();
     const userCollection = await users();
     const user = await userCollection.findOne({ email: lowercaseEmail });
@@ -68,44 +68,29 @@ export const passwordMatch = async (input, hash) => {
 
 const createUser = async (username, firstName, lastName, age, email, password, bio) => {
     // TODO: validate all parameters
-    console.log(firstName);
-    console.log(username);
-    console.log(lastName);
-    console.log(age);
-    console.log(email);
-    console.log(password);
-
-
     firstName = firstName.trim();
-	lastName = lastName.trim();
-	username = username.trim();
-	password = password.trim();
+    lastName = lastName.trim();
+    username = username.trim();
+    password = password.trim();
     email = email.trim();
     age = age.trim();
 
-    console.log(firstName);
-    console.log(username);
-    console.log(lastName);
-    console.log(age);
-    console.log(email);
-    console.log(password);
-
     checkRequiredFields(
-		firstName,
-		lastName,
-		username,
-		password,
-		age, 
+        firstName,
+        lastName,
+        username,
+        password,
+        age,
         email,
-	);
-	checkIfFieldsAreProperString(
-		firstName,
-		lastName,
-		username,
-		password,
-		age, 
+    );
+    checkIfFieldsAreProperString(
+        firstName,
+        lastName,
+        username,
+        password,
+        age,
         email,
-	);
+    );
     const lowercaseUsername = username.toLowerCase();
     const userExists = await getUserByUsername(lowercaseUsername);
     if (userExists) throw `User with username ${username} already exists`;
@@ -114,7 +99,7 @@ const createUser = async (username, firstName, lastName, age, email, password, b
     const emailExists = await getUserByEmail(lowercaseEmail);
     // console.log(emailExists)
     if (emailExists) throw `User with email ${email} already exists`;
-    isValidEmail(email); 
+    isValidEmail(email);
     isValidPassword(password);
     isValidAge(age);
 
@@ -149,7 +134,7 @@ const updateUserInfo = async (id, userInfo) => {
     if (userInfo.username) {
         // TODO: validate username
         const newUsername = userInfo.username.trim().toLowerCase();
-        checkIfFieldsAreProperString(newUsername);        
+        checkIfFieldsAreProperString(newUsername);
         const userExists = await getUserByUsername(newUsername);
         if (userExists) throw `User with username ${userInfo.username} already exists`;
         changes['username'] = userInfo.username;
@@ -157,18 +142,18 @@ const updateUserInfo = async (id, userInfo) => {
     if (userInfo.firstName) {
         // TODO: validate first name
         const newFirst = userInfo.firstName.trim();
-        checkIfFieldsAreProperString(newFirst); 
+        checkIfFieldsAreProperString(newFirst);
         changes['firstName'] = newFirst;
     }
     if (userInfo.lastName) {
         // TODO: validate last name
         const newLast = userInfo.firstLast.trim();
-        checkIfFieldsAreProperString(newLast); 
+        checkIfFieldsAreProperString(newLast);
         changes['lastName'] = newLast;
     }
     if (userInfo.age) {
         // TODO: validate age
-        const newAge = userInfo.age.trim(); 
+        const newAge = userInfo.age.trim();
         isValidAge(newAge);
         changes['age'] = newAge;
     }
@@ -214,9 +199,9 @@ const deleteUser = async (id) => {
 const loginUser = async (username, password) => {
     // TODO: validate inputs
     username = username.trim();
-	password = password.trim();
+    password = password.trim();
 
-	checkRequiredFields(username, password);
+    checkRequiredFields(username, password);
     const lowercaseUsername = username.toLowerCase();
 
     const userCollection = await users();
@@ -232,13 +217,13 @@ const loginUser = async (username, password) => {
         username: foundUser.username,
         wardrobes: foundUser.wardrobes,
         closet: foundUser.closet,
-        favorite: foundUser.favorite, 
+        favorite: foundUser.favorite,
         bio: foundUser.bio
     }
     return userInfo;
 }
 
-const addUserOutfitPiece = async (outfitPieceId, userId) => {
+export const addUserOutfitPiece = async (outfitPieceId, userId) => {
     if (!ObjectId.isValid(userId)) {
         throw new Error('Invalid User Id');
     }
@@ -249,13 +234,13 @@ const addUserOutfitPiece = async (outfitPieceId, userId) => {
     let userCloset = user.closet;
     userCloset.push(outfitPieceId);
 
-    updatedCloset = {
+    let updatedCloset = {
         closet: userCloset
     };
     const userCollection = await users();
     const updateInfo = await userCollection.findOneAndUpdate(
-        { _id: new ObjectId(id) },
-        { $set: changes },
+        { _id: new ObjectId(userId) },
+        { $set: updatedCloset },
         { returnDocument: 'after' }
     );
     if (!updateInfo) throw `Error updating user ${userId} closet with outfit piece ${outfitPieceId}`;
@@ -263,7 +248,7 @@ const addUserOutfitPiece = async (outfitPieceId, userId) => {
     return updateInfo.closet;
 }
 
-const deleteUserOutfitPiece = async (outfitPieceId, userId) => {
+export const deleteUserOutfitPiece = async (outfitPieceId, userId) => {
     if (!ObjectId.isValid(userId)) {
         throw new Error('Invalid User Id');
     }
@@ -277,12 +262,12 @@ const deleteUserOutfitPiece = async (outfitPieceId, userId) => {
         userCloset.splice(index, 1);
     }
 
-    updatedCloset = {
+    let updatedCloset = {
         closet: userCloset
     };
     const userCollection = await users();
     const updateInfo = await userCollection.findOneAndUpdate(
-        { _id: new ObjectId(id) },
+        { _id: new ObjectId(userId) },
         { $set: updatedCloset },
         { returnDocument: 'after' }
     );
@@ -302,12 +287,12 @@ const addUserFavorites = async (userId, fitpostId) => {
     let userFavorites = user.favorite;
     userFavorites.push(fitpostId);
 
-    updatedFavorites = {
+    let updatedFavorites = {
         favorite: userFavorites
     };
     const userCollection = await users();
     const updateInfo = await userCollection.findOneAndUpdate(
-        { _id: new ObjectId(id) },
+        { _id: new ObjectId(userId) },
         { $set: updatedFavorites },
         { returnDocument: 'after' }
     );
@@ -330,12 +315,12 @@ const deleteUserFavorite = async (userId, fitpostId) => {
         userFavorites.splice(index, 1);
     }
 
-    updatedFavorites = {
+    let updatedFavorites = {
         favorite: userFavorites
     };
     const userCollection = await users();
     const updateInfo = await userCollection.findOneAndUpdate(
-        { _id: new ObjectId(id) },
+        { _id: new ObjectId(userId) },
         { $set: updatedFavorites },
         { returnDocument: 'after' }
     );
@@ -345,7 +330,7 @@ const deleteUserFavorite = async (userId, fitpostId) => {
 }
 
 
-const checkLike = async(userId, fpId) => {
+const checkLike = async (userId, fpId) => {
     if (!ObjectId.isValid(userId)) {
         throw new Error('Invalid User Id');
     }
@@ -363,7 +348,7 @@ const checkLike = async(userId, fpId) => {
 
 
 
-const addLike= async(userId, fpId) => {
+const addLike = async (userId, fpId) => {
     if (!ObjectId.isValid(userId)) {
         throw new Error('Invalid User Id');
     }
@@ -371,33 +356,33 @@ const addLike= async(userId, fpId) => {
         throw new Error('Invalid fitpost Id');
     }
     const userCollection = await users();
-    const user = await userCollection.findOne({_id: new ObjectId(userId)});
+    const user = await userCollection.findOne({ _id: new ObjectId(userId) });
 
     if (user === null) throw 'No fitpost with that id';
-  
+
     // replaces ObjectId with string
     user._id = user._id.toString();
-  
+
     user.favorite.push(fpId);
-  
+
     let newFavorite = user.favorite;
     const updateUser = {
-      favorite: newFavorite
+        favorite: newFavorite
     }
-  
+
     const updatedInfo = await userCollection.findOneAndUpdate(
-      {_id: new ObjectId(userId)},
-      {$set: updateUser},
-      {returnDocument: 'after'}
+        { _id: new ObjectId(userId) },
+        { $set: updateUser },
+        { returnDocument: 'after' }
     );
-  
+
     if (!updatedInfo) {
-      throw 'could not update successfully';
+        throw 'could not update successfully';
     }
     updatedInfo._id = updatedInfo._id.toString();
     return updatedInfo;
-  
-  }
+
+}
 
 
 const removeLike = async (userId, fpId) => {
@@ -417,7 +402,7 @@ const removeLike = async (userId, fpId) => {
     const index = user.favorite.indexOf(fpId);
     if (index === -1) throw 'Fitpost not found in favorites';
 
-    user.favorite.splice(index, 1); 
+    user.favorite.splice(index, 1);
 
     const updateUser = {
         favorite: user.favorite
@@ -447,7 +432,7 @@ const addWardrobe = async (userId, drobeId) => {
     let drobe = user.wardrobes;
     drobe.push(drobeId)
 
-    
+
 
     const updateUser = {
         wardrobes: drobe
@@ -477,7 +462,7 @@ const addToCloset = async (userId, pid) => {
     let closet = user.closet;
     closet.push(pid)
 
-    
+
 
     const updateUser = {
         closet: closet
