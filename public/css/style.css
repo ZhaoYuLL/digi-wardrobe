@@ -61,44 +61,93 @@ img {
   flex-wrap: wrap;
 }
 
-/* makes preview horizontal */
 .preview-content-closet {
   display: flex;
   flex-direction: row;
 }
 
-/* CSS for the modal */
-#editFitpostModal {
-  display: none; /* Initially hide the modal */
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color:seagreen; 
+  border-bottom: 1px solid #ddd; 
+  display: flex; 
+  justify-content: space-between; 
 }
 
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto; /* Center modal vertically and horizontally */
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-  max-width: 600px; /* Set maximum width */
+nav ul li {
+  float: left;
 }
 
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
+nav ul li a {
+  display: block;
+  color:white; 
+  text-align: center;
+  padding: 14px 16px;
   text-decoration: none;
-  cursor: pointer;
+  font-family: 'Comic Sans MS', cursive;
+  font-size: larger;
 }
+
+nav ul li a:hover {
+  background-color:darkgreen; 
+}
+
+body {
+  font-family: 'Comic Sans MS', cursive;
+  background-color: #f0f0f0; 
+  text-align: center; 
+}
+main {
+  margin-top: 50px; 
+  background-color: #fff; 
+  padding: 20px;
+  border-radius: 10px; 
+  display: inline-block; /
+}
+form {
+  text-align: left; 
+}
+label {
+  display: block; 
+  margin-bottom: 5px; 
+}
+input {
+  width: 100%; 
+  padding: 10px;
+  margin-bottom: 10px; 
+  border: 1px solid #ccc; 
+  border-radius: 5px; 
+  box-sizing: border-box; 
+}
+button {
+  width: 100%; 
+  padding: 10px;
+  background-color: seagreen; 
+  color: white; 
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer; 
+}
+button:hover {
+  background-color: darkgreen; 
+}
+p {
+  margin-top: 20px; 
+}
+p a {
+  color: seagreen; 
+  text-decoration: none; 
+  font-weight: bold; 
+}
+p a:hover {
+  text-decoration: underline; 
+}
+
+.error {
+  color: red;
+  text-align: center;
+  font-weight: bold;
+} 

@@ -30,10 +30,21 @@
       </div>
     </div>
   </div>
+  <div class="filter-section">
+  <label for="outfitTypeFilter">Filter by Outfit Type:</label>
+  <select id="outfitTypeFilter">
+    <option value="all">All</option>
+    <option value="head">Head</option>
+    <option value="body">Body</option>
+    <option value="leg">Leg</option>
+    <option value="foot">Foot</option>
+  </select>
+</div>
 
   <div class="outfit-list">
     <!-- Outfit list will be populated dynamically -->
   </div>
+  
 </div>
 
 <script>
@@ -62,6 +73,21 @@
 
         updateOutfitPreviews();
         populateOutfitList();
+        var outfitTypeFilter = document.getElementById("outfitTypeFilter");
+        outfitTypeFilter.addEventListener("change", filterOutfitsByType);
+        function filterOutfitsByType() {
+          var selectedType = document.getElementById("outfitTypeFilter").value;
+          var outfitDivs = document.querySelectorAll(".outfit-list .outfit");
+
+          outfitDivs.forEach(function (outfitDiv) {
+            var outfitType = outfitDiv.getAttribute("data-type");
+            if (selectedType === "all" || outfitType === selectedType) {
+              outfitDiv.style.display = "inline-block";
+            } else {
+              outfitDiv.style.display = "none";
+            }
+          });
+        }
       });
 
       function nextOutfit(event) {
