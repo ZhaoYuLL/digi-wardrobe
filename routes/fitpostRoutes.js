@@ -3,7 +3,7 @@ import * as fp from '../data/fitposts.js';
 import * as user from '../data/users.js';
 import * as wardrobe from '../data/wardrobes.js';
 
-import { getOutfitPiecesByUserId, getOutfitPiecesByUsername } from '../data/outfitPieces.js';
+//import { getOutfitPiecesByUserId, getOutfitPiecesByUsername } from '../data/outfitPieces.js';
 
 import { validString, addSignedUrlsToFitPosts_in_fitposts, convertDate, addSignedUrlsToPosts } from '../helper.js';
 import xss from 'xss';
