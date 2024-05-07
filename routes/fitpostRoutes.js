@@ -286,7 +286,7 @@ router.route("/:id").get(async (req, res) => {
 router.post("/like", async (req, res) => {
     const data = req.body;
 
-    const userId = req.session.user.userId;
+    const userId = req.session.user._id;
     if (!data || Object.keys(data).length === 0) {
         return res
             .status(400)
