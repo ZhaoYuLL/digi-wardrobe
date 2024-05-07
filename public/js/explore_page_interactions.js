@@ -46,9 +46,10 @@ import * as fp from '../../data/fitposts.js';*/
       newWardrobeName = input.val();
       input.focus();
       // wait for user input
-      input.keypress(function (event) {
-        if (event.which === 13) {
-          // when enter is clicked
+      let ajaxInProgress = false; // Flag variable to track AJAX request status
+
+      input.on("keypress", function (event) {
+        if (event.which === 13 && !ajaxInProgress) {
           event.preventDefault();
           let newWardrobeName = input.val();
           console.log(newWardrobeName);
@@ -61,7 +62,7 @@ import * as fp from '../../data/fitposts.js';*/
             }
             newWardrobeName = inputTrim;
           }
-          input.hide();
+
           let requestData = {
             fitpostId: currentId,
             wardrobeId: drobeId,
@@ -74,17 +75,27 @@ import * as fp from '../../data/fitposts.js';*/
             contentType: "application/json",
             data: JSON.stringify(requestData),
           };
-          $.ajax(requestConfig).then(function (response) {
-            //console.log('this is wardrobe',response);
-            // add new wardrobe name to the dropdown
-            console.log("response");
-            if (response === "Duplicate") {
-              alert("Cannot have duplciate wardrobenames");
-            } else {
-              let newOption = `<option value="${response._id}">${response.wardrobeName}</option>`;
-              $(".wardrobe-select").append(newOption);
-            }
-          });
+
+          ajaxInProgress = true; // Set the flag to indicate AJAX request in progress
+
+          $.ajax(requestConfig)
+            .then(function (response) {
+              console.log("response");
+              if (response === "Duplicate") {
+                alert("Cannot have duplicate wardrobenames");
+                ajaxInProgress = false;
+              } else {
+                let newOption = `<option value="${response._id}">${response.wardrobeName}</option>`;
+                $(".wardrobe-select").append(newOption);
+                input.hide(); // Hide the input field
+              }
+            })
+            .catch(function (error) {
+              console.error("Error:", error);
+            })
+            .finally(function () {
+              ajaxInProgress = false; // Reset the flag
+            });
         }
       });
     } else {

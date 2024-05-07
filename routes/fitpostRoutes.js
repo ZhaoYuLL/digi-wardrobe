@@ -406,6 +406,7 @@ router.post("/save", async (req, res) => {
       console.log(JSON.stringify(wardrobeNames));
       for (var i = 0; i < wardrobeNames.length; i++) {
         if (newWardrobeName === wardrobeNames[i].toLowerCase()) {
+          console.log("uhm");
           return res.send("Duplicate");
         }
       }
