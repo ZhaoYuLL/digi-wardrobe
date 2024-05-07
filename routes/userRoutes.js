@@ -8,6 +8,7 @@ import {
   deleteFitpost,
   updateFitpost,
   searchByFPID,
+  searchByUID,
 } from "../data/fitposts.js";
 import { getAllOutfitPieces } from "../data/testCloset.js";
 import {
@@ -17,6 +18,7 @@ import {
 
 import { addSignedUrlsToFitPosts_in_fitposts, validString } from "../helper.js";
 import xss from 'xss';
+import { getOutfitPiecesByUsername } from "../data/outfitPieces.js";
 
 
 router.route("/").get(async (req, res) => {
@@ -146,14 +148,13 @@ router.route("/userProfile").get(async (req, res) => {
   }
 
 
-  const { username, firstName, lastName, wardrobes, closet, favorite, _id, bio } = req.session.user;
-  const userId = _id;
+  const { username, firstName, lastName, wardrobes, closet, favorite, userId, bio } = req.session.user;
   try {
     // Get all fitposts for the user
-    // const allFitposts = await searchByUID(userId);
+    //console.log(req.session.user);
+    const allFitposts = await searchByUID(userId);
     //test for display
-    const allFitposts = await getAll();
-    const outfitpieces = await getAllOutfitPieces();
+    const outfitpieces = await getOutfitPiecesByUsername(userId);
     const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_closet(
       outfitpieces
     );
