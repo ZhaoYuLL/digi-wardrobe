@@ -2,6 +2,9 @@ import { Router } from "express";
 import * as fp from "../data/fitposts.js";
 import * as user from "../data/users.js";
 import * as wardrobe from "../data/wardrobes.js";
+import { fitposts, users } from "../config/mongoCollections.js";
+import { ObjectId } from "mongodb";
+
 
 //import { getOutfitPiecesByUserId, getOutfitPiecesByUsername } from '../data/outfitPieces.js';
 
@@ -254,6 +257,59 @@ router.route("/user/:uid").get(async (req, res) => {
     }
 });
 
+router.get("/favorites", async (req, res) => {
+    if (!req.session || !req.session.user) {
+        res.status(500).send("Not logged in");
+    }
+    async function getFavoriteFitposts(username) {
+        try {
+          // Get the user's favorite array
+          const usersCollection = await users();
+          const user = await usersCollection.findOne(
+            { username: username },
+            { favorite: 1 }
+          );
+          const favoriteIds = user.favorite;
+          console.log('favorit ids', favoriteIds);
+          const favoriteObjectIds = favoriteIds.map((id) => new ObjectId(id));
+          console.log('favobjectids', favoriteObjectIds);
+          console.log('this is ids',favoriteIds);
+          const fitpostCollection = await fitposts();
+          const favoriteFitposts = await fitpostCollection
+            .find({
+              _id: { $in: favoriteObjectIds },
+            })
+            .toArray();
+
+        for (let fit of favoriteFitposts) {
+            fit.postedDate = convertDate(fit);
+        }
+    
+          return favoriteFitposts;
+        } catch (error) {
+          console.error("Error retrieving favorite fitposts:", error);
+          throw error;
+        }
+      }
+    
+    try {
+        const favorites = await getFavoriteFitposts(req.session.user.username);
+        // Handle the favorites data as needed
+        const favWithUrl = await addSignedUrlsToFitPosts_in_fitposts(favorites);
+        let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
+
+        return res.render("explore_page", {
+            title: "Latest",
+            fitposts: favWithUrl,
+            wardrobes: drobes
+        });
+    } catch (error) {
+        console.error("Error retrieving favorites:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+    }
+   
+})
+
 router.route("/:id").get(async (req, res) => {
     //code here for GET a single movie
     //console.log(req.params.id);
@@ -362,5 +418,6 @@ router.post("/closet", async (req, res) => {
     let updated = await user.addToCloset(userId, data.pid);
     return res.status(200).json(updated);
 });
+
 
 export default router;
