@@ -90,7 +90,7 @@ router
 				imageName,
 				req.session.user.username
 			);
-			const updatedCloset = await addUserOutfitPiece(postId.toString(), req.session.user.userId);
+			const updatedCloset = await addUserOutfitPiece(postId.toString(), req.session.user._id);
 			//console.log(updatedCloset);
 			res.redirect("/fitposts/create");
 		}
