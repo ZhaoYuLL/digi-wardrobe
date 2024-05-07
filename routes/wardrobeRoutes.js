@@ -40,7 +40,7 @@ router.get("/closet", async (req, res) => {
       outfitpiecesJson: JSON.stringify(postsWithSignedUrls),
     });
   } catch (error) {
-    res.send(500).send(errpr);
+    res.send(500).send(error);
   }
 
 });
