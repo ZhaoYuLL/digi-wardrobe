@@ -1,5 +1,4 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
 <div class="profile picture">
   <div class="profile-pic"></div>
 </div>
@@ -14,8 +13,9 @@
 </div>
 
 <div class="fitposts-container">
+  {{!--
   <h1>My fitposts</h1>
-  {{#each allFitposts}}
+  --}} {{#each allFitposts}}
   <div class="fitpost" data-fitpost-id="{{_id}}">
     <h1>Fitpost {{addOne @index}}</h1>
     <p>Headwear:</p>
@@ -26,9 +26,6 @@
       data-headid="{{this.headid}}"
       data-headwear="{{this.headwear}}"
     />
-    <p>
-      <a href="{{this.headLink}}" target="_blank">Link</a>
-    </p>
     <p>Bodywear:</p>
     <img
       src="{{this.bodyUrl}}"
@@ -37,7 +34,6 @@
       data-bodyid="{{this.bodyid}}"
       data-bodywear="{{this.bodywear}}"
     />
-
     <p>Legwear:</p>
     <img
       src="{{this.legUrl}}"
@@ -247,7 +243,8 @@
     // Customize the appearance of the dropdown options
     $("select").each(function () {
       $(this).css({
-        style="width: 200px; height: 200px",
+        width: "200px",
+        height: "200px",
         "background-size": "cover",
         "background-repeat": "no-repeat",
         "background-position": "center",
