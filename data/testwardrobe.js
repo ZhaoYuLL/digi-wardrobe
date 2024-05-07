@@ -11,8 +11,7 @@ export const getAllOutfits = async () => {
   return images;
 };
 export const storeWardrobe = async (id, wardrobeName, fitposts, username) => {
-  checkRequiredFields(id, wardrobeName, fitposts, username);
-  checkIfFieldsAreProperString(id, wardrobeName, fitposts, username);
+  
   const wardrobeCollection = await wardrobe();
 
   // Create a new document with the provided caption and imageName

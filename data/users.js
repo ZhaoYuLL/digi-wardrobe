@@ -16,10 +16,11 @@ const getAllUsers = async () => {
 
 const getUserById = async (id) => {
     // TODO: validate id parameter
+    const idString = JSON.stringify(id);
     checkRequiredFields(
-        id
+        idString
     );
-    checkIfFieldsAreProperString(id);
+    checkIfFieldsAreProperString(idString);
     if (!ObjectId.isValid(id)) {
         throw 'Invalid ObjectId';
     }

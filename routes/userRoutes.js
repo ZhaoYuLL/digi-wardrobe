@@ -132,7 +132,7 @@ router
         closet: user.closet,
         favorite: user.favorite,
         bio: user.bio,
-        userId: user.userId
+        _id: user.userId
       };
       res.redirect("/userProfile");
     } catch (err) {
@@ -148,7 +148,8 @@ router.route("/userProfile").get(async (req, res) => {
   }
 
 
-  const { username, firstName, lastName, wardrobes, closet, favorite, userId, bio } = req.session.user;
+  const { username, firstName, lastName, wardrobes, closet, favorite, _id, bio } = req.session.user;
+  const userId = _id;
   try {
     // Get all fitposts for the user
     //console.log(req.session.user);
