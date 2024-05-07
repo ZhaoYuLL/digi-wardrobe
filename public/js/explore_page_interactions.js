@@ -107,12 +107,9 @@ import * as fp from '../../data/fitposts.js';*/
                 data: JSON.stringify(requestData)
             };
             $.ajax(requestConfig).then(function (response) { 
-                //let savenum = $(`.like_num#like-${currentId}`);
-                //let savenum = document.querySelector(`.save_num#savenum-${currentId}`);
-                //savenum.innerHTML = `saves: ${response.saves}`;
-                console.log('second ajax req');
-                //console.log('this ohsuld print',response);
-                //dropdown.show();
+      
+                console.log('updated wardrobe');
+                
             });
         }
 
