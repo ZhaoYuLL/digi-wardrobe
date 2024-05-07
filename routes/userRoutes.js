@@ -237,7 +237,24 @@ router.route("/following")
     }
 
     try {
-      res.render("following", { title: "Following" }); // Render the following view
+      const { following } = req.session.user;
+      const followingUserIds = [...following]; // create a new array by spreading the values of the 'following' array
+      // const testUserId = "611a24a197aa3b5a1d315701";
+      // followingUserIds.push(testUserId);
+      // console.log(followingUserIds);
+
+      const allFitposts = [];
+      for (const userId of followingUserIds) {
+        const fitposts = await searchByUID(userId);
+        allFitposts.push(...fitposts);
+      }
+
+      const fitpostsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(allFitposts);
+
+      res.render("following", {
+        title: "Following",
+        fitposts: fitpostsWithSignedUrls,
+      });
     } catch (err) {
       res.status(400).render("login", {
         error: err,

@@ -1,0 +1,55 @@
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<div>
+  <p id="welcome">Following</p>
+</div>
+
+<div class="fitposts-container">
+  <h1>Fitposts from Users You Follow</h1>
+  {{#each fitposts}}
+  <div class="fitpost" data-fitpost-id="{{_id}}">
+    <h2>Fitpost by {{this.username}}</h2>
+    <p>Headwear:</p>
+    <img
+      src="{{this.headUrl}}"
+      width="200px;"
+      height="200px"
+      alt="Head Image"
+      data-headid="{{this.headid}}"
+      data-headwear="{{this.headwear}}"
+    />
+    <p>Bodywear:</p>
+    <img
+      src="{{this.bodyUrl}}"
+      width="200px;"
+      height="200px"
+      alt="Body Image"
+      data-bodyid="{{this.bodyid}}"
+      data-bodywear="{{this.bodywear}}"
+    />
+    <p>Legwear:</p>
+    <img
+      src="{{this.legUrl}}"
+      width="200px;"
+      height="200px"
+      alt="Leg Image"
+      data-legid="{{this.legid}}"
+      data-legwear="{{this.legwear}}"
+    />
+    <p>Footwear:</p>
+    <img
+      src="{{this.footUrl}}"
+      width="200px;"
+      height="200px"
+      alt="Foot Image"
+      data-footid="{{this.footid}}"
+      data-footwear="{{this.footwear}}"
+    />
+    <p>Likes: {{this.likes}}</p>
+    <p>Saves: {{this.saves}}</p>
+    <p>Posted on: {{this.postedDate}}</p>
+  </div>
+  {{/each}}
+</div>
+
+<a id="logoutLink" href="/logout">Logout</a>
