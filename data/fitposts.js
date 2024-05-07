@@ -150,10 +150,10 @@ const createFP = async (
   bodywear,
   legwear,
   footwear,
-  head_id,
-  body_id,
-  leg_id,
-  foot_id
+  headid,
+  bodyid,
+  legid,
+  footid
 ) => {
   // find a way to validate these ids
   user_id = validString(user_id);
@@ -162,10 +162,10 @@ const createFP = async (
   bodywear = validString(bodywear);
   legwear = validString(legwear);
   footwear = validString(footwear);
-  head_id = validString(head_id);
-  body_id = validString(body_id);
-  leg_id = validString(leg_id);
-  foot_id = validString(foot_id);
+  headid = validString(head_id);
+  bodyid = validString(body_id);
+  legid = validString(leg_id);
+  footid = validString(foot_id);
 
   let likes = 0;
   let saves = 0;
@@ -181,10 +181,10 @@ const createFP = async (
     bodywear,
     legwear,
     footwear,
-    head_id,
-    body_id,
-    leg_id,
-    foot_id,
+    headid,
+    bodyid,
+    legid,
+    footid,
     likes,
     saves,
   };
