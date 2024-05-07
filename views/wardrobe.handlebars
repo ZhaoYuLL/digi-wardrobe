@@ -51,30 +51,22 @@
       {{#each fitposts}}
       <div class="fitpost">
         <h1>this is fitpost {{addOne @index}}</h1>
-        <p>Headwear</p>
-        <img
-          src="{{this.headUrl}}"
-          style="width: 200px; height: 200px"
-          alt="head Image"
-        />
+        <p>Headwear:</p>
+        <img src="{{this.headUrl}}" style="width: 200px; height: 200px" alt="head Image" />
+        <p>Description: {{this.headDesc}}</p>
+        <p>Clothing Source: {{this.headLink}}</p>
         <p>Bodywear:</p>
-        <img
-          src="{{this.bodyUrl}}"
-          style="width: 200px; height: 200px"
-          alt="head Image"
-        />
+        <img src="{{this.bodyUrl}}" style="width: 200px; height: 200px" alt="head Image" />
+        <p>Description: {{this.bodyDesc}}</p>
+        <p>Clothing Source: {{this.bodyLink}}</p>
         <p>Legwear:</p>
-        <img
-          src="{{this.legUrl}}"
-          style="width: 200px; height: 200px"
-          alt="head Image"
-        />
+        <img src="{{this.legUrl}}" style="width: 200px; height: 200px" alt="head Image" />
+        <p>Description: {{this.legDesc}}</p>
+        <p>Clothing Source: {{this.legLink}}</p>
         <p>Footwear:</p>
-        <img
-          src="{{this.footUrl}}"
-          style="width: 200px; height: 200px"
-          alt="head Image"
-        />
+        <img src="{{this.footUrl}}" style="width: 200px; height: 200px" alt="head Image" />
+        <p>Description: {{this.footDesc}}</p>
+        <p>Clothing Source: {{this.footLink}}</p>
         <p>likes: {{likes}}</p>
         <p>saves: {{saves}}</p>
         <p>Posted Date: {{postedDate}}</p>
@@ -86,7 +78,7 @@
 </div>
 
 <script>
-  var ward = {{{wardrobesJson}}}
+  var ward = {{{ wardrobesJson }}}
   var currentIndex = {};
 
   document.addEventListener("DOMContentLoaded", function () {

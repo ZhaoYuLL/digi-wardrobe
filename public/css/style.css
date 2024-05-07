@@ -64,6 +64,7 @@
 .fitpost {
   margin-right: 20px;
   word-break: break-all;
+  width: 250px;
 }
 
 .fitpost-content {
@@ -77,6 +78,9 @@
 
 .slide {
   display: none;
+  width: 500px;
+  word-wrap: break-word;
+  text-align: center;
 }
 
 .slide[data-active] {
@@ -95,6 +99,8 @@ img {
 
 .outfit {
   margin: 10px;
+  word-break: break-all;
+  width: 200px;
 }
 
 .outfit img {
@@ -250,5 +256,7 @@ p a:hover {
 }
 
 .outfit-piece {
-  word-break: break-all
+  word-break: break-all;
+  width: 600px;
+  padding: 10px;
 }

@@ -58,6 +58,28 @@ export const addDescLinksForFitposts = async (fitposts) => {
 	return fitposts;
 }
 
+export const addDescLinksForFitposts_inWardrobes = async (wardrobes) => {
+	for (let wardrobe of wardrobes) {
+		for (let fitpost of wardrobe.fitposts) {
+			let head = await getImageById(fitpost.headid);
+			let body = await getImageById(fitpost.bodyid);
+			let leg = await getImageById(fitpost.legid);
+			let foot = await getImageById(fitpost.footid);
+
+			fitpost.headDesc = head.description;
+			fitpost.headLink = head.link;
+			fitpost.bodyDesc = body.description;
+			fitpost.bodyLink = body.link;
+			fitpost.legDesc = leg.description;
+			fitpost.legLink = leg.link;
+			fitpost.footDesc = foot.description;
+			fitpost.footLink = foot.link;
+		}
+	}
+
+	return wardrobes;
+}
+
 //!start outfitpeices
 
 //secure way of accessing secret key

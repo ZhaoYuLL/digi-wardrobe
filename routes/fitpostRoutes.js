@@ -4,21 +4,16 @@ import * as user from "../data/users.js";
 import * as wardrobe from "../data/wardrobes.js";
 import { fitposts, users } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
-
-
-//import { getOutfitPiecesByUserId, getOutfitPiecesByUsername } from '../data/outfitPieces.js';
-
 import {
     validString,
     addSignedUrlsToFitPosts_in_fitposts,
     convertDate,
-    addSignedUrlsToPosts, addSignedUrlsToOutfitPieces,
+    addSignedUrlsToPosts,
+    addSignedUrlsToOutfitPieces,
+    addDescLinksForFitposts,
 } from "../helper.js";
 import xss from "xss";
 import { getAllFromCloset } from '../data/outfitPieces.js';
-// import { wardrobe } from '../config/mongoCollections.js'; idk wahtthis is commenting it out
-
-// import { addSignedUrlsToFitPosts_in_wardrobe } from "../helper.js";
 
 const router = Router();
 
@@ -35,11 +30,12 @@ router.route("/").get(async (req, res) => {
         for (let fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
+        const postsWithDescLinks = await addDescLinksForFitposts(postsWithSignedUrls);
         let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
 
         return res.render("explore_page", {
             title: "Explore",
-            fitposts: postsWithSignedUrls,
+            fitposts: postsWithDescLinks,
             wardrobes: drobes,
         });
     } catch (e) {
@@ -188,10 +184,11 @@ router.route("/trending").get(async (req, res) => {
         for (const fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
+        const postsWithDescLinks = await addDescLinksForFitposts(postsWithSignedUrls);
         let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
         return res.render("explore_page", {
             title: "Trending",
-            fitposts: postsWithSignedUrls,
+            fitposts: postsWithDescLinks,
             wardrobes: drobes,
         });
     } catch (e) {
@@ -212,11 +209,12 @@ router.route("/latest").get(async (req, res) => {
         for (const fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
+        const postsWithDescLinks = await addDescLinksForFitposts(postsWithSignedUrls);
         let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
 
         return res.render("explore_page", {
             title: "Latest",
-            fitposts: postsWithSignedUrls,
+            fitposts: postsWithDescLinks,
             wardrobes: drobes,
         });
     } catch (e) {
@@ -245,11 +243,12 @@ router.route("/user/:uid").get(async (req, res) => {
         for (const fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
+        const postsWithDescLinks = await addDescLinksForFitposts(postsWithSignedUrls);
         let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
 
         return res.render("explore_page", {
             title: `${req.session.user.username}'s FitPosts`,
-            fitposts: postsWithSignedUrls,
+            fitposts: postsWithDescLinks,
             wardrobes: drobes,
         });
     } catch (e) {
@@ -263,51 +262,51 @@ router.get("/favorites", async (req, res) => {
     }
     async function getFavoriteFitposts(username) {
         try {
-          // Get the user's favorite array
-          const usersCollection = await users();
-          const user = await usersCollection.findOne(
-            { username: username },
-            { favorite: 1 }
-          );
-          const favoriteIds = user.favorite;
-          console.log('favorit ids', favoriteIds);
-          const favoriteObjectIds = favoriteIds.map((id) => new ObjectId(id));
-          console.log('favobjectids', favoriteObjectIds);
-          console.log('this is ids',favoriteIds);
-          const fitpostCollection = await fitposts();
-          const favoriteFitposts = await fitpostCollection
-            .find({
-              _id: { $in: favoriteObjectIds },
-            })
-            .toArray();
+            // Get the user's favorite array
+            const usersCollection = await users();
+            const user = await usersCollection.findOne(
+                { username: username },
+                { favorite: 1 }
+            );
+            const favoriteIds = user.favorite;
+            console.log('favorit ids', favoriteIds);
+            const favoriteObjectIds = favoriteIds.map((id) => new ObjectId(id));
+            console.log('favobjectids', favoriteObjectIds);
+            console.log('this is ids', favoriteIds);
+            const fitpostCollection = await fitposts();
+            const favoriteFitposts = await fitpostCollection
+                .find({
+                    _id: { $in: favoriteObjectIds },
+                })
+                .toArray();
 
-        for (let fit of favoriteFitposts) {
-            fit.postedDate = convertDate(fit);
-        }
-    
-          return favoriteFitposts;
+            for (let fit of favoriteFitposts) {
+                fit.postedDate = convertDate(fit);
+            }
+
+            return favoriteFitposts;
         } catch (error) {
-          console.error("Error retrieving favorite fitposts:", error);
-          throw error;
+            console.error("Error retrieving favorite fitposts:", error);
+            throw error;
         }
-      }
-    
+    }
+
     try {
         const favorites = await getFavoriteFitposts(req.session.user.username);
         // Handle the favorites data as needed
         const favWithUrl = await addSignedUrlsToFitPosts_in_fitposts(favorites);
         let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
-
+        const postsWithDescLinks = await addDescLinksForFitposts(favWithUrl);
         return res.render("explore_page", {
             title: "Favorites",
-            fitposts: favWithUrl,
+            fitposts: postsWithDescLinks,
             wardrobes: drobes
         });
     } catch (error) {
         console.error("Error retrieving favorites:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ error: "Internal Server Error" });
     }
-   
+
 })
 
 router.route("/:id").get(async (req, res) => {
