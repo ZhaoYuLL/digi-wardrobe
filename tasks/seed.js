@@ -48,7 +48,7 @@ const storeOutfitPiece = async (id, link, outfitType, imageName, username) => {
 
   // Check if the insertion was successful
   if (result.insertedId) {
-    console.log("Image stored successfully");
+    // console.log("Image stored successfully");
     return result.insertedId;
   } else {
     throw new Error("Failed to store image");

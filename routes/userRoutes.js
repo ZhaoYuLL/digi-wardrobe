@@ -14,13 +14,12 @@ import { getAllOutfitPieces } from "../data/testCloset.js";
 import {
   addSignedUrlsToFitPosts_in_wardrobe,
   addSignedUrlsToFitPosts_in_closet,
-  addDescLinksForFitposts
+  addDescLinksForFitposts,
 } from "../helper.js";
 
 import { addSignedUrlsToFitPosts_in_fitposts, validString } from "../helper.js";
-import xss from 'xss';
+import xss from "xss";
 import { getOutfitPiecesByUsername } from "../data/outfitPieces.js";
-
 
 router.route("/").get(async (req, res) => {
   //code here for GET THIS ROUTE SHOULD NEVER FIRE BECAUSE OF MIDDLEWARE #1 IN SPECS.
@@ -39,7 +38,16 @@ router
   })
   .post(async (req, res) => {
     //code here for POST
-    let { userName, firstName, lastName, age, email, password, confirmPassword, bio } = req.body;
+    let {
+      userName,
+      firstName,
+      lastName,
+      age,
+      email,
+      password,
+      confirmPassword,
+      bio,
+    } = req.body;
 
     try {
       userName = validString(userName);
@@ -88,7 +96,15 @@ router
       return res.status(500).json({ error: "Internal Server Error" });
     }
     try {
-      const newUser = await createUser(userName, firstName, lastName, age, email, password, bio);
+      const newUser = await createUser(
+        userName,
+        firstName,
+        lastName,
+        age,
+        email,
+        password,
+        bio
+      );
       req.session.user = newUser;
       res.redirect("/userProfile");
     } catch (err) {
@@ -150,8 +166,17 @@ router.route("/userProfile").get(async (req, res) => {
     return res.redirect("/login");
   }
 
-
-  const { username, firstName, lastName, wardrobes, closet, favorite, _id, bio, following } = req.session.user;
+  const {
+    username,
+    firstName,
+    lastName,
+    wardrobes,
+    closet,
+    favorite,
+    _id,
+    bio,
+    following,
+  } = req.session.user;
   const userId = _id;
   try {
     // Get all fitposts for the user
@@ -167,8 +192,10 @@ router.route("/userProfile").get(async (req, res) => {
     const fitpostsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
       allFitposts
     );
-    const fitpostsWithOutfitDescLinks = await addDescLinksForFitposts(fitpostsWithSignedUrls);
-    console.log(fitpostsWithOutfitDescLinks);
+    const fitpostsWithOutfitDescLinks = await addDescLinksForFitposts(
+      fitpostsWithSignedUrls
+    );
+    //console.log(fitpostsWithOutfitDescLinks);
 
     res.render("userProfile", {
       title: "User Profile",
@@ -182,7 +209,7 @@ router.route("/userProfile").get(async (req, res) => {
       wardrobes,
       wardrobes: postsWithSignedUrls,
       outfitpiecesJson: JSON.stringify(postsWithSignedUrls),
-      following
+      following,
     });
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -233,37 +260,38 @@ router.post("/userprofile/update-fitpost", async function (req, res) {
   // Send the updated fitpost as the response
   res.json(updatedFitpost);
 });
-router.route("/following")
-  .get(async (req, res) => {
-    if (!req.session.user) {
-      return res.redirect("/login");
+router.route("/following").get(async (req, res) => {
+  if (!req.session.user) {
+    return res.redirect("/login");
+  }
+
+  try {
+    const { following } = req.session.user;
+    const followingUserIds = [...following]; // create a new array by spreading the values of the 'following' array
+    // const testUserId = "611a24a197aa3b5a1d315701";
+    // followingUserIds.push(testUserId);
+    // console.log(followingUserIds);
+
+    const allFitposts = [];
+    for (const userId of followingUserIds) {
+      const fitposts = await searchByUID(userId);
+      allFitposts.push(...fitposts);
     }
 
-    try {
-      const { following } = req.session.user;
-      const followingUserIds = [...following]; // create a new array by spreading the values of the 'following' array
-      // const testUserId = "611a24a197aa3b5a1d315701";
-      // followingUserIds.push(testUserId);
-      // console.log(followingUserIds);
+    const fitpostsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
+      allFitposts
+    );
 
-      const allFitposts = [];
-      for (const userId of followingUserIds) {
-        const fitposts = await searchByUID(userId);
-        allFitposts.push(...fitposts);
-      }
-
-      const fitpostsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(allFitposts);
-
-      res.render("following", {
-        title: "Following",
-        fitposts: fitpostsWithSignedUrls,
-      });
-    } catch (err) {
-      res.status(400).render("login", {
-        error: err,
-      });
-    }
-  });
+    res.render("following", {
+      title: "Following",
+      fitposts: fitpostsWithSignedUrls,
+    });
+  } catch (err) {
+    res.status(400).render("login", {
+      error: err,
+    });
+  }
+});
 
 router.route("/logout").get(async (req, res) => {
   //code here for GET
