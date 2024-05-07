@@ -52,12 +52,12 @@ export const getAllImages = async () => {
 	//console.log(`Found ${images.length} images`);
 	return images;
 };
+//console.log(await getImage("435c29542cc36cbfc5bb32b578915f0585917c83c333c27655deb5411ecefc4f"));
 
 export const deleteImage = async (imageName) => {
 	const outfitPiecesCollection = await outfitPieces();
-	const deletionInfo = await outfitPiecesCollection.findOneAndDelete({ imageName: imageName });
-	console.log(deletionInfo);
-	if (!deletionInfo) throw `Error: Could not delete image with name of ${imageName}`;
+	const deletionInfo = await getImage(imageName);
+	await outfitPiecesCollection.findOneAndDelete({ imageName: imageName });
 
 	return deletionInfo;
 };

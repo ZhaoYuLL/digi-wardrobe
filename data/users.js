@@ -262,7 +262,7 @@ export const deleteUserOutfitPiece = async (outfitPieceId, userId) => {
         userCloset.splice(index, 1);
     }
 
-    updatedCloset = {
+    let updatedCloset = {
         closet: userCloset
     };
     const userCollection = await users();
