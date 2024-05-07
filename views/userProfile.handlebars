@@ -18,23 +18,47 @@
   <div class="fitpost" data-fitpost-id="{{_id}}">
     <h1>Fitpost {{addOne @index}}</h1>
     <p>Headwear:</p>
-    <img src="{{this.headUrl}}" width="200px;" height="200px" alt="Head Image" data-headid="{{this.headid}}"
-      data-headwear="{{this.headwear}}" />
+    <img
+      src="{{this.headUrl}}"
+      width="200px;"
+      height="200px"
+      alt="Head Image"
+      data-headid="{{this.headid}}"
+      data-headwear="{{this.headwear}}"
+    />
     <p>Description: {{this.headDesc}}</p>
     <p>Clothing Source: {{this.headLink}}</p>
     <p>Bodywear:</p>
-    <img src="{{this.bodyUrl}}" width="200px;" height="200px" alt="Body Image" data-bodyid="{{this.bodyid}}"
-      data-bodywear="{{this.bodywear}}" />
+    <img
+      src="{{this.bodyUrl}}"
+      width="200px;"
+      height="200px"
+      alt="Body Image"
+      data-bodyid="{{this.bodyid}}"
+      data-bodywear="{{this.bodywear}}"
+    />
     <p>Description: {{this.bodyDesc}}</p>
     <p>Clothing Source: {{this.bodyLink}}</p>
     <p>Legwear:</p>
-    <img src="{{this.legUrl}}" width="200px;" height="200px" alt="Leg Image" data-legid="{{this.legid}}"
-      data-legwear="{{this.legwear}}" />
+    <img
+      src="{{this.legUrl}}"
+      width="200px;"
+      height="200px"
+      alt="Leg Image"
+      data-legid="{{this.legid}}"
+      data-legwear="{{this.legwear}}"
+    />
     <p>Description: {{this.legDesc}}</p>
     <p>Clothing Source: {{this.legLink}}</p>
     <p>Footwear:</p>
-    <img src="{{this.footUrl}}" width="200px;" height="200px" alt="Foot Image" data-footid="{{this.footid}}"
-      data-footwear="{{this.footwear}}" />
+    <img
+      src="{{this.footUrl}}"
+      width="200px;"
+      height="200px"
+      alt="Foot Image"
+      data-footid="{{this.footid}}"
+      data-footwear="{{this.footwear}}"
+    />
     <p>Description: {{this.footDesc}}</p>
     <p>Clothing Source: {{this.footLink}}</p>
 
@@ -269,7 +293,7 @@
 
   // Function to update the fitpost UI after successful update
   function updateFitpostUI(fitpostId, updatedFitpost) {
-    console.log("Updating fitpost UI with data:", updatedFitpost);
+    //console.log("Updating fitpost UI with data:", updatedFitpost);
 
     var fitpostElement = $('.fitpost[data-fitpost-id="' + fitpostId + '"]');
 
@@ -279,8 +303,8 @@
       .prop("src", updatedFitpost.headUrl)
       .data("headid", updatedFitpost.headid)
       .data("headwear", updatedFitpost.headwear);
-    console.log(
-      "Updated head image:",
+    //console.log(
+      //"Updated head image:",
       fitpostElement.find('img[alt="Head Image"]')
     );
 
@@ -289,8 +313,8 @@
       .prop("src", updatedFitpost.bodyUrl)
       .data("bodyid", updatedFitpost.bodyid)
       .data("bodywear", updatedFitpost.bodywear);
-    console.log(
-      "Updated body image:",
+    //console.log(
+     // "Updated body image:",
       fitpostElement.find('img[alt="Body Image"]')
     );
 
@@ -299,8 +323,8 @@
       .prop("src", updatedFitpost.legUrl)
       .data("legid", updatedFitpost.legid)
       .data("legwear", updatedFitpost.legwear);
-    console.log(
-      "Updated leg image:",
+    //console.log(
+     // "Updated leg image:",
       fitpostElement.find('img[alt="Leg Image"]')
     );
 
@@ -309,8 +333,8 @@
       .prop("src", updatedFitpost.footUrl)
       .data("footid", updatedFitpost.footid)
       .data("footwear", updatedFitpost.footwear);
-    console.log(
-      "Updated foot image:",
+    //console.log(
+    //  "Updated foot image:",
       fitpostElement.find('img[alt="Foot Image"]')
     );
   }
