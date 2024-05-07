@@ -16,10 +16,11 @@ const getAllUsers = async () => {
 
 const getUserById = async (id) => {
     // TODO: validate id parameter
+    const idString = JSON.stringify(id);
     checkRequiredFields(
-        id
+        idString
     );
-    checkIfFieldsAreProperString(id);
+    checkIfFieldsAreProperString(idString);
     if (!ObjectId.isValid(id)) {
         throw 'Invalid ObjectId';
     }
@@ -120,6 +121,7 @@ const createUser = async (username, firstName, lastName, age, email, password, b
         wardrobes: [],
         closet: [],
         favorite: [],
+        following: []
         // might add profile pic when we get image storage working
     }
     const userCollection = await users();
@@ -223,7 +225,8 @@ const loginUser = async (username, password) => {
         wardrobes: foundUser.wardrobes,
         closet: foundUser.closet,
         favorite: foundUser.favorite,
-        bio: foundUser.bio
+        bio: foundUser.bio, 
+        following: foundUser.following
     }
     return userInfo;
 }

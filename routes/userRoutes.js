@@ -132,7 +132,8 @@ router
         closet: user.closet,
         favorite: user.favorite,
         bio: user.bio,
-        userId: user.userId
+        _id: user.userId, 
+        following: user.following,
       };
       res.redirect("/userProfile");
     } catch (err) {
@@ -148,7 +149,8 @@ router.route("/userProfile").get(async (req, res) => {
   }
 
 
-  const { username, firstName, lastName, wardrobes, closet, favorite, userId, bio } = req.session.user;
+  const { username, firstName, lastName, wardrobes, closet, favorite, _id, bio, following } = req.session.user;
+  const userId = _id;
   try {
     // Get all fitposts for the user
     //console.log(req.session.user);
@@ -176,6 +178,7 @@ router.route("/userProfile").get(async (req, res) => {
       wardrobes,
       wardrobes: postsWithSignedUrls,
       outfitpiecesJson: JSON.stringify(postsWithSignedUrls),
+      following
     });
   } catch (error) {
     console.error("Error fetching user data:", error);
