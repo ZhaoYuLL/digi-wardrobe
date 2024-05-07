@@ -229,6 +229,20 @@ router.post("/userprofile/update-fitpost", async function (req, res) {
   // Send the updated fitpost as the response
   res.json(updatedFitpost);
 });
+router.route("/following")
+  .get(async (req, res) => {
+    if (!req.session.user) {
+      return res.redirect("/login");
+    }
+
+    try {
+      res.render("following", { title: "Following" }); // Render the following view
+    } catch (err) {
+      res.status(400).render("login", {
+        error: err,
+      });
+    }
+  });
 
 router.route("/logout").get(async (req, res) => {
   //code here for GET
