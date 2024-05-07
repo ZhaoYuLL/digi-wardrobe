@@ -35,7 +35,7 @@ router.route('/create')
         // need to change so that it only gets outfit pieces that the user has in their closet
         try {
             const postsUrls = await addSignedUrlsToPosts();
-            console.log(postsUrls);
+            //console.log(postsUrls);
 
             let headwear = postsUrls.filter((element) => {
                 return element.outfitType === "head"
@@ -65,7 +65,7 @@ router.route('/create')
     })
     .post(async (req, res) => {
         // TODO: input validation
-        console.log("found the post route!");
+        //console.log("found the post route!");
         if (req.session && req.session.user) {
             let data = req.body;
             const user = req.session.user;
@@ -286,9 +286,7 @@ router.post('/save', async (req, res) => {
             
             //make new wardrobe, req.session.user.userId, data.newName, data.fitpostId
             //add wardrobe under user
-            console.log('not added yet');
             let newDrobeId = await wardrobe.createNewWardrobe(data.newName, data.fitpostId, req.session.user.userId);
-            console.log('succ added');
             await user.addWardrobe(req.session.user.userId, newDrobeId);
             let addedWardrobe = await wardrobe.getWardrobeById(newDrobeId);
             return res.status(200).json(addedWardrobe);
@@ -315,6 +313,18 @@ router.post('/save', async (req, res) => {
         console.log(error, 'oops');
         res.status(500).send(error);
     }
+});
+
+router.post('/closet', async (req, res) => {
+    const data = req.body;
+    const userId = req.session.user.userId;
+    let currentUser = await user.getUserById(userId);
+    if (currentUser.closet.includes(data.pid)) {
+        return res.status(400).json({error: 'already saved'});
+    }
+    let updated = await user.addToCloset(userId, data.pid);
+    return res.status(200).json(updated);
+
 });
 
 export default router;

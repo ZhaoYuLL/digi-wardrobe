@@ -8,7 +8,8 @@ import * as fp from '../../data/fitposts.js';*/
     const routing = '/fitposts';
     let likeButtons = $('.like'),
         saveButtons = $('.save')
-        dropdown = $('.wardrobe-select');
+        dropdown = $('.wardrobe-select'),
+        closetButtons = $('.closet');
 
     //dropdown.hide();
         
@@ -115,9 +116,24 @@ import * as fp from '../../data/fitposts.js';*/
             
         }
         $(".wardrobe-select").val("new");
+    });
 
+
+
+    closetButtons.on('click', function(event) {
+        event.preventDefault();
+        let pieceId = $(this).attr('id').substring(7);
+        console.log(pieceId);
+        let requestConfig = {
+            method: 'POST',
+            url: `${routing}/closet`,
+            contentType: 'application/json',
+            data: JSON.stringify({ pid: pieceId })
+            };
+        $.ajax(requestConfig).then(function (response) { 
+            console.log('updated closet');
+        });
         
-         
     });
 
 })(window.jQuery);

@@ -338,6 +338,36 @@ const addWardrobe = async (userId, drobeId) => {
     updatedInfo._id = updatedInfo._id.toString();
     return updatedInfo;
 };
+
+
+const addToCloset = async (userId, pid) => {
+    const userCollection = await users();
+    const user = await userCollection.findOne({ _id: new ObjectId(userId) });
+
+    if (user === null) throw 'No user with that id';
+
+    let closet = user.closet;
+    closet.push(pid)
+
+    
+
+    const updateUser = {
+        closet: closet
+    };
+
+    const updatedInfo = await userCollection.findOneAndUpdate(
+        { _id: new ObjectId(userId) },
+        { $set: updateUser },
+        { returnDocument: 'after' }
+    );
+
+    if (!updatedInfo) {
+        throw 'Could not update user successfully';
+    }
+
+    updatedInfo._id = updatedInfo._id.toString();
+    return updatedInfo;
+};
 /*const checkSave = async(userId, fpId, wardrobeId) => {
     const user = await getUserById(userId);
     if (user) {
@@ -352,4 +382,4 @@ const addWardrobe = async (userId, drobeId) => {
 
 
 
-export { getAllUsers, getUserById, createUser, updateUserInfo, deleteUser, loginUser, checkLike, addLike, removeLike, addWardrobe };
+export { getAllUsers, getUserById, createUser, updateUserInfo, deleteUser, loginUser, checkLike, addLike, removeLike, addWardrobe, addToCloset };
