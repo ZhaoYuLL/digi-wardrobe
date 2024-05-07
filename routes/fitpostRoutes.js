@@ -92,61 +92,61 @@ router.route('/create')
                 if (!data.bodywear) throw new Error("Bodywear not provided in route");
                 if (!data.legwear) throw new Error("Legwear not provided in route");
                 if (!data.footwear) throw new Error("Footwear not provided in route");
-                if (!data.head_id) throw new Error("Head_id not provided in route");
-                if (!data.body_id) throw new Error("Body_id not provided in route");
-                if (!data.leg_id) throw new Error("Leg_id not provided in route");
-                if (!data.foot_id) throw new Error("Foot_id not provided in route");
+                if (!data.headid) throw new Error("Head_id not provided in route");
+                if (!data.bodyid) throw new Error("Body_id not provided in route");
+                if (!data.legid) throw new Error("Leg_id not provided in route");
+                if (!data.footid) throw new Error("Foot_id not provided in route");
             } catch (e) {
-                res.status(400).send(e);
+                return res.status(400).send(e);
             }
 
             try {
                 data.headwear = validString(data.headwear);
                 data.headwear = xss(data.headwear);
             } catch (e) {
-                res.status(400).send(e);
+                return res.status(400).send(e);
             }
             try {
-                data.head_id = validString(data.head_id);
-                data.head_id = xss(data.head_id);
+                data.headid = validString(data.headid);
+                data.headid = xss(data.headid);
             } catch (e) {
-                res.status(400).send(e);
+                return res.status(400).send(e);
             }
             try {
                 data.bodywear = validString(data.bodywear);
                 data.bodywear = xss(data.bodywear);
             } catch (e) {
-                res.status(400).send(e);
+                return res.status(400).send(e);
             }
             try {
-                data.body_id = validString(data.body_id);
-                data.body_id = xss(data.body_id);
+                data.bodyid = validString(data.bodyid);
+                data.bodyid = xss(data.bodyid);
             } catch (e) {
-                res.status(400).send(e);
+                return res.status(400).send(e);
             }
             try {
                 data.legwear = validString(data.legwear);
                 data.legwear = xss(data.legwear);
             } catch (e) {
-                res.status(400).send(e);
+                return res.status(400).send(e);
             }
             try {
-                data.leg_id = validString(data.leg_id);
-                data.leg_id = xss(data.leg_id);
+                data.legid = validString(data.legid);
+                data.legid = xss(data.legid);
             } catch (e) {
-                res.status(400).send(e);
+                return res.status(400).send(e);
             }
             try {
                 data.footwear = validString(data.footwear);
                 data.footwear = xss(data.footwear);
             } catch (e) {
-                res.status(400).send(e);
+                return res.status(400).send(e);
             }
             try {
-                data.foot_id = validString(data.foot_id);
-                data.foot_id = xss(data.foot_id);
+                data.footid = validString(data.footid);
+                data.footid = xss(data.footid);
             } catch (e) {
-                res.status(400).send(e);
+                return res.status(400).send(e);
             }
 
             try {
@@ -157,17 +157,17 @@ router.route('/create')
                     data.bodywear,
                     data.legwear,
                     data.footwear,
-                    data.head_id,
-                    data.body_id,
-                    data.leg_id,
-                    data.foot_id
+                    data.headid,
+                    data.bodyid,
+                    data.legid,
+                    data.footid
                 );
-                res.status(200).redirect("/");
+                return res.status(200).redirect("/");
             } catch (e) {
-                res.status(500).json({ error: e });
+                return res.status(500).json({ error: e });
             }
         } else {
-            res.status(500).send("Not logged in");
+            return res.status(500).send("Not logged in");
         }
     });
 
