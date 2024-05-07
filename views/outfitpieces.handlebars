@@ -12,8 +12,8 @@
     <option value="foot">Footwear</option>
   </select>
   <br />
-  <label for="caption">Description: </label>
-  <input type="text" id="caption" name="caption" placeholder="Write a description!" />
+  <label for="description">Description: </label>
+  <input type="text" id="description" name="description" placeholder="Write a description!" />
   <br />
   <label for="link">Where did you get your clothing item from?</label>
   <input type="text" id="link" name="link" placeholder="Clothing source link" />
@@ -24,7 +24,8 @@
 {{#each posts}}
 <div class="outfit-piece" id="{{this._id}}">
   <img src="{{this.imageUrl}}" alt="{{this.caption}}" />
-  <p>{{this.caption}}</p>
+  <p>Description: {{this.description}}</p>
+  <p>Clothing Source: {{this.link}}</p>
   <button type="button" class="delete-button" id="{{this.imageName}}">Delete</button>
 </div>
 {{/each}}

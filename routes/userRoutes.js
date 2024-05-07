@@ -14,6 +14,7 @@ import { getAllOutfitPieces } from "../data/testCloset.js";
 import {
   addSignedUrlsToFitPosts_in_wardrobe,
   addSignedUrlsToFitPosts_in_closet,
+  addDescLinksForFitposts
 } from "../helper.js";
 
 import { addSignedUrlsToFitPosts_in_fitposts, validString } from "../helper.js";
@@ -166,6 +167,8 @@ router.route("/userProfile").get(async (req, res) => {
     const fitpostsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
       allFitposts
     );
+    const fitpostsWithOutfitDescLinks = await addDescLinksForFitposts(fitpostsWithSignedUrls);
+    console.log(fitpostsWithOutfitDescLinks);
 
     res.render("userProfile", {
       title: "User Profile",
@@ -175,7 +178,7 @@ router.route("/userProfile").get(async (req, res) => {
       closet,
       favorite,
       bio: bio,
-      allFitposts: fitpostsWithSignedUrls,
+      allFitposts: fitpostsWithOutfitDescLinks,
       wardrobes,
       wardrobes: postsWithSignedUrls,
       outfitpiecesJson: JSON.stringify(postsWithSignedUrls),

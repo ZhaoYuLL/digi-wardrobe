@@ -13,6 +13,7 @@ import {
 	getImage,
 	getAllImages,
 	deleteImage,
+	getImageById,
 } from "./data/outfitPieces.js";
 
 export const validString = (input) => {
@@ -36,6 +37,25 @@ const imageExists = async (imageName) => {
 		return false;
 	}
 	return true;
+}
+
+export const addDescLinksForFitposts = async (fitposts) => {
+	for (let fitpost of fitposts) {
+		let head = await getImageById(fitpost.headid);
+		let body = await getImageById(fitpost.bodyid);
+		let leg = await getImageById(fitpost.legid);
+		let foot = await getImageById(fitpost.footid);
+
+		fitpost.headDesc = head.description;
+		fitpost.headLink = head.link;
+		fitpost.bodyDesc = body.description;
+		fitpost.bodyLink = body.link;
+		fitpost.legDesc = leg.description;
+		fitpost.legLink = leg.link;
+		fitpost.footDesc = foot.description;
+		fitpost.footLink = foot.link;
+	}
+	return fitposts;
 }
 
 //!start outfitpeices
