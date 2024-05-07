@@ -83,7 +83,10 @@ import * as fp from '../../data/fitposts.js';*/
                         data: JSON.stringify(requestData)
                     };
                     $.ajax(requestConfig).then(function (response) { 
-                        console.log('this ohsuld print',response);
+                        //console.log('this is wardrobe',response);
+                        // add new wardrobe name to the dropdown
+                        let newOption = `<option value="${response._id}">${response.wardrobeName}</option>`;
+                        $(".wardrobe-select").append(newOption);
                     });
                 }
                 

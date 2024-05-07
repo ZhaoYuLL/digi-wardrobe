@@ -290,7 +290,8 @@ router.post('/save', async (req, res) => {
             let newDrobeId = await wardrobe.createNewWardrobe(data.newName, data.fitpostId, req.session.user.userId);
             console.log('succ added');
             await user.addWardrobe(req.session.user.userId, newDrobeId);
-            return res.status(200).json(data.newName);
+            let addedWardrobe = await wardrobe.getWardrobeById(newDrobeId);
+            return res.status(200).json(addedWardrobe);
 
 
         }
