@@ -16,7 +16,7 @@ router.route('/').get(async (req, res) => {
         const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
             fpList
         );
-        for (const fit of postsWithSignedUrls) {
+        for (let fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
         return res.render('explore_page', { title: 'Explore', fitposts: fpList });
@@ -30,7 +30,7 @@ router.route('/create')
     .get(async (req, res) => {
         // need to change so that it only gets outfit pieces that the user has in their closet
         try {
-            const postsUrls = await addSignedUrlsToPosts();
+            let postsUrls = await addSignedUrlsToPosts();
             //console.log(postsUrls);
 
             let headwear = postsUrls.filter((element) => {
@@ -77,56 +77,56 @@ router.route('/create')
                 if (!data.leg_id) throw new Error('Leg_id not provided in route');
                 if (!data.foot_id) throw new Error('Foot_id not provided in route');
             } catch (e) {
-                res.status(400).json({ error: e });
+                res.status(400).send(e);
             }
 
             try {
                 data.headwear = validString(data.headwear);
                 data.headwear = xss(data.headwear);
             } catch (e) {
-                res.status(400).json({ error: e });
+                res.status(400).send(e);
             }
             try {
                 data.head_id = validString(data.head_id);
                 data.head_id = xss(data.head_id);
             } catch (e) {
-                res.status(400).json({ error: e });
+                res.status(400).send(e);
             }
             try {
                 data.bodywear = validString(data.bodywear);
                 data.bodywear = xss(data.bodywear);
             } catch (e) {
-                res.status(400).json({ error: e });
+                res.status(400).send(e);
             }
             try {
                 data.body_id = validString(data.body_id);
                 data.body_id = xss(data.body_id);
             } catch (e) {
-                res.status(400).json({ error: e });
+                res.status(400).send(e);
             }
             try {
                 data.legwear = validString(data.legwear);
                 data.legwear = xss(data.legwear);
             } catch (e) {
-                res.status(400).json({ error: e });
+                res.status(400).send(e);
             }
             try {
                 data.leg_id = validString(data.leg_id);
                 data.leg_id = xss(data.leg_id);
             } catch (e) {
-                res.status(400).json({ error: e });
+                res.status(400).send(e);
             }
             try {
                 data.footwear = validString(data.footwear);
                 data.footwear = xss(data.footwear);
             } catch (e) {
-                res.status(400).json({ error: e });
+                res.status(400).send(e);
             }
             try {
                 data.foot_id = validString(data.foot_id);
                 data.foot_id = xss(data.foot_id);
             } catch (e) {
-                res.status(400).json({ error: e });
+                res.status(400).send(e);
             }
 
             try {

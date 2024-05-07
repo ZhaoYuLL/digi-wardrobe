@@ -20,6 +20,10 @@ import {
 	getOutfitPiecesByUsername,
 	deleteImage,
 } from "../data/outfitPieces.js";
+import {
+	addUserOutfitPiece,
+	deleteUserOutfitPiece
+} from "../data/users.js";
 import xss from 'xss';
 
 const router = Router();
@@ -85,6 +89,9 @@ router
 			imageName,
 			req.session.user.username
 		);
+
+		const updatedCloset = addUserOutfitPiece(post._id.toString(), req.session.user.userId);
+		console.log(updatedCloset);
 		res.redirect("/fitposts/create");
 	});
 router.route("/:imageName").delete(async (req, res) => {
@@ -94,7 +101,10 @@ router.route("/:imageName").delete(async (req, res) => {
 
 		// example usage: delete from s3, then delete from database
 		await deleteImageFromS3(s3_image_name);
-		await deleteImage(s3_image_name);
+		const deleted = await deleteImage(s3_image_name);
+
+		const updatedCloset = deleteUserOutfitPiece(deleted._id.toString(), req.session.user.userId);
+		console.log(updatedCloset);
 
 		res.send("Post deleted successfully");
 	} catch (error) {

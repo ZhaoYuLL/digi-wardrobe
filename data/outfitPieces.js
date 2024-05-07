@@ -49,20 +49,24 @@ export const getAllImages = async () => {
 	// Find all documents in the outfitPieces collection
 	const images = await outfitPiecesCollection.find({}).toArray();
 
-	console.log(`Found ${images.length} images`);
+	//console.log(`Found ${images.length} images`);
 	return images;
 };
 
 export const deleteImage = async (imageName) => {
 	const outfitPiecesCollection = await outfitPieces();
-	await outfitPiecesCollection.deleteOne({ imageName: imageName });
+	const deletionInfo = await outfitPiecesCollection.findOneAndDelete({ imageName: imageName });
+
+	if (!deletionInfo) throw `Error: Could not delete image with name of ${imageName}`;
+
+	return deletionInfo;
 };
 
 export const getOutfitPiecesByUsername = async (username) => {
 	// get all outfit pieces owned by user
 	const outfitPiecesCollection = await outfitPieces();
 	const userOutfitPieces = outfitPiecesCollection.find({ username: username }).toArray();
-	if (!userOutfitPieces) throw new Error(`Error getting outfit pieces for user ${user_id}`);
+	if (!userOutfitPieces) throw new Error(`Error getting outfit pieces for user ${username}`);
 
 	return userOutfitPieces;
 }
