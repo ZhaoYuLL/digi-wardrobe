@@ -56,7 +56,6 @@ router
 	//upload.single uploads a single image
 	.post(upload.single("image"), async (req, res) => {
 		if (!req.session || !req.session.user) {
-			console.log(req.session.user);
 			res.status(500).send("Not logged in");
 		}
 		else {
@@ -97,6 +96,9 @@ router
 		}
 	});
 router.route("/:imageName").delete(async (req, res) => {
+	if (!req.session || !req.session.user) {
+		res.status(500).send("Not logged in");
+	}
 	try {
 		// // getting the imageName, which is the name of the image on s3 bucket
 		const s3_image_name = req.params.imageName;

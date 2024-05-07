@@ -21,6 +21,9 @@ const router = Router();
 
 router.route("/").get(async (req, res) => {
     //code here for GET will render the home handlebars file
+    if (!req.session || !req.session.user) {
+        res.status(500).send("Not logged in");
+    }
     try {
         let fpList = await fp.getAll();
         const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
@@ -44,6 +47,9 @@ router.route("/").get(async (req, res) => {
 router.route('/create')
     .get(async (req, res) => {
         // need to change so that it only gets outfit pieces that the user has in their closet
+        if (!req.session || !req.session.user) {
+            res.status(500).send("Not logged in");
+        }
         try {
             let closetOutfitPieces = await getAllFromCloset(req.session.user.username);
 
@@ -77,7 +83,6 @@ router.route('/create')
         }
     })
     .post(async (req, res) => {
-        // TODO: input validation
         //console.log("found the post route!");
         if (req.session && req.session.user) {
             let data = req.body;
@@ -170,6 +175,9 @@ router.route('/create')
 
 router.route("/trending").get(async (req, res) => {
     //code here for GET will render the home handlebars file
+    if (!req.session || !req.session.user) {
+        res.status(500).send("Not logged in");
+    }
     try {
         let fpList = await fp.trending();
         const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
@@ -191,6 +199,9 @@ router.route("/trending").get(async (req, res) => {
 
 router.route("/latest").get(async (req, res) => {
     //code here for GET will render the home handlebars file
+    if (!req.session || !req.session.user) {
+        res.status(500).send("Not logged in");
+    }
     try {
         let fpList = await fp.latest();
         const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
@@ -214,6 +225,9 @@ router.route("/latest").get(async (req, res) => {
 router.route("/user/:uid").get(async (req, res) => {
     //code here for GET a single movie
     //console.log(req.params.uid);
+    if (!req.session || !req.session.user) {
+        res.status(500).send("Not logged in");
+    }
     let userId = req.params.uid;
     try {
         userId = validString(userId);
@@ -244,6 +258,9 @@ router.route("/user/:uid").get(async (req, res) => {
 router.route("/:id").get(async (req, res) => {
     //code here for GET a single movie
     //console.log(req.params.id);
+    if (!req.session || !req.session.user) {
+        res.status(500).send("Not logged in");
+    }
     let fpid = req.params.id;
     try {
         fpid = validString(fpid);
