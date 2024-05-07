@@ -131,7 +131,7 @@ router.route('/create')
 
             try {
                 const newFitpost = await fp.createFP(
-                    user.userId,
+                    user._id,
                     user.username,
                     data.headwear,
                     data.bodywear,
