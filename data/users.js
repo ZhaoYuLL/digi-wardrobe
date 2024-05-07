@@ -25,7 +25,7 @@ const getUserById = async (id) => {
     return user;
 }
 
-const getUserByUsername = async (username) => {
+export const getUserByUsername = async (username) => {
     // Made this to check if a username already exists
     // TODO: validate username parameter
     username = username.trim();
