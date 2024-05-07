@@ -248,7 +248,7 @@ router.route('/:id').get(async (req, res) => {
 router.post('/like', async (req, res) => {
     const data = req.body;
 
-    const userId = req.session.user.userId;
+    const userId = req.session.user._id;
     if (!data || Object.keys(data).length === 0) {
         return res
             .status(400)
@@ -263,6 +263,7 @@ router.post('/like', async (req, res) => {
             updatedFitpost = await fp.removeLike(data.fitpostId);
         }
         else {
+            console.log('this is user id', userId);
             await user.addLike(userId, data.fitpostId);
             updatedFitpost = await fp.addLike(data.fitpostId);
         }
@@ -287,8 +288,8 @@ router.post('/save', async (req, res) => {
             
             //make new wardrobe, req.session.user.userId, data.newName, data.fitpostId
             //add wardrobe under user
-            let newDrobeId = await wardrobe.createNewWardrobe(data.newName, data.fitpostId, req.session.user.userId);
-            await user.addWardrobe(req.session.user.userId, newDrobeId);
+            let newDrobeId = await wardrobe.createNewWardrobe(data.newName, data.fitpostId, req.session.user._id);
+            await user.addWardrobe(req.session.user._id, newDrobeId);
             let addedWardrobe = await wardrobe.getWardrobeById(newDrobeId);
             return res.status(200).json(addedWardrobe);
 
@@ -318,7 +319,7 @@ router.post('/save', async (req, res) => {
 
 router.post('/closet', async (req, res) => {
     const data = req.body;
-    const userId = req.session.user.userId;
+    const userId = req.session.user._id;
     let currentUser = await user.getUserById(userId);
     if (currentUser.closet.includes(data.pid)) {
         return res.status(400).json({error: 'already saved'});

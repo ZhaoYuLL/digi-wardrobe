@@ -16,9 +16,9 @@ const getAllUsers = async () => {
 
 const getUserById = async (id) => {
     // TODO: validate id parameter
-    if (!ObjectId.isValid(id)) {
+    /*if (!ObjectId.isValid(id)) {
         throw 'Invalid ObjectId';
-    }
+    }*/
     const userCollection = await users();
     const user = await userCollection.findOne({ _id: new ObjectId(id) }, { projection: { password: 0 } });
     // if (!user) throw `Error getting user with id: ${id}`;
