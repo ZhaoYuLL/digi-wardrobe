@@ -117,7 +117,7 @@ router
         closet: user.closet,
         favorite: user.favorite,
         bio: user.bio,
-        _id: user.userId
+        userId: user.userId
       };
       res.redirect('/userProfile');
 

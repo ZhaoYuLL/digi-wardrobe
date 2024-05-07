@@ -90,7 +90,7 @@ router
 			req.session.user.username
 		);
 		console.log(post._id);
-		const updatedCloset = await addUserOutfitPiece(post, req.session.user._id);
+		const updatedCloset = await addUserOutfitPiece(post, req.session.user.userId);
 		console.log(updatedCloset);
 		res.redirect("/fitposts/create");
 	});
@@ -103,7 +103,7 @@ router.route("/:imageName").delete(async (req, res) => {
 		await deleteImageFromS3(s3_image_name);
 		const deleted = await deleteImage(s3_image_name);
 
-		const updatedCloset = await deleteUserOutfitPiece(deleted._id, req.session.user._id);
+		const updatedCloset = await deleteUserOutfitPiece(deleted._id, req.session.user.userId);
 		console.log(updatedCloset);
 
 		res.send("Post deleted successfully");
