@@ -234,13 +234,13 @@ export const addUserOutfitPiece = async (outfitPieceId, userId) => {
     let userCloset = user.closet;
     userCloset.push(outfitPieceId);
 
-    updatedCloset = {
+    let updatedCloset = {
         closet: userCloset
     };
     const userCollection = await users();
     const updateInfo = await userCollection.findOneAndUpdate(
-        { _id: new ObjectId(id) },
-        { $set: changes },
+        { _id: new ObjectId(userId) },
+        { $set: updatedCloset },
         { returnDocument: 'after' }
     );
     if (!updateInfo) throw `Error updating user ${userId} closet with outfit piece ${outfitPieceId}`;
@@ -267,7 +267,7 @@ export const deleteUserOutfitPiece = async (outfitPieceId, userId) => {
     };
     const userCollection = await users();
     const updateInfo = await userCollection.findOneAndUpdate(
-        { _id: new ObjectId(id) },
+        { _id: new ObjectId(userId) },
         { $set: updatedCloset },
         { returnDocument: 'after' }
     );
@@ -287,12 +287,12 @@ const addUserFavorites = async (userId, fitpostId) => {
     let userFavorites = user.favorite;
     userFavorites.push(fitpostId);
 
-    updatedFavorites = {
+    let updatedFavorites = {
         favorite: userFavorites
     };
     const userCollection = await users();
     const updateInfo = await userCollection.findOneAndUpdate(
-        { _id: new ObjectId(id) },
+        { _id: new ObjectId(userId) },
         { $set: updatedFavorites },
         { returnDocument: 'after' }
     );
@@ -315,12 +315,12 @@ const deleteUserFavorite = async (userId, fitpostId) => {
         userFavorites.splice(index, 1);
     }
 
-    updatedFavorites = {
+    let updatedFavorites = {
         favorite: userFavorites
     };
     const userCollection = await users();
     const updateInfo = await userCollection.findOneAndUpdate(
-        { _id: new ObjectId(id) },
+        { _id: new ObjectId(userId) },
         { $set: updatedFavorites },
         { returnDocument: 'after' }
     );

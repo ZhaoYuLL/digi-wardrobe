@@ -19,7 +19,7 @@ export const storeImage = async (caption, link, outfitType, imageName, username)
 
 	// Check if the insertion was successful
 	if (result.insertedId) {
-		console.log("Image stored successfully");
+		//console.log("Image stored successfully");
 		return result.insertedId;
 	} else {
 		throw new Error("Failed to store image");
@@ -56,6 +56,7 @@ export const getAllImages = async () => {
 export const deleteImage = async (imageName) => {
 	const outfitPiecesCollection = await outfitPieces();
 	const deletionInfo = await outfitPiecesCollection.findOneAndDelete({ imageName: imageName });
+	console.log(deletionInfo);
 	if (!deletionInfo) throw `Error: Could not delete image with name of ${imageName}`;
 
 	return deletionInfo;

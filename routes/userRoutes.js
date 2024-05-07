@@ -133,8 +133,7 @@ router.route('/userProfile').get(async (req, res) => {
     return res.redirect('/login');
   }
 
-  const { username, firstName, lastName, wardrobes, closet, favorite, _id, bio } = req.session.user;
-  const userId = _id;
+  const { username, firstName, lastName, wardrobes, closet, favorite, userId, bio } = req.session.user;
   try {
     // Get all fitposts for the user
     const allFitposts = await searchByUID(userId);
