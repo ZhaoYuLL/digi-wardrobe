@@ -255,3 +255,36 @@ p a:hover {
   text-align: center;
   font-weight: bold;
 } 
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: seagreen; /* Color based on wardrobe-preview */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow for better visibility */
+  list-style: none; /* Remove default list style */
+  padding: 0; /* Remove default padding */
+  width: 120px; /* Set the width of the dropdown menu */
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-toggle {
+  cursor: pointer;
+}
+
+.dropdown-menu li {
+  display: block;
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 10px;
+  color: white; /* Text color based on wardrobe-preview */
+  text-decoration: none; /* Remove default underline */
+}
+
+.dropdown-menu li a:hover {
+  background-color: darkgreen; /* Hover background color */
+}

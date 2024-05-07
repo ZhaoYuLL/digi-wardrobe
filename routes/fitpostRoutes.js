@@ -38,7 +38,7 @@ router.route("/").get(async (req, res) => {
         let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
 
         return res.render("explore_page", {
-            title: "Latest",
+            title: "Explore",
             fitposts: postsWithSignedUrls,
             wardrobes: drobes,
         });
@@ -190,7 +190,7 @@ router.route("/trending").get(async (req, res) => {
         }
         let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
         return res.render("explore_page", {
-            title: "Latest",
+            title: "Trending",
             fitposts: postsWithSignedUrls,
             wardrobes: drobes,
         });
@@ -299,7 +299,7 @@ router.get("/favorites", async (req, res) => {
         let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
 
         return res.render("explore_page", {
-            title: "Latest",
+            title: "Favorites",
             fitposts: favWithUrl,
             wardrobes: drobes
         });
