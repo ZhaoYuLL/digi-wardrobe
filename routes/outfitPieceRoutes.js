@@ -7,16 +7,24 @@ import {
 	s3,
 	generateFileName,
 	addSignedUrlsToPosts,
+	addSignedUrlsToOutfitPieces,
 	uploadImageToS3,
 	deleteImageFromS3,
+	validString
 } from "../helper.js";
 // importing database manipulation functions
 import {
 	storeImage,
 	getImage,
 	getAllImages,
+	getOutfitPiecesByUsername,
 	deleteImage,
 } from "../data/outfitPieces.js";
+import {
+	addUserOutfitPiece,
+	deleteUserOutfitPiece
+} from "../data/users.js";
+import xss from 'xss';
 
 const router = Router();
 
@@ -31,18 +39,15 @@ router
 	.route("/")
 	.get(async (req, res) => {
 		// addSignedUrlsToPosts;
+		if (!req.session || !req.session.user) {
+			res.status(500).send("Not logged in");
+		}
+
 		try {
-			const postsUrls = await addSignedUrlsToPosts();
-			//this render file can be changed to what it's supposed to be. right now it
-			//is just a temp place to display the images
-			//moidfy outfitpieces.handlebars to change what's sent
-			if (req.session.user) {
-				console.log("hi");
-				console.log("user:", req.session.user);
-			} else {
-				console.log("no user");
-			}
-			res.render("outfitpieces", { title: "fitposts", posts: postsUrls });
+			const userOutfitPieces = await getOutfitPiecesByUsername(req.session.user.username);
+			let postsUrls = await addSignedUrlsToOutfitPieces(userOutfitPieces);
+
+			res.render("outfitpieces", { title: "My Clothes", posts: postsUrls, script_partial: "createOutfitPiece_script" });
 		} catch (error) {
 			console.error("Error rendering fitposts:", error);
 			res.status(500).send("Internal Server Error");
@@ -50,24 +55,58 @@ router
 	})
 	//upload.single uploads a single image
 	.post(upload.single("image"), async (req, res) => {
-		const imageName = await generateFileName();
-		const img = await uploadImageToS3(req.file, 1920, 1080, imageName);
+		if (!req.session || !req.session.user) {
+			res.status(500).send("Not logged in");
+		}
+		else {
 
-		const post = await storeImage(
-			req.body.caption,
-			imageName,
-			req.session.user.username
-		);
-		res.render("outfitpieces", { title: "fitposts" });
+			const imageName = await generateFileName();
+			const img = await uploadImageToS3(req.file, 1920, 1080, imageName);
+
+			let data = req.body;
+			try {
+				data.caption = validString(data.caption);
+				data.caption = xss(data.caption);
+			} catch (e) {
+				res.status(400).send(e);
+			}
+			try {
+				data.link = validString(data.link);
+				data.link = xss(data.link);
+			} catch (e) {
+				res.status(400).send(e);
+			}
+			try {
+				data.outfitType = validString(data.outfitType);
+				data.outfitType = xss(data.outfitType);
+			} catch (e) {
+				res.status(400).send(e);
+			}
+
+			const postId = await storeImage(
+				req.body.caption,
+				req.body.link,
+				req.body.outfitType,
+				imageName,
+				req.session.user.username
+			);
+			const updatedCloset = await addUserOutfitPiece(postId.toString(), req.session.user._id);
+			//console.log(updatedCloset);
+			res.redirect("/fitposts/create");
+		}
 	});
 router.route("/:imageName").delete(async (req, res) => {
+	if (!req.session || !req.session.user) {
+		res.status(500).send("Not logged in");
+	}
 	try {
 		// // getting the imageName, which is the name of the image on s3 bucket
 		const s3_image_name = req.params.imageName;
 
 		// example usage: delete from s3, then delete from database
-		await deleteImageFromS3(s3_image_name);
-		await deleteImage(s3_image_name);
+		let deleted = await deleteImageFromS3(s3_image_name);
+
+		const updatedCloset = await deleteUserOutfitPiece(deleted._id.toString(), req.session.user.userId);
 
 		res.send("Post deleted successfully");
 	} catch (error) {

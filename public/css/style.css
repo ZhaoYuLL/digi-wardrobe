@@ -27,3 +27,231 @@
 .fitpost-item {
   margin-right: 20px;
 }
+
+.slide {
+  display: none;
+}
+
+.slide[data-active] {
+  display: block;
+}
+
+img {
+  width: 200px;
+  height: auto;
+}
+
+.outfit-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.outfit {
+  margin: 10px;
+}
+
+.outfit img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.outfit-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* makes preview horizontal */
+.preview-content-closet {
+  display: flex;
+  flex-direction: row;
+}
+
+/* CSS for the modal */
+#editFitpostModal {
+  display: none; /* Initially hide the modal */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* Center modal vertically and horizontally */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px; /* Set maximum width */
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.wardrobe-preview {
+  display: flex;
+  flex-direction: row;
+}
+
+.preview-content {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+}
+
+.fitposts {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+}
+
+.fitpost {
+  margin-right: 20px;
+}
+
+.fitpost-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.fitpost-item {
+  margin-right: 20px;
+}
+
+.slide {
+  display: none;
+}
+
+.slide[data-active] {
+  display: block;
+}
+
+img {
+  width: 200px;
+  height: auto;
+}
+
+.outfit-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.outfit {
+  margin: 10px;
+}
+
+.outfit img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.outfit-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.preview-content-closet {
+  display: flex;
+  flex-direction: row;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color:seagreen; 
+  border-bottom: 1px solid #ddd; 
+  display: flex; 
+  justify-content: space-between; 
+}
+
+nav ul li {
+  float: left;
+}
+
+nav ul li a {
+  display: block;
+  color:white; 
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-family: 'Comic Sans MS', cursive;
+  font-size: larger;
+}
+
+nav ul li a:hover {
+  background-color:darkgreen; 
+}
+
+body {
+  font-family: 'Comic Sans MS', cursive;
+  background-color: #f0f0f0; 
+  text-align: center; 
+}
+main {
+  margin-top: 50px; 
+  background-color: #fff; 
+  padding: 20px;
+  border-radius: 10px; 
+  display: inline-block; /
+}
+form {
+  text-align: left; 
+}
+label {
+  display: block; 
+  margin-bottom: 5px; 
+}
+input {
+  width: 100%; 
+  padding: 10px;
+  margin-bottom: 10px; 
+  border: 1px solid #ccc; 
+  border-radius: 5px; 
+  box-sizing: border-box; 
+}
+button {
+  width: 100%; 
+  padding: 10px;
+  background-color: seagreen; 
+  color: white; 
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer; 
+}
+button:hover {
+  background-color: darkgreen; 
+}
+p {
+  margin-top: 20px; 
+}
+p a {
+  color: seagreen; 
+  text-decoration: none; 
+  font-weight: bold; 
+}
+p a:hover {
+  text-decoration: underline; 
+}
+
+.error {
+  color: red;
+  text-align: center;
+  font-weight: bold;
+} 

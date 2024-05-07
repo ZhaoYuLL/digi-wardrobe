@@ -27,6 +27,17 @@ export const validString = (input) => {
 	}
 };
 
+const imageExists = async (imageName) => {
+	// checks if the image exists in the database
+	// this is for when a fitpost has a deleted outfit piece in it
+	try {
+		const post = await getImage(imageName);
+	} catch (e) {
+		return false;
+	}
+	return true;
+}
+
 //!start outfitpeices
 
 //secure way of accessing secret key
@@ -90,6 +101,35 @@ export const addSignedUrlsToPosts = async () => {
 	}
 };
 
+export const addSignedUrlsToOutfitPieces = async (posts) => {
+	try {
+		// console.log(posts);
+		// Loop through each post and generate a signed URL for the image
+		for (let post of posts) {
+			const imageName = post.imageName;
+			// Generate a signed URL for the image
+			const signedUrl = await getSignedUrl(
+				s3,
+				new GetObjectCommand({
+					Bucket: BUCKET_NAME,
+					Key: imageName,
+				}),
+				{ expiresIn: 6000 } // 6000 seconds
+			);
+			//console.log(signedUrl);
+			// Add the signed URL to the post object
+			post.imageUrl = signedUrl;
+			// console.log("image url:", post.imageUrl);
+		}
+
+		// console.log("Signed URLs added to posts");
+		return posts;
+	} catch (error) {
+		console.error("Error adding signed URLs to posts:", error);
+		throw error;
+	}
+};
+
 const addUrl = async (imgName) => {
 	return await getSignedUrl(
 		s3,
@@ -110,10 +150,28 @@ export const addSignedUrlsToFitPosts_in_wardrobe = async (outfits) => {
 				let legName = fitpost.legwear;
 				let footName = fitpost.footwear;
 
-				let headUrl = await addUrl(headName);
-				let bodyUrl = await addUrl(bodyName);
-				let legUrl = await addUrl(legName);
-				let footUrl = await addUrl(footName);
+				// checks if the outfit pieces still exist in the database
+				let headUrl, bodyUrl, legUrl, footUrl;
+				if (await imageExists(headName)) {
+					headUrl = await addUrl(headName);
+				}
+				else headUrl = "/public/no_image.jpg";
+
+				if (await imageExists(bodyName)) {
+					bodyUrl = await addUrl(bodyName);
+				}
+				else bodyUrl = "/public/no_image.jpg";
+
+				if (await imageExists(legName)) {
+					legUrl = await addUrl(legName);
+				}
+				else legUrl = "/public/no_image.jpg";
+
+				if (await imageExists(footName)) {
+					footUrl = await addUrl(footName);
+				}
+				else footUrl = "/public/no_image.jpg";
+
 				fitpost.headUrl = headUrl;
 				fitpost.bodyUrl = bodyUrl;
 				fitpost.legUrl = legUrl;
@@ -127,6 +185,64 @@ export const addSignedUrlsToFitPosts_in_wardrobe = async (outfits) => {
 	}
 };
 
+
+export const addSignedUrlsToFitPosts_in_fitposts = async (outfits) => {
+	try {
+		// Loop through each outfit and generate signed URLs for the fitposts
+		for (let fitpost of outfits) {
+
+			let headName = fitpost.headwear;
+			let bodyName = fitpost.bodywear;
+			let legName = fitpost.legwear;
+			let footName = fitpost.footwear;
+
+			// checks if the outfit pieces still exist in the database
+			let headUrl, bodyUrl, legUrl, footUrl;
+			if (await imageExists(headName)) {
+				headUrl = await addUrl(headName);
+			}
+			else headUrl = "/public/no_image.jpg";
+
+			if (await imageExists(bodyName)) {
+				bodyUrl = await addUrl(bodyName);
+			}
+			else bodyUrl = "/public/no_image.jpg";
+
+			if (await imageExists(legName)) {
+				legUrl = await addUrl(legName);
+			}
+			else legUrl = "/public/no_image.jpg";
+
+			if (await imageExists(footName)) {
+				footUrl = await addUrl(footName);
+			}
+			else footUrl = "/public/no_image.jpg";
+
+			fitpost.headUrl = headUrl;
+			fitpost.bodyUrl = bodyUrl;
+			fitpost.legUrl = legUrl;
+			fitpost.footUrl = footUrl;
+
+		}
+		return outfits;
+	} catch (error) {
+		console.error("Error adding signed URLs to posts:", error);
+		throw error;
+	}
+};
+export const addSignedUrlsToFitPosts_in_closet = async (outfits) => {
+	try {
+		// Loop through each outfit and generate signed URLs for the fitposts
+		for (let outfit of outfits) {
+			let imageName = outfit.imageName;
+			outfit.imageUrl = await addUrl(imageName);
+		}
+		return outfits;
+	} catch (error) {
+		console.error("Error adding signed URLs to posts:", error);
+		throw error;
+	}
+};
 export const uploadImageToS3 = async (file, h, w, imageName) => {
 	try {
 		// Resize image using sharp package
@@ -173,13 +289,135 @@ export const deleteImageFromS3 = async (s3_image_name) => {
 		await s3.send(new DeleteObjectCommand(deleteParams));
 
 		// Delete the post from the MongoDB database
-		await deleteImage(s3_image_name);
+		return await deleteImage(s3_image_name);
 	} catch (error) {
 		console.error("Error deleting image from S3:", error);
 		throw error;
 	}
 };
+
+// takes a fitpost, returns the stringified date
+export const convertDate = (fitpost) => {
+	const dateValue = fitpost.postedDate;
+
+	const date = new Date(dateValue);
+	const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
+	return formattedDate;
+}
 //!end outfit pieces
 
 //!please do export const instead of this export {...func names}
 // export { validString };
+export const checkIsProperString = (str, variableName) => {
+	if (!str && str !== "") {
+		throw `ERR: ${variableName || "Provided Variable"} is not a string`;
+	}
+	if (typeof str !== "string" && !(str instanceof String)) {
+		throw `ERR: ${variableName || "Provided Variable"} is not an string`;
+	}
+};
+
+export const stringTrimmer = (str) => {
+	if ((!str && str !== "") || typeof str !== "string") {
+		throw "Input is not a String";
+	}
+	return str.trim();
+};
+
+export const checkIsProperLength = (str, len, variableName, type) => {
+	if (str.length < len) {
+		throw `ERR: ${variableName || "Provided Variable"
+		} cannot be less than ${len} ${type}`;
+	}
+};
+export const checkMaxLength = (str, len, variableName) => {
+	if (str.length > len) {
+		throw `ERR: ${variableName || "Provided Variable"
+		} cannot greater than ${len} ${type}`;
+	}
+};
+
+export const checkIfContainsNumber = (str, variableName) => {
+	if (/\d/.test(str)) {
+		throw `ERR: ${variableName || "Provided Variable"} cannot contain number`;
+	}
+};
+export const checkIfFieldsAreProperString = (...fields) => {
+	for (let i = 0; i < fields.length; i++) {
+		const check = stringTrimmer(fields[i]);
+		fields[i] = check;
+		checkIsProperString(check, check);
+		checkIsProperLength(check, 1);
+	}
+};
+
+export const checkRequiredFields = (...fields) => {
+	for (const field of fields) {
+		if (
+			field === undefined ||
+			field === null ||
+			Number.isNaN(field) ||
+			!(
+				typeof field === "string" ||
+				typeof field === "number" ||
+				typeof field === "boolean" ||
+				Array.isArray(field)
+			)
+		) {
+			throw "All fields need to be supplied";
+		}
+	}
+};
+export const isValidEmail = (email) => {
+	// Regular expression for basic email validation
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	if (!emailRegex.test(email)) {
+		throw 'Invalid email format';
+	}
+	return true;
+};
+
+export const isValidPassword = (password) => {
+	// Regular expressions for password validation
+	const lowercaseRegex = /[a-z]/;
+	const uppercaseRegex = /[A-Z]/;
+	const symbolRegex = /[$&+,:;=?_@#|'<>.^*()%!-]/;
+	const numberRegex = /[0-9]/;
+
+	// Check if password meets all criteria
+	const hasLowercase = lowercaseRegex.test(password);
+	const hasUppercase = uppercaseRegex.test(password);
+	const hasSymbol = symbolRegex.test(password);
+	const hasNumber = numberRegex.test(password);
+	const isLengthValid = password.length >= 8;
+
+	if (!hasLowercase) {
+		throw 'Password must contain at least one lowercase letter';
+	}
+	if (!hasUppercase) {
+		throw 'Password must contain at least one uppercase letter';
+	}
+	if (!hasSymbol) {
+		throw 'Password must contain at least one symbol';
+	}
+	if (!hasNumber) {
+		throw 'Password must contain at least one number';
+	}
+	if (!isLengthValid) {
+		throw 'Password must be at least 8 characters long';
+	}
+
+	return true;
+};
+export const isValidAge = (age) => {
+	if (!age || isNaN(age)) {
+		throw 'Age must be provided and must be a number.';
+	}
+
+	const parsedAge = parseInt(age);
+	if (parsedAge < 13) {
+		throw 'Age must be at least 13 years old.';
+	}
+
+	return true;
+};
