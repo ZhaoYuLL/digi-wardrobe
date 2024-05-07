@@ -110,8 +110,11 @@ import * as fp from '../../data/fitposts.js';*/
       
                 console.log('updated wardrobe');
                 
+                
             });
+            
         }
+        $(".wardrobe-select").val("new");
 
         
          
