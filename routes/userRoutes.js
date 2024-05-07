@@ -101,7 +101,7 @@ router
     if (req.session.user) {
       res.redirect("/user");
     }
-    res.render("login", { pageTitle: "Login" });
+    res.render("login", { title: "Login" });
   })
   .post(async (req, res) => {
     //code here for POST
@@ -229,7 +229,7 @@ router.post("/userprofile/update-fitpost", async function (req, res) {
 router.route("/logout").get(async (req, res) => {
   //code here for GET
   req.session.destroy();
-  res.render("logout", { pageTitle: "Logout Page" });
+  res.render("logout", { title: "Logout Page" });
 });
 
 export default router;
