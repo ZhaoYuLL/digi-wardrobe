@@ -20,6 +20,10 @@ import {
 	getOutfitPiecesByUsername,
 	deleteImage,
 } from "../data/outfitPieces.js";
+import {
+	addUserOutfitPiece,
+	deleteUserOutfitPiece
+} from "../data/users.js";
 import xss from 'xss';
 
 const router = Router();
@@ -51,41 +55,46 @@ router
 	})
 	//upload.single uploads a single image
 	.post(upload.single("image"), async (req, res) => {
-		if (!req.session || req.session.user) {
+		if (!req.session || !req.session.user) {
+			console.log(req.session.user);
 			res.status(500).send("Not logged in");
 		}
+		else {
 
-		const imageName = await generateFileName();
-		const img = await uploadImageToS3(req.file, 1920, 1080, imageName);
+			const imageName = await generateFileName();
+			const img = await uploadImageToS3(req.file, 1920, 1080, imageName);
 
-		let data = req.body;
-		try {
-			data.caption = validString(data.caption);
-			data.caption = xss(data.caption);
-		} catch (e) {
-			res.status(400).send(e);
-		}
-		try {
-			data.link = validString(data.link);
-			data.link = xss(data.link);
-		} catch (e) {
-			res.status(400).send(e);
-		}
-		try {
-			data.outfitType = validString(data.outfitType);
-			data.outfitType = xss(data.outfitType);
-		} catch (e) {
-			res.status(400).send(e);
-		}
+			let data = req.body;
+			try {
+				data.caption = validString(data.caption);
+				data.caption = xss(data.caption);
+			} catch (e) {
+				res.status(400).send(e);
+			}
+			try {
+				data.link = validString(data.link);
+				data.link = xss(data.link);
+			} catch (e) {
+				res.status(400).send(e);
+			}
+			try {
+				data.outfitType = validString(data.outfitType);
+				data.outfitType = xss(data.outfitType);
+			} catch (e) {
+				res.status(400).send(e);
+			}
 
-		const post = await storeImage(
-			req.body.caption,
-			req.body.link,
-			req.body.outfitType,
-			imageName,
-			req.session.user.username
-		);
-		res.redirect("/fitposts/create");
+			const postId = await storeImage(
+				req.body.caption,
+				req.body.link,
+				req.body.outfitType,
+				imageName,
+				req.session.user.username
+			);
+			const updatedCloset = await addUserOutfitPiece(postId.toString(), req.session.user.userId);
+			//console.log(updatedCloset);
+			res.redirect("/fitposts/create");
+		}
 	});
 router.route("/:imageName").delete(async (req, res) => {
 	try {
@@ -93,8 +102,9 @@ router.route("/:imageName").delete(async (req, res) => {
 		const s3_image_name = req.params.imageName;
 
 		// example usage: delete from s3, then delete from database
-		await deleteImageFromS3(s3_image_name);
-		await deleteImage(s3_image_name);
+		let deleted = await deleteImageFromS3(s3_image_name);
+
+		const updatedCloset = await deleteUserOutfitPiece(deleted._id.toString(), req.session.user.userId);
 
 		res.send("Post deleted successfully");
 	} catch (error) {

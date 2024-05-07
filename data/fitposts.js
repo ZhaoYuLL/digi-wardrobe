@@ -54,15 +54,13 @@ const searchByUID = async (uid) => {
 
 
   return fpList;
-
-}
+};
 
 const searchByFPID = async (id) => {
-
   id = validString(id);
   const fitpostCollection = await fitposts();
   const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
-  if (fp === null) throw 'No fitpost with that id';
+  if (fp === null) throw "No fitpost with that id";
 
   // replaces ObjectId with string
   fp._id = fp._id.toString();
@@ -70,41 +68,33 @@ const searchByFPID = async (id) => {
 
 
   return fp;
-
-}
-
+};
 
 const addLike = async (id) => {
-
   id = validString(id);
   const fitpostCollection = await fitposts();
   const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
-  if (fp === null) throw 'No fitpost with that id';
+  if (fp === null) throw "No fitpost with that id";
 
   // replaces ObjectId with string
   fp._id = fp._id.toString();
 
-
-
   const updatePost = {
-    likes: fp.likes + 1
-  }
+    likes: fp.likes + 1,
+  };
 
   const updatedInfo = await fitpostCollection.findOneAndUpdate(
     { _id: new ObjectId(id) },
     { $set: updatePost },
-    { returnDocument: 'after' }
+    { returnDocument: "after" }
   );
 
   if (!updatedInfo) {
-    throw 'could not update successfully';
+    throw "could not update successfully";
   }
   updatedInfo._id = updatedInfo._id.toString();
   return updatedInfo;
-
-}
-
-
+};
 
 const removeLike = async (id) => {
 
@@ -116,25 +106,23 @@ const removeLike = async (id) => {
   // replaces ObjectId with string
   fp._id = fp._id.toString();
 
-
-
   const updatePost = {
-    likes: fp.likes - 1
-  }
+    likes: fp.likes - 1,
+  };
 
   const updatedInfo = await fitpostCollection.findOneAndUpdate(
     { _id: new ObjectId(id) },
     { $set: updatePost },
+
     { returnDocument: 'after' }
   );
 
   if (!updatedInfo) {
-    throw 'could not update successfully';
+    throw "could not update successfully";
   }
   updatedInfo._id = updatedInfo._id.toString();
   return updatedInfo;
-
-}
+};
 
 
 const addSave = async (id) => {
@@ -146,12 +134,9 @@ const addSave = async (id) => {
 
   // replaces ObjectId with string
   fp._id = fp._id.toString();
-
-
-
   const updatePost = {
-    saves: fp.saves + 1
-  }
+    saves: fp.saves + 1,
+  };
 
   const updatedInfo = await fitpostCollection.findOneAndUpdate(
     { _id: new ObjectId(id) },
@@ -160,15 +145,12 @@ const addSave = async (id) => {
   );
 
   if (!updatedInfo) {
-    throw 'could not update successfully';
+    throw "could not update successfully";
   }
   updatedInfo._id = updatedInfo._id.toString();
   return updatedInfo;
 
 }
-
-
-
 
 const createFP = async (
   user_id,
@@ -180,7 +162,7 @@ const createFP = async (
   head_id,
   body_id,
   leg_id,
-  foot_id,
+  foot_id
 ) => {
   // find a way to validate these ids
   user_id = validString(user_id);
@@ -213,22 +195,78 @@ const createFP = async (
     leg_id,
     foot_id,
     likes,
-    saves
+    saves,
   };
 
   const fitpostCollection = await fitposts();
   const insertInfo = await fitpostCollection.insertOne(newFP);
   if (!insertInfo.acknowledged || !insertInfo.insertedId)
-    throw 'could not add fitpost womp womp';
+    throw "could not add fitpost womp womp";
 
   // converts id to string to get the product object
   const newId = insertInfo.insertedId.toString();
   const fp = await searchByFPID(newId);
   return fp;
   //return newProduct;
-}
+};
+
+const deleteFitpost = async (fitpost_id) => {
+  //   fitpost_id = validString(fitpost_id);
+
+  const fitpostCollection = await fitposts();
+  const deletionInfo = await fitpostCollection.deleteOne({
+    _id: new ObjectId(fitpost_id),
+  });
+
+  if (deletionInfo.deletedCount === 0) {
+    throw `Could not delete fitpost with id of ${fitpost_id}`;
+  }
+
+  return { deleted: true };
+};
+
+const updateFitpost = async (fitpost_id, attribute, changed_to) => {
+  const fitpostCollection = await fitposts();
 
 
-export { getAll, latest, trending, searchByUID, searchByFPID, createFP, addLike, addSave, removeLike }
+  try {
+    const result = await fitpostCollection.updateOne(
+      { _id: new ObjectId(fitpost_id) },
+      { $set: { [attribute]: changed_to } }
+    );
 
+    if (result.modifiedCount === 1) {
+      console.log(`Successfully updated fitpost with ID: ${fitpost_id}`);
+    } else {
+      console.log(`No fitpost found with ID: ${fitpost_id}`);
+    }
+  } catch (error) {
+    console.error(`Error updating fitpost: ${error}`);
+  }
+};
 
+const searchBySID = async (id) => {
+  id = validString(id);
+  const fitpostCollection = await fitposts();
+  const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
+  if (fp === null) throw "No fitpost with that id";
+
+  // replaces ObjectId with string
+  fp._id = fp._id.toString();
+
+  // remove later
+  console.log(fp);
+
+  return fp;
+};
+
+export {
+  getAll,
+  latest,
+  trending,
+  searchByUID,
+  searchByFPID,
+  createFP,
+  deleteFitpost,
+  updateFitpost,
+};

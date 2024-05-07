@@ -289,7 +289,7 @@ export const deleteImageFromS3 = async (s3_image_name) => {
 		await s3.send(new DeleteObjectCommand(deleteParams));
 
 		// Delete the post from the MongoDB database
-		await deleteImage(s3_image_name);
+		return await deleteImage(s3_image_name);
 	} catch (error) {
 		console.error("Error deleting image from S3:", error);
 		throw error;
@@ -310,116 +310,114 @@ export const convertDate = (fitpost) => {
 // export { validString };
 export const checkIsProperString = (str, variableName) => {
 	if (!str && str !== "") {
-	  throw `ERR: ${variableName || "Provided Variable"} is not a string`;
+		throw `ERR: ${variableName || "Provided Variable"} is not a string`;
 	}
 	if (typeof str !== "string" && !(str instanceof String)) {
-	  throw `ERR: ${variableName || "Provided Variable"} is not an string`;
+		throw `ERR: ${variableName || "Provided Variable"} is not an string`;
 	}
-  };
-  
-  export const stringTrimmer = (str) => {
+};
+
+export const stringTrimmer = (str) => {
 	if ((!str && str !== "") || typeof str !== "string") {
-	  throw "Input is not a String";
+		throw "Input is not a String";
 	}
 	return str.trim();
-  };
-  
-  export const checkIsProperLength = (str, len, variableName, type) => {
+};
+
+export const checkIsProperLength = (str, len, variableName, type) => {
 	if (str.length < len) {
-	  throw `ERR: ${
-		variableName || "Provided Variable"
-	  } cannot be less than ${len} ${type}`;
+		throw `ERR: ${variableName || "Provided Variable"
+		} cannot be less than ${len} ${type}`;
 	}
-  };
-  export const checkMaxLength = (str, len, variableName) => {
+};
+export const checkMaxLength = (str, len, variableName) => {
 	if (str.length > len) {
-	  throw `ERR: ${
-		variableName || "Provided Variable"
-	  } cannot greater than ${len} ${type}`;
+		throw `ERR: ${variableName || "Provided Variable"
+		} cannot greater than ${len} ${type}`;
 	}
-  };
-  
-  export const checkIfContainsNumber = (str, variableName) => {
+};
+
+export const checkIfContainsNumber = (str, variableName) => {
 	if (/\d/.test(str)) {
-	  throw `ERR: ${variableName || "Provided Variable"} cannot contain number`;
+		throw `ERR: ${variableName || "Provided Variable"} cannot contain number`;
 	}
-  };
-  export const checkIfFieldsAreProperString = (...fields) => {
+};
+export const checkIfFieldsAreProperString = (...fields) => {
 	for (let i = 0; i < fields.length; i++) {
-	  const check = stringTrimmer(fields[i]);
-	  fields[i] = check;
-	  checkIsProperString(check, check);
-	  checkIsProperLength(check, 1);
+		const check = stringTrimmer(fields[i]);
+		fields[i] = check;
+		checkIsProperString(check, check);
+		checkIsProperLength(check, 1);
 	}
-  };
-  
-  export const checkRequiredFields = (...fields) => {
+};
+
+export const checkRequiredFields = (...fields) => {
 	for (const field of fields) {
-	  if (
-		field === undefined ||
-		field === null ||
-		Number.isNaN(field) ||
-		!(
-		  typeof field === "string" ||
-		  typeof field === "number" ||
-		  typeof field === "boolean" ||
-		  Array.isArray(field)
-		)
-	  ) {
-		throw "All fields need to be supplied";
-	  }
+		if (
+			field === undefined ||
+			field === null ||
+			Number.isNaN(field) ||
+			!(
+				typeof field === "string" ||
+				typeof field === "number" ||
+				typeof field === "boolean" ||
+				Array.isArray(field)
+			)
+		) {
+			throw "All fields need to be supplied";
+		}
 	}
-  };
-  export const isValidEmail = (email) => {
-    // Regular expression for basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        throw 'Invalid email format';
-    }
-    return true;
+};
+export const isValidEmail = (email) => {
+	// Regular expression for basic email validation
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	if (!emailRegex.test(email)) {
+		throw 'Invalid email format';
+	}
+	return true;
 };
 
 export const isValidPassword = (password) => {
-    // Regular expressions for password validation
-    const lowercaseRegex = /[a-z]/;
-    const uppercaseRegex = /[A-Z]/;
-    const symbolRegex = /[$&+,:;=?_@#|'<>.^*()%!-]/;
-    const numberRegex = /[0-9]/;
+	// Regular expressions for password validation
+	const lowercaseRegex = /[a-z]/;
+	const uppercaseRegex = /[A-Z]/;
+	const symbolRegex = /[$&+,:;=?_@#|'<>.^*()%!-]/;
+	const numberRegex = /[0-9]/;
 
-    // Check if password meets all criteria
-    const hasLowercase = lowercaseRegex.test(password);
-    const hasUppercase = uppercaseRegex.test(password);
-    const hasSymbol = symbolRegex.test(password);
-    const hasNumber = numberRegex.test(password);
-    const isLengthValid = password.length >= 8;
+	// Check if password meets all criteria
+	const hasLowercase = lowercaseRegex.test(password);
+	const hasUppercase = uppercaseRegex.test(password);
+	const hasSymbol = symbolRegex.test(password);
+	const hasNumber = numberRegex.test(password);
+	const isLengthValid = password.length >= 8;
 
-    if (!hasLowercase) {
-        throw 'Password must contain at least one lowercase letter';
-    }
-    if (!hasUppercase) {
-        throw 'Password must contain at least one uppercase letter';
-    }
-    if (!hasSymbol) {
-        throw 'Password must contain at least one symbol';
-    }
-    if (!hasNumber) {
-        throw 'Password must contain at least one number';
-    }
-    if (!isLengthValid) {
-        throw 'Password must be at least 8 characters long';
-    }
+	if (!hasLowercase) {
+		throw 'Password must contain at least one lowercase letter';
+	}
+	if (!hasUppercase) {
+		throw 'Password must contain at least one uppercase letter';
+	}
+	if (!hasSymbol) {
+		throw 'Password must contain at least one symbol';
+	}
+	if (!hasNumber) {
+		throw 'Password must contain at least one number';
+	}
+	if (!isLengthValid) {
+		throw 'Password must be at least 8 characters long';
+	}
 
-    return true;
+	return true;
 };
 export const isValidAge = (age) => {
-    if (!age || isNaN(age)) {
-        throw 'Age must be provided and must be a number.';
-    }
+	if (!age || isNaN(age)) {
+		throw 'Age must be provided and must be a number.';
+	}
 
-    const parsedAge = parseInt(age);
-    if (parsedAge < 13) {
-        throw 'Age must be at least 13 years old.';
-    }
+	const parsedAge = parseInt(age);
+	if (parsedAge < 13) {
+		throw 'Age must be at least 13 years old.';
+	}
 
-    return true;
+	return true;
 };
