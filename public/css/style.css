@@ -260,3 +260,7 @@ p a:hover {
   width: 600px;
   padding: 10px;
 }
+
+ul.fitposts {
+  list-style: none;
+}

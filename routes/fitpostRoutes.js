@@ -190,6 +190,7 @@ router.route("/trending").get(async (req, res) => {
             title: "Trending",
             fitposts: postsWithDescLinks,
             wardrobes: drobes,
+            username: req.session.user.username,
         });
     } catch (e) {
         return res.status(500).send(e);
@@ -216,6 +217,7 @@ router.route("/latest").get(async (req, res) => {
             title: "Latest",
             fitposts: postsWithDescLinks,
             wardrobes: drobes,
+            username: req.session.user.username,
         });
     } catch (e) {
         return res.status(500).send(e);
@@ -250,6 +252,7 @@ router.route("/user/:uid").get(async (req, res) => {
             title: `${req.session.user.username}'s FitPosts`,
             fitposts: postsWithDescLinks,
             wardrobes: drobes,
+            username: req.session.user.username,
         });
     } catch (e) {
         return res.status(500).send(e);
@@ -300,7 +303,8 @@ router.get("/favorites", async (req, res) => {
         return res.render("explore_page", {
             title: "Favorites",
             fitposts: postsWithDescLinks,
-            wardrobes: drobes
+            wardrobes: drobes,
+            username: req.session.user.username,
         });
     } catch (error) {
         console.error("Error retrieving favorites:", error);
@@ -310,7 +314,6 @@ router.get("/favorites", async (req, res) => {
 })
 
 router.route("/:id").get(async (req, res) => {
-    //code here for GET a single movie
     //console.log(req.params.id);
     if (!req.session || !req.session.user) {
         res.status(500).send("Not logged in");

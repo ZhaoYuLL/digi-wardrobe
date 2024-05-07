@@ -9,10 +9,24 @@ import * as fp from '../../data/fitposts.js';*/
     let likeButtons = $('.like'),
         saveButtons = $('.save')
         dropdown = $('.wardrobe-select'),
-        closetButtons = $('.closet');
+        closetButtons = $('.closet'),
+        followButtons = $('.follow'),
+        unfollowButtons = $('.unfollow');
 
-    //dropdown.hide();
-        
+    let requestConfig = {
+        method: 'GET',
+        url: `${routing}`
+        };
+
+
+    // ajax request upon load
+    $.ajax(requestConfig).then(function (response) {
+        console.log('ajax request upon reload?', followButtons);
+        for (button of followButtons) {
+            console.log(button);
+        }
+
+    });        
 
 
   
@@ -110,6 +124,7 @@ import * as fp from '../../data/fitposts.js';*/
             $.ajax(requestConfig).then(function (response) { 
       
                 console.log('updated wardrobe');
+                
                 
                 
             });
