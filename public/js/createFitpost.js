@@ -15,19 +15,19 @@
     const changeInputValue = (type, id, image) => {
         // function to change the values of the hidden inputs
         if (type === 'headwear') {
-            $('#head_id').val(id);
+            $('#headid').val(id);
             $('#headwear').val(image);
         }
         else if (type === 'bodywear') {
-            $('#body_id').val(id);
+            $('#bodyid').val(id);
             $('#bodywear').val(image);
         }
         else if (type === 'legwear') {
-            $('#leg_id').val(id);
+            $('#legid').val(id);
             $('#legwear').val(image);
         }
         else if (type === 'footwear') {
-            $('#foot_id').val(id);
+            $('#footid').val(id);
             $('#footwear').val(image);
         }
     }
@@ -123,7 +123,7 @@
         let errorCount = 0;
 
         let headwear = $('#headwear').val().trim();
-        let head_id = $('#head_id').val().trim();
+        let head_id = $('#headid').val().trim();
         if (!headwear || !head_id) {
             let error = "<div class='error'>Can't create fitpost with no headwear</div>";
             $('#headwear-slider').after(error);
@@ -142,7 +142,7 @@
 
 
         let bodywear = $('#bodywear').val().trim();
-        let body_id = $('#body_id').val().trim();
+        let body_id = $('#bodyid').val().trim();
         if (!bodywear || !body_id) {
             let error = "<div class='error'>Can't create fitpost with no top</div>";
             $('#bodywear-slider').after(error);
@@ -160,7 +160,7 @@
         }
 
         let legwear = $('#legwear').val().trim();
-        let leg_id = $('#leg_id').val().trim();
+        let leg_id = $('#legid').val().trim();
         if (!legwear || !leg_id) {
             let error = "<div class='error'>Can't create fitpost with no bottoms</div>";
             $('#legwear-slider').after(error);
@@ -178,7 +178,7 @@
         }
 
         let footwear = $('#footwear').val().trim();
-        let foot_id = $('#foot_id').val().trim();
+        let foot_id = $('#footid').val().trim();
         if (!footwear || !foot_id) {
             let error = "<div class='error'>Can't create fitpost with no footwear</div>";
             $('#footwear-slider').after(error);
