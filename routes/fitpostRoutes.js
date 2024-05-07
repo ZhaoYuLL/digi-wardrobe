@@ -5,8 +5,9 @@ import * as wardrobe from '../data/wardrobes.js';
 
 //import { getOutfitPiecesByUserId, getOutfitPiecesByUsername } from '../data/outfitPieces.js';
 
-import { validString, addSignedUrlsToFitPosts_in_fitposts, convertDate, addSignedUrlsToPosts } from '../helper.js';
+import { validString, addSignedUrlsToFitPosts_in_fitposts, convertDate, addSignedUrlsToPosts, addSignedUrlsToOutfitPieces } from '../helper.js';
 import xss from 'xss';
+import { getAllFromCloset } from '../data/outfitPieces.js';
 // import { wardrobe } from '../config/mongoCollections.js'; idk wahtthis is commenting it out
 
 // import { addSignedUrlsToFitPosts_in_wardrobe } from "../helper.js";
@@ -25,7 +26,8 @@ router.route('/').get(async (req, res) => {
         }
         let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
 
-        return res.render('explore_page', { title: 'Latest', fitposts: postsWithSignedUrls, wardrobes: drobes });    }
+        return res.render('explore_page', { title: 'Latest', fitposts: postsWithSignedUrls, wardrobes: drobes });
+    }
     catch (e) {
         return res.status(500).send(e);
     }
@@ -35,7 +37,9 @@ router.route('/create')
     .get(async (req, res) => {
         // need to change so that it only gets outfit pieces that the user has in their closet
         try {
-            let postsUrls = await addSignedUrlsToPosts();
+            let closetOutfitPieces = await getAllFromCloset(req.session.user.username);
+
+            let postsUrls = await addSignedUrlsToOutfitPieces(closetOutfitPieces);
             //console.log(postsUrls);
 
             let headwear = postsUrls.filter((element) => {
@@ -167,7 +171,8 @@ router.route('/trending').get(async (req, res) => {
             fit.postedDate = convertDate(fit);
         }
         let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
-        return res.render('explore_page', { title: 'Latest', fitposts: postsWithSignedUrls, wardrobes: drobes });    }
+        return res.render('explore_page', { title: 'Latest', fitposts: postsWithSignedUrls, wardrobes: drobes });
+    }
     catch (e) {
         return res.status(500).send(e);
     }
@@ -184,7 +189,7 @@ router.route('/latest').get(async (req, res) => {
             fit.postedDate = convertDate(fit);
         }
         let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
-    
+
 
         return res.render('explore_page', { title: 'Latest', fitposts: postsWithSignedUrls, wardrobes: drobes });
     }
@@ -235,7 +240,7 @@ router.route('/:id').get(async (req, res) => {
         for (const fit of postsWithSignedUrls) {
             fit.postedDate = convertDate(fit);
         }
-        return res.render('fitpost_page', { post: postsWithSignedUrls});
+        return res.render('fitpost_page', { post: postsWithSignedUrls });
         //return res.render('explore_page', {title: `${userId}'s FitPosts`, fitposts:  fpList});
 
     } catch (e) {
@@ -284,7 +289,7 @@ router.post('/save', async (req, res) => {
     }
     try {
         if (data.wardrobeId === 'new') {
-            
+
             //make new wardrobe, req.session.user.userId, data.newName, data.fitpostId
             //add wardrobe under user
             let newDrobeId = await wardrobe.createNewWardrobe(data.newName, data.fitpostId, req.session.user.userId);
@@ -300,7 +305,7 @@ router.post('/save', async (req, res) => {
             let drobe = await wardrobe.getWardrobeById(data.wardrobeId);
             for (let post of drobe.fitposts) {
                 if (post._id === data.fitpostId) {
-                    return res.status(400).json({error: 'already saved'});
+                    return res.status(400).json({ error: 'already saved' });
                 }
             }
 
@@ -321,7 +326,7 @@ router.post('/closet', async (req, res) => {
     const userId = req.session.user.userId;
     let currentUser = await user.getUserById(userId);
     if (currentUser.closet.includes(data.pid)) {
-        return res.status(400).json({error: 'already saved'});
+        return res.status(400).json({ error: 'already saved' });
     }
     let updated = await user.addToCloset(userId, data.pid);
     return res.status(200).json(updated);

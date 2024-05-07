@@ -10,6 +10,7 @@ import {
   addSignedUrlsToFitPosts_in_fitposts,
 } from "../helper.js";
 import xss from 'xss';
+import { getAllFromCloset } from "../data/outfitPieces.js";
 
 const router = Router();
 
@@ -19,7 +20,7 @@ router.get("/", (req, res) => {
 });
 router.get("/closet", async (req, res) => {
   // Render your sign-in page
-  const outfitpieces = await getAllOutfitPieces();
+  const outfitpieces = await getAllFromCloset(req.session.user.username);
   const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_closet(
     outfitpieces
   );
