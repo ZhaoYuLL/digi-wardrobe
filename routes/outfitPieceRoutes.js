@@ -106,7 +106,7 @@ router.route("/:imageName").delete(async (req, res) => {
 		// example usage: delete from s3, then delete from database
 		let deleted = await deleteImageFromS3(s3_image_name);
 
-		const updatedCloset = await deleteUserOutfitPiece(deleted._id.toString(), req.session.user.userId);
+		const updatedCloset = await deleteUserOutfitPiece(deleted._id.toString(), req.session.user._id);
 
 		res.send("Post deleted successfully");
 	} catch (error) {
