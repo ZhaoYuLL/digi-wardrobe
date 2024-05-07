@@ -1,4 +1,5 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <div class="profile picture">
   <div class="profile-pic"></div>
 </div>
@@ -9,7 +10,7 @@
 <div></div>
 <div class="container">
   <section class="profile"></section>
-  <div class="bio">{{bio}}</div>
+  <div class="bio"></div>
 </div>
 
 <div class="fitposts-container">
@@ -20,48 +21,39 @@
     <p>Headwear:</p>
     <img
       src="{{this.headUrl}}"
-      width="200px;"
-      height="200px"
+      style="width: 200px; height: 200px"
       alt="Head Image"
       data-headid="{{this.headid}}"
       data-headwear="{{this.headwear}}"
     />
-    <p>Description: {{this.headDesc}}</p>
-    <p>Clothing Source: {{this.headLink}}</p>
+    <p>
+      <a href="{{this.headLink}}" target="_blank">Link</a>
+    </p>
     <p>Bodywear:</p>
     <img
       src="{{this.bodyUrl}}"
-      width="200px;"
-      height="200px"
+      style="width: 200px; height: 200px"
       alt="Body Image"
       data-bodyid="{{this.bodyid}}"
       data-bodywear="{{this.bodywear}}"
     />
-    <p>Description: {{this.bodyDesc}}</p>
-    <p>Clothing Source: {{this.bodyLink}}</p>
+
     <p>Legwear:</p>
     <img
       src="{{this.legUrl}}"
-      width="200px;"
-      height="200px"
+      style="width: 200px; height: 200px"
       alt="Leg Image"
       data-legid="{{this.legid}}"
       data-legwear="{{this.legwear}}"
     />
-    <p>Description: {{this.legDesc}}</p>
-    <p>Clothing Source: {{this.legLink}}</p>
     <p>Footwear:</p>
     <img
       src="{{this.footUrl}}"
-      width="200px;"
-      height="200px"
+      style="width: 200px; height: 200px"
       alt="Foot Image"
       data-footid="{{this.footid}}"
       data-footwear="{{this.footwear}}"
     />
-    <p>Description: {{this.footDesc}}</p>
-    <p>Clothing Source: {{this.footLink}}</p>
-
     <p>Likes: {{this.likes}}</p>
     <p>Saves: {{this.saves}}</p>
 
@@ -188,47 +180,47 @@
 
       headwearSelect.append(
         '<option value="' +
-        headId +
-        '" data-image="' +
-        headUrl +
-        '" data-headwear="' +
-        headwear +
-        '">Fitpost ' +
-        (index + 1) +
-        " Headwear</option>"
+          headId +
+          '" data-image="' +
+          headUrl +
+          '" data-headwear="' +
+          headwear +
+          '">Fitpost ' +
+          (index + 1) +
+          " Headwear</option>"
       );
       bodywearSelect.append(
         '<option value="' +
-        bodyId +
-        '" data-image="' +
-        bodyUrl +
-        '" data-bodywear="' +
-        bodywear +
-        '">Fitpost ' +
-        (index + 1) +
-        " Bodywear</option>"
+          bodyId +
+          '" data-image="' +
+          bodyUrl +
+          '" data-bodywear="' +
+          bodywear +
+          '">Fitpost ' +
+          (index + 1) +
+          " Bodywear</option>"
       );
       legwearSelect.append(
         '<option value="' +
-        legId +
-        '" data-image="' +
-        legUrl +
-        '" data-legwear="' +
-        legwear +
-        '">Fitpost ' +
-        (index + 1) +
-        " Legwear</option>"
+          legId +
+          '" data-image="' +
+          legUrl +
+          '" data-legwear="' +
+          legwear +
+          '">Fitpost ' +
+          (index + 1) +
+          " Legwear</option>"
       );
       footwearSelect.append(
         '<option value="' +
-        footId +
-        '" data-image="' +
-        footUrl +
-        '" data-footwear="' +
-        footwear +
-        '">Fitpost ' +
-        (index + 1) +
-        " Footwear</option>"
+          footId +
+          '" data-image="' +
+          footUrl +
+          '" data-footwear="' +
+          footwear +
+          '">Fitpost ' +
+          (index + 1) +
+          " Footwear</option>"
       );
     });
 
@@ -255,8 +247,7 @@
     // Customize the appearance of the dropdown options
     $("select").each(function () {
       $(this).css({
-        width: "200px",
-        height: "200px",
+        style="width: 200px; height: 200px",
         "background-size": "cover",
         "background-repeat": "no-repeat",
         "background-position": "center",
@@ -293,7 +284,7 @@
 
   // Function to update the fitpost UI after successful update
   function updateFitpostUI(fitpostId, updatedFitpost) {
-    //console.log("Updating fitpost UI with data:", updatedFitpost);
+    console.log("Updating fitpost UI with data:", updatedFitpost);
 
     var fitpostElement = $('.fitpost[data-fitpost-id="' + fitpostId + '"]');
 
@@ -303,8 +294,8 @@
       .prop("src", updatedFitpost.headUrl)
       .data("headid", updatedFitpost.headid)
       .data("headwear", updatedFitpost.headwear);
-    //console.log(
-      //"Updated head image:",
+    console.log(
+      "Updated head image:",
       fitpostElement.find('img[alt="Head Image"]')
     );
 
@@ -313,8 +304,8 @@
       .prop("src", updatedFitpost.bodyUrl)
       .data("bodyid", updatedFitpost.bodyid)
       .data("bodywear", updatedFitpost.bodywear);
-    //console.log(
-     // "Updated body image:",
+    console.log(
+      "Updated body image:",
       fitpostElement.find('img[alt="Body Image"]')
     );
 
@@ -323,8 +314,8 @@
       .prop("src", updatedFitpost.legUrl)
       .data("legid", updatedFitpost.legid)
       .data("legwear", updatedFitpost.legwear);
-    //console.log(
-     // "Updated leg image:",
+    console.log(
+      "Updated leg image:",
       fitpostElement.find('img[alt="Leg Image"]')
     );
 
@@ -333,8 +324,8 @@
       .prop("src", updatedFitpost.footUrl)
       .data("footid", updatedFitpost.footid)
       .data("footwear", updatedFitpost.footwear);
-    //console.log(
-    //  "Updated foot image:",
+    console.log(
+      "Updated foot image:",
       fitpostElement.find('img[alt="Foot Image"]')
     );
   }
