@@ -8,7 +8,8 @@
 		"start": "node app.js",
 		"test": "nodemon app.js",
 		"outfitseed": "node ./tasks/outfitseed.js",
-		"fitpostseed": "node ./tasks/fpseed.js"
+		"fitpostseed": "node ./tasks/fpseed.js",
+		"seed": "node ./tasks/seed.js"
 	},
 	"repository": {
 		"type": "git",
