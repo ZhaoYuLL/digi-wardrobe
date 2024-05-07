@@ -2,7 +2,7 @@
 
 <form action="/index/create-fitpost" method="post">
   <input type="hidden" name="msg" id="msgInput" />
-  <button type="submit" id="sendToServerButton">Send to Server</button>
+  <button type="submit" id="sendToServerButton" hidden>Send to Server</button>
 </form>
 <div class="outfits">
   <div class="outfit-previews">
@@ -31,108 +31,108 @@
     </div>
   </div>
   <div class="filter-section">
-  <label for="outfitTypeFilter">Filter by Outfit Type:</label>
-  <select id="outfitTypeFilter">
-    <option value="all">All</option>
-    <option value="head">Head</option>
-    <option value="body">Body</option>
-    <option value="leg">Leg</option>
-    <option value="foot">Foot</option>
-    <option value="owned">Owned</option>
-  </select>
-</div>
+    <label for="outfitTypeFilter">Filter by Outfit Type:</label>
+    <select id="outfitTypeFilter">
+      <option value="all">All</option>
+      <option value="head">Head</option>
+      <option value="body">Body</option>
+      <option value="leg">Leg</option>
+      <option value="foot">Foot</option>
+      <option value="owned">Owned</option>
+    </select>
+  </div>
 
   <div class="outfit-list">
     <!-- Outfit list will be populated dynamically -->
   </div>
-  
+
 </div>
 
 <script>
-      var outfitpieces = {{{outfitpiecesJson}}};
+  var outfitpieces = {{{ outfitpiecesJson }}};
 
-      var currentIndex = {};
+  var currentIndex = {};
 
-      document.addEventListener("DOMContentLoaded", function () {
-        // Initialize currentIndex for each outfit type
-        var outfitTypes = Array.from(new Set(outfitpieces.map(outfit => outfit.outfitType)));
-        outfitTypes.forEach(type => {
-          currentIndex[type] = 0;
-        });
+  document.addEventListener("DOMContentLoaded", function () {
+    // Initialize currentIndex for each outfit type
+    var outfitTypes = Array.from(new Set(outfitpieces.map(outfit => outfit.outfitType)));
+    outfitTypes.forEach(type => {
+      currentIndex[type] = 0;
+    });
 
-        var nextButtons = document.getElementsByClassName("next-button");
-        for (var i = 0; i < nextButtons.length; i++) {
-          nextButtons[i].addEventListener("click", nextOutfit);
-        }
+    var nextButtons = document.getElementsByClassName("next-button");
+    for (var i = 0; i < nextButtons.length; i++) {
+      nextButtons[i].addEventListener("click", nextOutfit);
+    }
 
-        var prevButtons = document.getElementsByClassName("prev-button");
-        for (var i = 0; i < prevButtons.length; i++) {
-          prevButtons[i].addEventListener("click", previousOutfit);
-        }
-        var sendToServerButton = document.getElementById("sendToServerButton");
-        sendToServerButton.addEventListener("click", sendOutfitsToServer);
+    var prevButtons = document.getElementsByClassName("prev-button");
+    for (var i = 0; i < prevButtons.length; i++) {
+      prevButtons[i].addEventListener("click", previousOutfit);
+    }
+    var sendToServerButton = document.getElementById("sendToServerButton");
+    sendToServerButton.addEventListener("click", sendOutfitsToServer);
 
-        updateOutfitPreviews();
-        populateOutfitList();
-        var outfitTypeFilter = document.getElementById("outfitTypeFilter");
-        outfitTypeFilter.addEventListener("change", filterOutfitsByType);
-        function filterOutfitsByType() {
-          var selectedType = document.getElementById("outfitTypeFilter").value;
-          var outfitDivs = document.querySelectorAll(".outfit-list .outfit");
+    updateOutfitPreviews();
+    populateOutfitList();
+    var outfitTypeFilter = document.getElementById("outfitTypeFilter");
+    outfitTypeFilter.addEventListener("change", filterOutfitsByType);
+    function filterOutfitsByType() {
+      var selectedType = document.getElementById("outfitTypeFilter").value;
+      var outfitDivs = document.querySelectorAll(".outfit-list .outfit");
 
-          outfitDivs.forEach(function (outfitDiv) {
-            var outfitType = outfitDiv.getAttribute("data-type");
-            if (selectedType === "all" || outfitType === selectedType || (selectedType === "owned" && outfitDiv.getAttribute("data-owner") === "true")) {
-              outfitDiv.style.display = "inline-block";
-            } else {
-              outfitDiv.style.display = "none";
-            }
-          });
+      outfitDivs.forEach(function (outfitDiv) {
+        var outfitType = outfitDiv.getAttribute("data-type");
+        if (selectedType === "all" || outfitType === selectedType || (selectedType === "owned" && outfitDiv.getAttribute("data-owner") === "true")) {
+          outfitDiv.style.display = "inline-block";
+        } else {
+          outfitDiv.style.display = "none";
         }
       });
+    }
+  });
 
-      function nextOutfit(event) {
-        var selectedType = event.target.getAttribute("data-type");
-        var outfits = outfitpieces.filter(outfit => outfit.outfitType === selectedType);
-        currentIndex[selectedType] = (currentIndex[selectedType] + 1) % outfits.length;
-        updateOutfitPreviews();
+  function nextOutfit(event) {
+    var selectedType = event.target.getAttribute("data-type");
+    var outfits = outfitpieces.filter(outfit => outfit.outfitType === selectedType);
+    currentIndex[selectedType] = (currentIndex[selectedType] + 1) % outfits.length;
+    updateOutfitPreviews();
+  }
+
+  function previousOutfit(event) {
+    var selectedType = event.target.getAttribute("data-type");
+    var outfits = outfitpieces.filter(outfit => outfit.outfitType === selectedType);
+    currentIndex[selectedType] = (currentIndex[selectedType] - 1 + outfits.length) % outfits.length;
+    updateOutfitPreviews();
+  }
+
+  function updateOutfitPreviews() {
+    var outfitTypes = Array.from(new Set(outfitpieces.map(outfit => outfit.outfitType)));
+    outfitTypes.forEach(type => {
+      var outfits = outfitpieces.filter(outfit => outfit.outfitType === type);
+      if (outfits.length > 0) {
+        var selectedOutfit = outfits[currentIndex[type]];
+        var imageUrl = selectedOutfit.imageUrl;
+        var imageTag = '<img style="width: 200px; height: 200px" src="' + imageUrl + '" alt="Outfit Image">';
+        document.querySelector(`.preview-outfit[data-type="${type}"]`).innerHTML = imageTag;
       }
+    });
+  }
 
-      function previousOutfit(event) {
-        var selectedType = event.target.getAttribute("data-type");
-        var outfits = outfitpieces.filter(outfit => outfit.outfitType === selectedType);
-        currentIndex[selectedType] = (currentIndex[selectedType] - 1 + outfits.length) % outfits.length;
-        updateOutfitPreviews();
-      }
-
-      function updateOutfitPreviews() {
-        var outfitTypes = Array.from(new Set(outfitpieces.map(outfit => outfit.outfitType)));
-        outfitTypes.forEach(type => {
-          var outfits = outfitpieces.filter(outfit => outfit.outfitType === type);
-          if (outfits.length > 0) {
-            var selectedOutfit = outfits[currentIndex[type]];
-            var imageUrl = selectedOutfit.imageUrl;
-            var imageTag = '<img style="width: 200px; height: 200px" src="' + imageUrl + '" alt="Outfit Image">';
-            document.querySelector(`.preview-outfit[data-type="${type}"]`).innerHTML = imageTag;
-          }
-        });
-      }
-
-      function populateOutfitList() {
-        var outfitList = document.querySelector(".outfit-list");
-        outfitpieces.forEach(outfit => {
-          var outfitDiv = document.createElement("div");
-          outfitDiv.className = "outfit";
-          outfitDiv.setAttribute("data-type", outfit.outfitType);
-          outfitDiv.setAttribute("data-owner", outfit.username === "{{username}}" ? "true" : "false");
-          outfitDiv.innerHTML = `
+  function populateOutfitList() {
+    var outfitList = document.querySelector(".outfit-list");
+    outfitpieces.forEach(outfit => {
+      var outfitDiv = document.createElement("div");
+      outfitDiv.className = "outfit";
+      outfitDiv.setAttribute("data-type", outfit.outfitType);
+      outfitDiv.setAttribute("data-owner", outfit.username === "{{username}}" ? "true" : "false");
+      outfitDiv.innerHTML = `
             <img src="${outfit.imageUrl}" style="width: 200px; height: 200px" alt="Outfit Image" margin="100px" />
             <p style="display: none;" data-image-name="${outfit._id}"></p>
           `;
-          outfitList.appendChild(outfitDiv);
-        });
-      }
-     function sendOutfitsToServer() {
+      outfitList.appendChild(outfitDiv);
+    });
+  }
+  function sendOutfitsToServer() {
     var selectedOutfits = {};
     var outfitTypes = Array.from(new Set(outfitpieces.map(outfit => outfit.outfitType)));
     outfitTypes.forEach(type => {

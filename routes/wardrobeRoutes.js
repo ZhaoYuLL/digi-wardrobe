@@ -16,40 +16,61 @@ const router = Router();
 
 router.get("/", (req, res) => {
   // Render your sign-in page
+  if (!req.session || !req.session.user) {
+    res.status(500).send("Not logged in");
+  }
   res.render("index", { title: "Sub-page" });
 });
 router.get("/closet", async (req, res) => {
   // Render your sign-in page
-  const outfitpieces = await getAllFromCloset(req.session.user.username);
-  const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_closet(
-    outfitpieces
-  );
-  
-  const {username} = req.session.user;
-  res.render("closet", {
-    title: "Closet Page",
-    username: username,
-    outfitpieces: postsWithSignedUrls,
-    outfitpiecesJson: JSON.stringify(postsWithSignedUrls),
-  });
+  if (!req.session || !req.session.user) {
+    res.status(500).send("Not logged in");
+  }
+  try {
+    const outfitpieces = await getAllFromCloset(req.session.user.username);
+    const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_closet(
+      outfitpieces
+    );
+
+    const { username } = req.session.user;
+    res.render("closet", {
+      title: "Closet Page",
+      username: username,
+      outfitpieces: postsWithSignedUrls,
+      outfitpiecesJson: JSON.stringify(postsWithSignedUrls),
+    });
+  } catch (error) {
+    res.send(500).send(errpr);
+  }
+
 });
 router.get("/wardrobe", async (req, res) => {
   // Render your sign-in page
-  const outfits = await getAllOutfits();
-  console.log(outfits)
-  const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_wardrobe(
-    outfits
-  );
-  //   console.log(postsWithSignedUrls[0].wardrobeName);
-  // console.log(postsWithSignedUrls.fitposts);
-  res.render("wardrobe", {
-    title: "Wardrobe Page",
-    wardrobes: postsWithSignedUrls,
-    wardrobesJson: JSON.stringify(postsWithSignedUrls),
-  });
+  if (!req.session || !req.session.user) {
+    res.status(500).send("Not logged in");
+  }
+  try {
+    const outfits = await getAllOutfits();
+    const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_wardrobe(
+      outfits
+    );
+    //   console.log(postsWithSignedUrls[0].wardrobeName);
+    // console.log(postsWithSignedUrls.fitposts);
+    res.render("wardrobe", {
+      title: "Wardrobe Page",
+      wardrobes: postsWithSignedUrls,
+      wardrobesJson: JSON.stringify(postsWithSignedUrls),
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+
 });
 router.get("/favorites", async (req, res) => {
   // Render your sign-in page
+  if (!req.session || !req.session.user) {
+    res.status(500).send("Not logged in");
+  }
 
   async function getFavoriteFitposts(username) {
     try {

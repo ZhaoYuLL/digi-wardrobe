@@ -16,9 +16,13 @@ const getAllUsers = async () => {
 
 const getUserById = async (id) => {
     // TODO: validate id parameter
-    /*if (!ObjectId.isValid(id)) {
+    checkRequiredFields(
+        id
+    );
+    checkIfFieldsAreProperString(id);
+    if (!ObjectId.isValid(id)) {
         throw 'Invalid ObjectId';
-    }*/
+    }
     const userCollection = await users();
     const user = await userCollection.findOne({ _id: new ObjectId(id) }, { projection: { password: 0 } });
     // if (!user) throw `Error getting user with id: ${id}`;
@@ -32,6 +36,7 @@ export const getUserByUsername = async (username) => {
     checkRequiredFields(
         username
     );
+    checkIfFieldsAreProperString(username);
     const lowercaseUsername = username.toLowerCase();
     const userCollection = await users();
     const user = await userCollection.findOne({ username: lowercaseUsername });
@@ -55,7 +60,7 @@ const getUserByEmail = async (email) => {
 
 const passwordHelper = async (password) => {
     // will probably move to a helper function file
-    const saltRounds = 2;
+    const saltRounds = 10;
     const hash = await bcrypt.hash(password, saltRounds);
     return hash;
 }
