@@ -90,7 +90,7 @@ import * as fp from '../../data/fitposts.js';*/
         
             });
         }
-        else {
+        else { // adding fp to existing wardrobe
             let requestData = {
                 fitpostId: currentId,
                 wardrobeId: drobeId,
@@ -108,11 +108,8 @@ import * as fp from '../../data/fitposts.js';*/
                 //let savenum = document.querySelector(`.save_num#savenum-${currentId}`);
                 //savenum.innerHTML = `saves: ${response.saves}`;
                 console.log('second ajax req');
-                console.log('this ohsuld print',response);
+                //console.log('this ohsuld print',response);
                 //dropdown.show();
-                
-    
-    
             });
         }
 

@@ -297,6 +297,14 @@ router.post('/save', async (req, res) => {
         else {
             //add to existing wardrobe,  req.session.user.userId, data.wardrobeId, data.fitpostId
             //check if fitpost exists in wardrobe alreadyl
+            let drobe = await wardrobe.getWardrobeById(data.wardrobeId);
+            for (let post of drobe.fitposts) {
+                if (post._id === data.fitpostId) {
+                    return res.status(400).json({error: 'already saved'});
+                }
+            }
+
+            await wardrobe.addFitpost(data.wardrobeId, data.fitpostId);
         }
         const updatedFitpost = await fp.addSave(data.fitpostId);
         res.status(200).json(updatedFitpost);

@@ -52,5 +52,36 @@ const createNewWardrobe = async (wardrobeName, fpId, uId) => {
     return newInsertInformation.insertedId.toString();
 }
 
-export { getAllWardrobes, getWardrobeById, getWardrobesByIds, createNewWardrobe };
+const addFitpost = async (drobeId, fpId) => {
+    const wardrobeCollection = await wardrobe();
+    const drobe = await wardrobeCollection.findOne({ _id: new ObjectId(drobeId) });
+
+    if (drobe === null) throw 'No user with that id';
+
+    let fps = drobe.fitposts;
+    let newFp = await fp.searchByFPID(fpId);
+    fps.push(newFp);
+
+    
+
+    const updateDrobe = {
+        fitposts: fps
+    };
+
+    const updatedInfo = await wardrobeCollection.findOneAndUpdate(
+        { _id: new ObjectId(drobeId) },
+        { $set: updateDrobe },
+        { returnDocument: 'after' }
+    );
+
+    if (!updatedInfo) {
+        throw 'Could not update user successfully';
+    }
+
+    updatedInfo._id = updatedInfo._id.toString();
+    return updatedInfo;
+
+}
+
+export { getAllWardrobes, getWardrobeById, getWardrobesByIds, createNewWardrobe, addFitpost };
 
