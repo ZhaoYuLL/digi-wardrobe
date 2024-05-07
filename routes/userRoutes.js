@@ -132,9 +132,10 @@ router
         closet: user.closet,
         favorite: user.favorite,
         bio: user.bio,
-        _id: user.userId, 
+        _id: user.userId,
         following: user.following,
       };
+
       res.redirect("/userProfile");
     } catch (err) {
       res.status(400).render("login", {
@@ -190,7 +191,7 @@ router.route("/userProfile").get(async (req, res) => {
 router.post("/userprofile/delete-fitpost", async (req, res) => {
   try {
     const { fitpostId } = req.body;
-    console.log(fitpostId);
+    //console.log(fitpostId);
     await deleteFitpost(fitpostId);
     res.json({ message: "Fitpost deleted successfully" });
   } catch (error) {
@@ -211,10 +212,10 @@ router.post("/userprofile/update-fitpost", async function (req, res) {
     legwear,
     footwear,
   } = req.body;
-  console.log(fitpostId);
-  console.log(headid);
-  console.log("headid: ", headid);
-  console.log("headwearname: ", headwear);
+  //console.log(fitpostId);
+  //console.log(headid);
+  //console.log("headid: ", headid);
+  //console.log("headwearname: ", headwear);
 
   await updateFitpost(fitpostId, "headid", headid);
   await updateFitpost(fitpostId, "headwear", headwear);

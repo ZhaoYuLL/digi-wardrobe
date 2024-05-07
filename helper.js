@@ -324,16 +324,15 @@ export const stringTrimmer = (str) => {
 	return str.trim();
 };
 
-export const checkIsProperLength = (str, len, variableName, type) => {
+export const checkIsProperLength = (str, len) => {
 	if (str.length < len) {
-		throw `ERR: ${variableName || "Provided Variable"
-		} cannot be less than ${len} ${type}`;
+		throw `ERR: ${str} cannot be less than ${len}`;
 	}
 };
 export const checkMaxLength = (str, len, variableName) => {
 	if (str.length > len) {
 		throw `ERR: ${variableName || "Provided Variable"
-		} cannot greater than ${len} ${type}`;
+		} cannot greater than ${len}`;
 	}
 };
 
