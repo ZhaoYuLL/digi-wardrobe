@@ -73,7 +73,16 @@ router
     }
     try {
       const newUser = await createUser(userName, firstName, lastName, age, email, password, bio);
-      req.session.user = newUser;
+      req.session.user = {
+        username: newUser.userName, 
+        firstName: newUser.firstName, 
+        lastName: newUser.lastName, 
+        wardrobes: user.wardrobes,
+        closet: user.closet,
+        favorite: user.favorite,
+        bio: user.bio,
+        userId: user.userId
+      }
       res.redirect("/userProfile");
     } catch (err) {
       res.status(400).render("register", {
@@ -117,7 +126,7 @@ router
         closet: user.closet,
         favorite: user.favorite,
         bio: user.bio,
-        _id: user.userId
+        userId: user.userId
       };
       res.redirect('/userProfile');
 
@@ -133,8 +142,7 @@ router.route('/userProfile').get(async (req, res) => {
     return res.redirect('/login');
   }
 
-  const { username, firstName, lastName, wardrobes, closet, favorite, _id, bio } = req.session.user;
-  const userId = _id;
+  const { username, firstName, lastName, wardrobes, closet, favorite, userId, bio } = req.session.user;
   try {
     // Get all fitposts for the user
     const allFitposts = await searchByUID(userId);
