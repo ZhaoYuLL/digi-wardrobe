@@ -23,17 +23,17 @@ async function createFitpost(fitpost) {
 }
 
 // await generateFileName()
-const hat = "0084a3ce67c6bcc90ee7792bddfbd4e105ed1ae2a48d297fdc302f6308496fda";
-const hat2 = "7101237a6d2ef9ae0103ff8ef2d0afe0cb929bd4916eb85605ebd059be373a89";
-const hat3 = "c932a50074e44707f7f1b9bc0768caa3bef341887beadfa313f6b88f18ff7756";
-const hat4 = "3927eeb715b128eaac7e754129d3eab033bd86240aa4d4995bf32083e3587a2d";
-const jean = "e8017cd5326d13759dd71dde65b76d842e3b71fef0bbfb39f66ffb5c31b2e145";
+const hat = "79974a7c8b9aeced4f99773386f2b113d568c2f6d8efc6382d2119c332e668c0";
+const hat2 = "88191896f6945e8aaff7451f6fffd55e0644305a9876b2465873dda7d4a256b3";
+const hat3 = "83c18c2666007d7fdfaeb2097876f8f035e5e0e9b9e41a69cfa814921696fda8";
+const hat4 = "f7c9f354cc588116c5812400db2e714f0f264d1106e05b0756d0fdf13b0922a8";
+const jean = "5610728dbe350f784c47ab82c953f2ef28bc5124c18d235251840cedd173b149";
 const tanktop =
-  "a090356d90b6d2a8611349c805fe25589d7ca3b109b33ae5e35127c0cc39e9ba";
+  "9903ab6777c1152911aa57db1d21aceb48c5817354cdceab710e5b31745ee211";
 const sweater =
-  "211c977fa571cfcc50555af6d4556e76accd38fdada20577eb99fdb352a60bac";
+  "45d2fa1ee8c08bb6a4db932a87e5efeaf7d01096854efa8c97c895d676f4b389";
 const shoes =
-  "b252d8e80320fd288feadb7cc3fc86c6e385f8ea9212ea5d2bffde21d689aa50";
+  "7768dac33c9cfae0fdbe8a3f28389f25b1bfb4bbe4ac6b1880f9dc91e55d1fea";
 
 //store outfit piece in outfit collection function
 const storeOutfitPiece = async (id, link, outfitType, imageName, username) => {
@@ -60,7 +60,7 @@ const storeOutfitPiece = async (id, link, outfitType, imageName, username) => {
   }
 };
 
-// stores a outfitpeice shoes
+// stores out fit pieces shoes
 await storeOutfitPiece(
   "711a24a197aa3b5a1c314701",
   "google.com",

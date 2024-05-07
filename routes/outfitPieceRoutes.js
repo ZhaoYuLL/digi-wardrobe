@@ -88,19 +88,19 @@ router
 		res.redirect("/fitposts/create");
 	});
 router.route("/:imageName").delete(async (req, res) => {
-	try {
-		// // getting the imageName, which is the name of the image on s3 bucket
-		const s3_image_name = req.params.imageName;
+  try {
+    // // getting the imageName, which is the name of the image on s3 bucket
+    const s3_image_name = req.params.imageName;
 
-		// example usage: delete from s3, then delete from database
-		await deleteImageFromS3(s3_image_name);
-		await deleteImage(s3_image_name);
+    // example usage: delete from s3, then delete from database
+    await deleteImageFromS3(s3_image_name);
+    await deleteImage(s3_image_name);
 
-		res.send("Post deleted successfully");
-	} catch (error) {
-		console.error("Error deleting post:", error);
-		res.status(500).send("Internal Server Error");
-	}
+    res.send("Post deleted successfully");
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 export default router;

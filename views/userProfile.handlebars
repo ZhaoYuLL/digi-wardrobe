@@ -1,48 +1,387 @@
-<title>My User Profile</title>
 
-<div class="profile picture">
-  <div class="profile-pic"></div>
-</div>
-<div>
-  <p id="welcome">Welcome {{firstName}} {{lastName}}</p>
-  <h2 id="userName">{{userName}}</h2>
-</div>
-<div></div>
-<div class="container">
-  <section class="profile"></section>
-  <div class="bio"> {{bio}}</div>
-</div>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My User Profile</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  </head>
+  <body>
+    <div class="profile picture">
+      <div class="profile-pic"></div>
+    </div>
+    <div>
+      <p id="welcome">Welcome {{firstName}} {{lastName}}</p>
+      <h2 id="userName">{{userName}}</h2>
+    </div>
+    <div></div>
+    <div class="container">
+      <section class="profile"></section>
+      <div class="bio"></div>
+    </div>
 
-<div class="fitposts-container">
-  <h1>All Fitposts</h1>
-  {{#each allFitposts}}
-  <div class="fitpost">
-    <h1>Fitpost {{addOne @index}}</h1>
-    <p>Headwear:</p>
-    <img
-      src="{{this.headUrl}}"
-      style="width: 200px; height: 200px"
-      alt="Head Image"
-    />
-    <p>Bodywear:</p>
-    <img
-      src="{{this.bodyUrl}}"
-      style="width: 200px; height: 200px"
-      alt="Body Image"
-    />
-    <p>Legwear:</p>
-    <img
-      src="{{this.legUrl}}"
-      style="width: 200px; height: 200px"
-      alt="Leg Image"
-    />
-    <p>Footwear:</p>
-    <img
-      src="{{this.footUrl}}"
-      style="width: 200px; height: 200px"
-      alt="Foot Image"
-    />
-  </div>
-  {{/each}}
-</div>
-<a id="logoutLink" href="/logout">Logout</a>
+    <div class="fitposts-container">
+      <h1>My fitposts</h1>
+      {{#each allFitposts}}
+      <div class="fitpost" data-fitpost-id="{{_id}}">
+        <h1>Fitpost {{addOne @index}}</h1>
+        <p>Headwear:</p>
+        <img
+          src="{{this.headUrl}}"
+          width="200px;"
+          height="200px"
+          alt="Head Image"
+          data-headid="{{this.headid}}"
+          data-headwear="{{this.headwear}}"
+        />
+        <p>Bodywear:</p>
+        <img
+          src="{{this.bodyUrl}}"
+          width="200px;"
+          height="200px"
+          alt="Body Image"
+          data-bodyid="{{this.bodyid}}"
+          data-bodywear="{{this.bodywear}}"
+        />
+        <p>Legwear:</p>
+        <img
+          src="{{this.legUrl}}"
+          width="200px;"
+          height="200px"
+          alt="Leg Image"
+          data-legid="{{this.legid}}"
+          data-legwear="{{this.legwear}}"
+        />
+        <p>Footwear:</p>
+        <img
+          src="{{this.footUrl}}"
+          width="200px;"
+          height="200px"
+          alt="Foot Image"
+          data-footid="{{this.footid}}"
+          data-footwear="{{this.footwear}}"
+        />
+        <p>Likes: {{this.likes}}</p>
+        <p>Saves: {{this.saves}}</p>
+
+        <button class="edit-fitpost" data-fitpost-id="{{_id}}">Edit</button>
+        <button class="delete-fitpost" data-fitpost-id="{{_id}}">Delete</button>
+      </div>
+      {{/each}}
+    </div>
+
+    <!-- Edit Fitpost Modal -->
+    <div id="editFitpostModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Edit Fitpost</h2>
+        <form id="editFitpostForm">
+          <input type="hidden" id="editFitpostId" name="fitpostId" />
+          <label for="editHeadwearSelect">Headwear:</label>
+          <select id="editHeadwearSelect" name="headwearSelect"></select>
+          <label for="editBodywearSelect">Bodywear:</label>
+          <select id="editBodywearSelect" name="bodywearSelect"></select>
+          <label for="editLegwearSelect">Legwear:</label>
+          <select id="editLegwearSelect" name="legwearSelect"></select>
+          <label for="editFootwearSelect">Footwear:</label>
+          <select id="editFootwearSelect" name="footwearSelect"></select>
+          <button type="submit">Update Fitpost</button>
+        </form>
+      </div>
+    </div>
+
+    <a id="logoutLink" href="/logout">Logout</a>
+
+    <script>
+      $(document).ready(function () {
+        // Add event listener to the "Edit" button
+        $(".edit-fitpost").on("click", function () {
+          var fitpostId = $(this).data("fitpost-id");
+          var fitpostIndex = $(this).closest(".fitpost").index();
+          openEditModal(fitpostId, fitpostIndex);
+        });
+
+        // Add event listener to the "Delete" button
+        $(".delete-fitpost").on("click", function () {
+          var fitpostId = $(this).data("fitpost-id");
+          deleteFitpost(fitpostId);
+        });
+
+        // Function to handle the update fitpost form submission
+        $("#editFitpostForm").on("submit", function (event) {
+          event.preventDefault();
+
+          var fitpostId = $("#editFitpostId").val();
+          var headwearSelect = $("#editHeadwearSelect");
+          var bodywearSelect = $("#editBodywearSelect");
+          var legwearSelect = $("#editLegwearSelect");
+          var footwearSelect = $("#editFootwearSelect");
+
+          var formData = {
+            fitpostId: fitpostId,
+            headid: headwearSelect.val(),
+            bodyid: bodywearSelect.val(),
+            legid: legwearSelect.val(),
+            footid: footwearSelect.val(),
+            headwear: headwearSelect.find("option:selected").data("headwear"),
+            bodywear: bodywearSelect.find("option:selected").data("bodywear"),
+            legwear: legwearSelect.find("option:selected").data("legwear"),
+            footwear: footwearSelect.find("option:selected").data("footwear"),
+          };
+
+          $.ajax({
+            url: "/userprofile/update-fitpost",
+            method: "POST",
+            data: formData,
+            success: function (response) {
+              console.log("Fitpost updated successfully:", response);
+              // Optionally, you can close the modal and update the UI
+              closeModal();
+              updateFitpostUI(fitpostId, response);
+            },
+            error: function (xhr, status, error) {
+              console.error("Error updating fitpost:", error);
+              // Optionally, display an error message to the user
+            },
+          });
+        });
+
+        // Close the modal when the close button is clicked
+        $(".close").on("click", closeModal);
+      });
+
+      function openEditModal(fitpostId, fitpostIndex) {
+        $("#editFitpostModal h2").text("Edit Fitpost " + fitpostIndex);
+        var headwearSelect = $("#editHeadwearSelect");
+        var bodywearSelect = $("#editBodywearSelect");
+        var legwearSelect = $("#editLegwearSelect");
+        var footwearSelect = $("#editFootwearSelect");
+
+        // Clear existing options
+        headwearSelect.empty();
+        bodywearSelect.empty();
+        legwearSelect.empty();
+        footwearSelect.empty();
+
+        // Populate dropdown menus with images from all fitposts
+        $(".fitpost").each(function (index) {
+          var fitpostElement = $(this);
+          var headUrl = fitpostElement
+            .find('img[alt="Head Image"]')
+            .attr("src");
+          var bodyUrl = fitpostElement
+            .find('img[alt="Body Image"]')
+            .attr("src");
+          var legUrl = fitpostElement.find('img[alt="Leg Image"]').attr("src");
+          var footUrl = fitpostElement
+            .find('img[alt="Foot Image"]')
+            .attr("src");
+          var headId = fitpostElement
+            .find('img[alt="Head Image"]')
+            .data("headid");
+          var bodyId = fitpostElement
+            .find('img[alt="Body Image"]')
+            .data("bodyid");
+          var legId = fitpostElement.find('img[alt="Leg Image"]').data("legid");
+          var footId = fitpostElement
+            .find('img[alt="Foot Image"]')
+            .data("footid");
+          var headwear = fitpostElement
+            .find('img[alt="Head Image"]')
+            .data("headwear");
+          var bodywear = fitpostElement
+            .find('img[alt="Body Image"]')
+            .data("bodywear");
+          var legwear = fitpostElement
+            .find('img[alt="Leg Image"]')
+            .data("legwear");
+          var footwear = fitpostElement
+            .find('img[alt="Foot Image"]')
+            .data("footwear");
+
+          headwearSelect.append(
+            '<option value="' +
+              headId +
+              '" data-image="' +
+              headUrl +
+              '" data-headwear="' +
+              headwear +
+              '">Fitpost ' +
+              (index + 1) +
+              " Headwear</option>"
+          );
+          bodywearSelect.append(
+            '<option value="' +
+              bodyId +
+              '" data-image="' +
+              bodyUrl +
+              '" data-bodywear="' +
+              bodywear +
+              '">Fitpost ' +
+              (index + 1) +
+              " Bodywear</option>"
+          );
+          legwearSelect.append(
+            '<option value="' +
+              legId +
+              '" data-image="' +
+              legUrl +
+              '" data-legwear="' +
+              legwear +
+              '">Fitpost ' +
+              (index + 1) +
+              " Legwear</option>"
+          );
+          footwearSelect.append(
+            '<option value="' +
+              footId +
+              '" data-image="' +
+              footUrl +
+              '" data-footwear="' +
+              footwear +
+              '">Fitpost ' +
+              (index + 1) +
+              " Footwear</option>"
+          );
+        });
+
+        // Set the selected values based on the fitpost being edited
+        var selectedFitpost = $(
+          '.fitpost[data-fitpost-id="' + fitpostId + '"]'
+        );
+        var selectedHeadId = selectedFitpost
+          .find('img[alt="Head Image"]')
+          .data("headid");
+        var selectedBodyId = selectedFitpost
+          .find('img[alt="Body Image"]')
+          .data("bodyid");
+        var selectedLegId = selectedFitpost
+          .find('img[alt="Leg Image"]')
+          .data("legid");
+        var selectedFootId = selectedFitpost
+          .find('img[alt="Foot Image"]')
+          .data("footid");
+
+        headwearSelect.val(selectedHeadId);
+        bodywearSelect.val(selectedBodyId);
+        legwearSelect.val(selectedLegId);
+        footwearSelect.val(selectedFootId);
+
+        // Customize the appearance of the dropdown options
+        $("select").each(function () {
+          $(this).css({
+            width: "200px",
+            height: "200px",
+            "background-size": "cover",
+            "background-repeat": "no-repeat",
+            "background-position": "center",
+            padding: "10px",
+          });
+
+          // Set the initial background image based on the selected option
+          var selectedOption = $(this).find("option:selected");
+          var imageUrl = selectedOption.data("image");
+          $(this).css("background-image", 'url("' + imageUrl + '")');
+
+          // Update the background image when the selected option changes
+          $(this).on("change", function () {
+            var selectedOption = $(this).find("option:selected");
+            var imageUrl = selectedOption.data("image");
+            $(this).css("background-image", 'url("' + imageUrl + '")');
+          });
+        });
+
+        // Show the edit modal
+        $("#editFitpostModal").css("display", "block");
+
+        // Set the fitpost ID in the hidden input field
+        $("#editFitpostId").val(fitpostId);
+      }
+
+      // Function to close the modal
+      function closeModal() {
+        $("#editFitpostModal").css("display", "none");
+
+        // Clear the select elements
+        $("select").empty().css("background-image", "");
+      }
+
+      // Function to update the fitpost UI after successful update
+      function updateFitpostUI(fitpostId, updatedFitpost) {
+        console.log("Updating fitpost UI with data:", updatedFitpost);
+
+        var fitpostElement = $('.fitpost[data-fitpost-id="' + fitpostId + '"]');
+
+        // Update the fitpost element with the updated data
+        fitpostElement
+          .find('img[alt="Head Image"]')
+          .prop("src", updatedFitpost.headUrl)
+          .data("headid", updatedFitpost.headid)
+          .data("headwear", updatedFitpost.headwear);
+        console.log(
+          "Updated head image:",
+          fitpostElement.find('img[alt="Head Image"]')
+        );
+
+        fitpostElement
+          .find('img[alt="Body Image"]')
+          .prop("src", updatedFitpost.bodyUrl)
+          .data("bodyid", updatedFitpost.bodyid)
+          .data("bodywear", updatedFitpost.bodywear);
+        console.log(
+          "Updated body image:",
+          fitpostElement.find('img[alt="Body Image"]')
+        );
+
+        fitpostElement
+          .find('img[alt="Leg Image"]')
+          .prop("src", updatedFitpost.legUrl)
+          .data("legid", updatedFitpost.legid)
+          .data("legwear", updatedFitpost.legwear);
+        console.log(
+          "Updated leg image:",
+          fitpostElement.find('img[alt="Leg Image"]')
+        );
+
+        fitpostElement
+          .find('img[alt="Foot Image"]')
+          .prop("src", updatedFitpost.footUrl)
+          .data("footid", updatedFitpost.footid)
+          .data("footwear", updatedFitpost.footwear);
+        console.log(
+          "Updated foot image:",
+          fitpostElement.find('img[alt="Foot Image"]')
+        );
+      }
+
+      // Function to delete a fitpost
+      function deleteFitpost(fitpostId) {
+        $.ajax({
+          url: "/userprofile/delete-fitpost",
+          method: "POST",
+          data: { fitpostId: fitpostId },
+          success: function (response) {
+            console.log("Fitpost deleted successfully:", response);
+            // Remove the deleted fitpost from the UI
+            $('.fitpost[data-fitpost-id="' + fitpostId + '"]').remove();
+          },
+          error: function (xhr, status, error) {
+            console.error("Error deleting fitpost:", error);
+            // Optionally, display an error message to the user
+          },
+        });
+      }
+
+      // Function to display the image dynamically
+      function displayImage(imageUrl) {
+        var imgElement = $("<img>").attr({
+          src: imageUrl,
+          alt: "Dynamic Image",
+          width: 200,
+          height: 200,
+        });
+
+        $(".container").append(imgElement);
+      }
+    </script>
+  </body>
+</html>
