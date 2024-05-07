@@ -124,6 +124,7 @@ export const getOutfitPiecesByUsername = async (username) => {
 
 export const getAllFromCloset = async (username) => {
 	// get all of the outfit pieces from ur closet
+	//console.log(username);
 	checkRequiredFields(username);
 	checkIfFieldsAreProperString(username);
 	let user = await getUserByUsername(username);

@@ -132,9 +132,10 @@ router
         closet: user.closet,
         favorite: user.favorite,
         bio: user.bio,
-        _id: user.userId, 
+        _id: user.userId,
         following: user.following,
       };
+
       res.redirect("/userProfile");
     } catch (err) {
       res.status(400).render("login", {
@@ -190,7 +191,7 @@ router.route("/userProfile").get(async (req, res) => {
 router.post("/userprofile/delete-fitpost", async (req, res) => {
   try {
     const { fitpostId } = req.body;
-    console.log(fitpostId);
+    //console.log(fitpostId);
     await deleteFitpost(fitpostId);
     res.json({ message: "Fitpost deleted successfully" });
   } catch (error) {
@@ -211,10 +212,10 @@ router.post("/userprofile/update-fitpost", async function (req, res) {
     legwear,
     footwear,
   } = req.body;
-  console.log(fitpostId);
-  console.log(headid);
-  console.log("headid: ", headid);
-  console.log("headwearname: ", headwear);
+  //console.log(fitpostId);
+  //console.log(headid);
+  //console.log("headid: ", headid);
+  //console.log("headwearname: ", headwear);
 
   await updateFitpost(fitpostId, "headid", headid);
   await updateFitpost(fitpostId, "headwear", headwear);
@@ -236,7 +237,24 @@ router.route("/following")
     }
 
     try {
-      res.render("following", { title: "Following" }); // Render the following view
+      const { following } = req.session.user;
+      const followingUserIds = [...following]; // create a new array by spreading the values of the 'following' array
+      // const testUserId = "611a24a197aa3b5a1d315701";
+      // followingUserIds.push(testUserId);
+      // console.log(followingUserIds);
+
+      const allFitposts = [];
+      for (const userId of followingUserIds) {
+        const fitposts = await searchByUID(userId);
+        allFitposts.push(...fitposts);
+      }
+
+      const fitpostsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(allFitposts);
+
+      res.render("following", {
+        title: "Following",
+        fitposts: fitpostsWithSignedUrls,
+      });
     } catch (err) {
       res.status(400).render("login", {
         error: err,
