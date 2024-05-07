@@ -34,3 +34,7 @@ Features:
   - Users can like and unlike fitposts.
     - Liked fitposts goes under the Favorites Section for the user
   - Users can save fiposts into existing wardrobes or create a new wardrobe to save the fitposts into
+- User Profile:
+  - Can View your fitposts here
+  - Can edit fitposts based on your fitposts
+  - Can delete fitposts
