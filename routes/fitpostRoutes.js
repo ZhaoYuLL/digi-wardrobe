@@ -257,7 +257,7 @@ router.post('/like', async (req, res) => {
     try {
         // like or unlike
         let updatedFitpost;
-
+        console.log('this is userid',userId);
         if (await user.checkLike(userId, data.fitpostId)) {
             await user.removeLike(userId, data.fitpostId);
             updatedFitpost = await fp.removeLike(data.fitpostId);
