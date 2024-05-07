@@ -23,7 +23,7 @@ router
   })
   .post(async (req, res) => {
     //code here for POST
-    let { userName, firstName, lastName, age, email, password, confirmPassword } = req.body;
+    let { userName, firstName, lastName, age, email, password, confirmPassword, bio } = req.body;
 
     try {
       userName = validString(userName);
@@ -72,7 +72,7 @@ router
       return res.status(500).json({ error: 'Internal Server Error' });
     }
     try {
-      const newUser = await createUser(userName, firstName, lastName, age, email, password);
+      const newUser = await createUser(userName, firstName, lastName, age, email, password, bio);
       req.session.user = newUser;
       res.redirect("/userProfile");
     } catch (err) {
@@ -116,7 +116,8 @@ router
         wardrobes: user.wardrobes,
         closet: user.closet,
         favorite: user.favorite,
-        userId: user.userId
+        bio: user.bio,
+        _id: user.userId
       };
       res.redirect('/userProfile');
 
@@ -132,8 +133,8 @@ router.route('/userProfile').get(async (req, res) => {
     return res.redirect('/login');
   }
 
-  const { username, firstName, lastName, wardrobes, closet, favorite, userId } = req.session.user;
-
+  const { username, firstName, lastName, wardrobes, closet, favorite, _id, bio } = req.session.user;
+  const userId = _id;
   try {
     // Get all fitposts for the user
     const allFitposts = await searchByUID(userId);
@@ -149,6 +150,7 @@ router.route('/userProfile').get(async (req, res) => {
       lastName,
       closet,
       favorite,
+      bio: bio,
       allFitposts: fitpostsWithSignedUrls,
       wardrobes,
     });

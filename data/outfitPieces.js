@@ -36,7 +36,7 @@ export const getImage = async (imageName) => {
 
 	// Check if the image exists
 	if (image) {
-		console.log("Image found");
+		//console.log("Image found");
 		return image;
 	} else {
 		throw new Error("Image not found");
@@ -58,10 +58,10 @@ export const deleteImage = async (imageName) => {
 	await outfitPiecesCollection.deleteOne({ imageName: imageName });
 };
 
-export const getOutfitPiecesByUserId = async (user_id) => {
+export const getOutfitPiecesByUsername = async (username) => {
 	// get all outfit pieces owned by user
 	const outfitPiecesCollection = await outfitPieces();
-	const userOutfitPieces = outfitPiecesCollection.find({ user_id: user_id }).toArray();
+	const userOutfitPieces = outfitPiecesCollection.find({ username: username }).toArray();
 	if (!userOutfitPieces) throw new Error(`Error getting outfit pieces for user ${user_id}`);
 
 	return userOutfitPieces;
