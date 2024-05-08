@@ -228,15 +228,15 @@ router.route("/latest").get(async (req, res) => {
       req.session.user.username
     );
 
-        return res.render("explore_page", {
-            title: "Latest",
-            fitposts: postsWithDescLinks,
-            wardrobes: drobes,
-            userId: req.session.user.userId,
-        });
-    } catch (e) {
-        return res.status(500).send(e);
-    }
+    return res.render("explore_page", {
+      title: "Latest",
+      fitposts: postsWithDescLinks,
+      wardrobes: drobes,
+      userId: req.session.user.userId,
+    });
+  } catch (e) {
+    return res.status(500).send(e);
+  }
 });
 
 router.route("/user/:uid").get(async (req, res) => {
@@ -265,15 +265,15 @@ router.route("/user/:uid").get(async (req, res) => {
     );
     let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
 
-        return res.render("explore_page", {
-            title: `${req.session.user.username}'s FitPosts`,
-            fitposts: postsWithDescLinks,
-            wardrobes: drobes,
-            userId: req.session.user.userId,
-        });
-    } catch (e) {
-        return res.status(500).send(e);
-    }
+    return res.render("explore_page", {
+      title: `${req.session.user.username}'s FitPosts`,
+      fitposts: postsWithDescLinks,
+      wardrobes: drobes,
+      userId: req.session.user.userId,
+    });
+  } catch (e) {
+    return res.status(500).send(e);
+  }
 });
 
 router.get("/favorites", async (req, res) => {
@@ -311,63 +311,60 @@ router.get("/favorites", async (req, res) => {
     }
   }
 
-    try {
-        const favorites = await getFavoriteFitposts(req.session.user.username);
-        // Handle the favorites data as needed
-        const favWithUrl = await addSignedUrlsToFitPosts_in_fitposts(favorites);
-        let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
-        const postsWithDescLinks = await addDescLinksForFitposts(favWithUrl);
-        return res.render("explore_page", {
-            title: "Favorites",
-            fitposts: postsWithDescLinks,
-            wardrobes: drobes,
-            userId: req.session.user.userId,
-        });
-    } catch (error) {
-        console.error("Error retrieving favorites:", error);
-        res.status(500).json({ error: "Internal Server Error" });
-    }
-
+  try {
+    const favorites = await getFavoriteFitposts(req.session.user.username);
+    // Handle the favorites data as needed
+    const favWithUrl = await addSignedUrlsToFitPosts_in_fitposts(favorites);
+    let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
+    const postsWithDescLinks = await addDescLinksForFitposts(favWithUrl);
+    return res.render("explore_page", {
+      title: "Favorites",
+      fitposts: postsWithDescLinks,
+      wardrobes: drobes,
+      userId: req.session.user.userId,
+    });
+  } catch (error) {
+    console.error("Error retrieving favorites:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
-router.route('/profile').get(async (req, res) => {
-    try {
-        return res.status(200).send(req.session.user);
-    } catch (error) {
-        console.error("Error in /profile route:", error);
-        return res.status(500).send("Internal Server Error ggs");
-    }
+router.route("/profile").get(async (req, res) => {
+  try {
+    let userProfile = await user.getUserById(req.session.user._id);
+    return res.status(200).send(userProfile);
+    //return res.status(200).send(req.session.user);
+  } catch (error) {
+    console.error("Error in /profile route:", error);
+    return res.status(500).send("Internal Server Error ggs");
+  }
 });
 
 router.route("/:id").get(async (req, res) => {
-    //console.log(req.params.id);
-    if (!req.session || !req.session.user) {
-        res.status(500).send("Not logged in");
+  //console.log(req.params.id);
+  if (!req.session || !req.session.user) {
+    res.status(500).send("Not logged in");
+  }
+  let fpid = req.params.id;
+  try {
+    fpid = validString(fpid);
+  } catch (e) {
+    return res.status(500).send(e);
+  }
+  try {
+    let fitpost = await fp.searchByFPID(fpid);
+    const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
+      fpList
+    );
+    for (const fit of postsWithSignedUrls) {
+      fit.postedDate = convertDate(fit);
     }
-    let fpid = req.params.id;
-    try {
-        fpid = validString(fpid);
-    } catch (e) {
-        return res.status(500).send(e);
-    }
-    try {
-        let fitpost = await fp.searchByFPID(fpid);
-        const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
-            fpList
-        );
-        for (const fit of postsWithSignedUrls) {
-            fit.postedDate = convertDate(fit);
-        }
-        return res.render("fitpost_page", { post: postsWithSignedUrls });
-        //return res.render('explore_page', {title: `${userId}'s FitPosts`, fitposts:  fpList});
-    } catch (e) {
-        return res.status(500).send(e);
-    }
+    return res.render("fitpost_page", { post: postsWithSignedUrls });
+    //return res.render('explore_page', {title: `${userId}'s FitPosts`, fitposts:  fpList});
+  } catch (e) {
+    return res.status(500).send(e);
+  }
 });
-
-
-
-
 
 // POST route for handling like action
 router.post("/like", async (req, res) => {
@@ -467,22 +464,17 @@ router.post("/closet", async (req, res) => {
 });
 
 router.post("/follow", async (req, res) => {
-    const data = req.body;
-    const userId = req.session.user._id;
-    await user.follow(userId, data.followId);
-    return res.status(200).json('updated');
+  const data = req.body;
+  const userId = req.session.user._id;
+  await user.follow(userId, data.followId);
+  return res.status(200).json("updated");
 });
 
 router.post("/unfollow", async (req, res) => {
-    const data = req.body;
-    const userId = req.session.user._id;
-    await user.unfollow(userId, data.followId);
-    return res.status(200).json('updated');
+  const data = req.body;
+  const userId = req.session.user._id;
+  await user.unfollow(userId, data.followId);
+  return res.status(200).json("updated");
 });
-
-
-
-
-
 
 export default router;
