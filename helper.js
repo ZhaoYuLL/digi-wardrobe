@@ -280,6 +280,18 @@ export const addSignedUrlsToFitPosts_in_closet = async (outfits) => {
     throw error;
   }
 };
+
+export const addSignedUrlsToProfile = async (pfp) => {
+  try {
+    // Loop through each outfit and generate signed URLs for the fitposts
+
+    const pUrl = await addUrl(pfp);
+    return pUrl;
+  } catch (error) {
+    console.error("Error adding signed URLs to posts:", error);
+    throw error;
+  }
+};
 export const uploadImageToS3 = async (file, h, w, imageName) => {
   try {
     // Resize image using sharp package
