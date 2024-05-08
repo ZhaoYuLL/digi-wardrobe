@@ -260,28 +260,3 @@ p a:hover {
   width: 600px;
   padding: 10px;
 }
-
-.fitposts {
-  display: flex;
-  flex-wrap: wrap; /* Allow fitposts to wrap to the next line */
-  justify-content: flex-start; /* Align fitposts to the start of the container */
-}
-
-.fitpost {
-  flex: 0 0 calc(20% - 20px); /* Each fitpost takes up 20% of the container width with 20px margin between fitposts */
-  margin-right: 20px;
-  margin-bottom: 20px; /* Add bottom margin for spacing between rows */
-  word-break: break-all;
-}
-
-.fitpost:last-child {
-  margin-right: 0; /* Remove right margin from the last fitpost in each row */
-}
-
-.preview-content-closet {
-  display: flex;
-  flex-direction: column; /* Change to column layout */
-  align-items: flex-start; /* Align items to the start of the container */
-  max-height: 80vh; /* Limit maximum height to 80% of the viewport height */
-  overflow-y: auto; /* Add vertical scroll if content overflows */
-}
