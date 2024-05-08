@@ -102,9 +102,11 @@ router
             let data = req.body;
             const user = req.session.user;
             //console.log(user);
+            if(req.file){
             const imageName = await generateFileName();
-			const img = await uploadImageToS3(req.file, 1920, 1080, imageName);
+			      const img = await uploadImageToS3(req.file, 1920, 1080, imageName);
             const a = await storeFitpic(imageName,req.session.user.username)
+            }
             try {
                 if (!data.headwear) throw new Error("Headwear not provided in route");
                 if (!data.bodywear) throw new Error("Bodywear not provided in route");

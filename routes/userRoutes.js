@@ -272,11 +272,9 @@ router.get("/logout", async (req, res) => {
 router.route("/fitpics").get(async (req, res) => {
   const fitpics = await getAllFitpics();
   let fitUrls;
-  if(fitpics.length === 0){
+  if(fitpics.length !== 0){
    fitUrls = await addSignedUrlsToFitPosts_in_fitpics(fitpics);
-
   }
-
   res.render("fitpics", {title : "fitpics",
   fitpics: fitUrls})
 });
