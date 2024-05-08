@@ -260,3 +260,13 @@ p a:hover {
   width: 600px;
   padding: 10px;
 }
+
+.fitposts-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+ul.fitposts {
+  list-style: none;
+}

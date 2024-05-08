@@ -1,10 +1,12 @@
 <h1>{{title}}</h1>
 
 
-<ol class="fitposts">
+<ul class="fitposts" id={{userId}}>
 	{{#each fitposts}}
-	<li class="fitpost" id={{this._id}}>
-		<h1>this is fitpost {{addOne @index}}</h1>
+	<li class="fitpost" id={{this.username}}>
+		<h3 id="user{{addOne @index}}">{{this.username}}</h3>
+		<button class="follow" id="follow{{addOne @index}}" data-part="{{this.user_id}}">Follow</button>
+		<button class="unfollow" id="unfollow{{addOne @index}}" data-part="{{this.user_id}}">Unfollow</button>
 		<p>Headwear:</p>
 		<button class="closet" id="closet-{{this.headid}}">Save</button>
 		<img src="{{this.headUrl}}" style="width: 200px; height: 200px" alt="head Image" />
@@ -44,7 +46,7 @@
 		<p>Posted Date: {{postedDate}}</p>
 	</li>
 	{{/each}}
-</ol>
+</ul>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"
 	integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
