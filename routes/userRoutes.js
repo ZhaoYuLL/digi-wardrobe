@@ -11,10 +11,13 @@ import {
   searchByUID,
 } from "../data/fitposts.js";
 import { getAllOutfitPieces } from "../data/testCloset.js";
+import { getAllFitpics, getFitpicsByUsername } from "../data/fitpics.js";
+
 import {
   addSignedUrlsToFitPosts_in_wardrobe,
   addSignedUrlsToFitPosts_in_closet,
-  addDescLinksForFitposts
+  addDescLinksForFitposts,
+  addSignedUrlsToFitPosts_in_fitpics
 } from "../helper.js";
 
 import { addSignedUrlsToFitPosts_in_fitposts, validString } from "../helper.js";
@@ -162,6 +165,8 @@ router.route("/userProfile").get(async (req, res) => {
     const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_closet(
       outfitpieces
     );
+    const fitpics = await getFitpicsByUsername(username);
+    const fitUrls = await addSignedUrlsToFitPosts_in_fitpics(fitpics);
 
     // Add signed URLs to fitposts
     const fitpostsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
@@ -182,7 +187,8 @@ router.route("/userProfile").get(async (req, res) => {
       wardrobes,
       wardrobes: postsWithSignedUrls,
       outfitpiecesJson: JSON.stringify(postsWithSignedUrls),
-      following
+      following,
+      fitpics: fitUrls
     });
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -269,6 +275,13 @@ router.route("/logout").get(async (req, res) => {
   //code here for GET
   req.session.destroy();
   res.render("logout", { title: "Logout Page" });
+});
+router.route("/fitpics").get(async (req, res) => {
+  const fitpics = await getAllFitpics();
+  const fitUrls = await addSignedUrlsToFitPosts_in_fitpics(fitpics);
+
+  res.render("fitpics", {title : "fitpics",
+  fitpics: fitUrls})
 });
 
 export default router;

@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as fp from "../data/fitposts.js";
 import * as user from "../data/users.js";
 import * as wardrobe from "../data/wardrobes.js";
+import * as fitpics from "../data/fitpics.js"
 import { fitposts, users } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 import {
@@ -11,9 +12,16 @@ import {
     addSignedUrlsToPosts,
     addSignedUrlsToOutfitPieces,
     addDescLinksForFitposts,
+    generateFileName,
+    uploadImageToS3
 } from "../helper.js";
 import xss from "xss";
 import { getAllFromCloset } from '../data/outfitPieces.js';
+import { storeFitpic, getFitpic } from "../data/fitpics.js";
+import multer from "multer";
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const router = Router();
 
@@ -80,13 +88,15 @@ router.route('/create')
             return res.status(500).send(e.message);
         }
     })
-    .post(async (req, res) => {
+    .post(upload.single("fitpic"), async (req, res) => {
         //console.log("found the post route!");
         if (req.session && req.session.user) {
             let data = req.body;
             const user = req.session.user;
             //console.log(user);
-
+            const imageName = await generateFileName();
+			const img = await uploadImageToS3(req.file, 1920, 1080, imageName);
+            const a = await storeFitpic(imageName,req.session.user.username)
             try {
                 if (!data.headwear) throw new Error("Headwear not provided in route");
                 if (!data.bodywear) throw new Error("Bodywear not provided in route");

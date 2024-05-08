@@ -345,3 +345,16 @@
     $(".container").append(imgElement);
   }
 </script>
+<div class="fitpics-container">
+  <h1>My Fitpics</h1>
+  {{#each fitpics}}
+  <div class="fitpic" data-fitpic-id="">
+    <img
+      src="{{this.imageUrl}}"
+      width="200px;"
+      height="200px"
+      alt="fitpic Image"
+    />
+  </div>
+  {{/each}}
+</div>

@@ -20,3 +20,5 @@ export const users = getCollectionFn("users");
 export const fitposts = getCollectionFn("fitpostCollection");
 export const outfitPieces = getCollectionFn("outfitPieceCollection");
 export const wardrobe = getCollectionFn("wardrobe");
+export const fitpics = getCollectionFn("fitpics");
+
