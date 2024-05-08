@@ -179,6 +179,26 @@ import * as fp from '../../data/fitposts.js';*/
     });
 
 
+    followButtons.on('click', function(event) {
+        let fid = $(this).attr('data-part');
+        let requestConfig = {
+            method: 'POST',
+            url:   `${routing}/follow`,
+            contentType: 'application/json',
+            data: JSON.stringify({
+                userId: loggedUser,
+                followId: fid
+            })
+        };
+
+        $.ajax(requestConfig).then(function (response) {
+            console.log(response);
+            let fbs = $(`.follow[data-part=${fid}]`);
+            fbs.hide();
+            let ubs = $(`.unfollow[data-part=${fid}]`)
+            ubs.show();
+        });
+    });
 
 })(window.jQuery);
 

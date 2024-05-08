@@ -437,6 +437,13 @@ router.post("/closet", async (req, res) => {
     return res.status(200).json(updated);
 });
 
+router.post("/follow", async (req, res) => {
+    const data = req.body;
+    const userId = req.session.user._id;
+    await user.follow(userId, data.followId);
+    return res.status(200).json('updated');
+});
+
 
 
 
