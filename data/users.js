@@ -484,6 +484,69 @@ const addToCloset = async (userId, pid) => {
   updatedInfo._id = updatedInfo._id.toString();
   return updatedInfo;
 };
+
+
+
+
+const follow = async (userId, followId) => {
+  const userCollection = await users();
+  const user = await userCollection.findOne({ _id: new ObjectId(userId) });
+
+  if (user === null) throw 'No user with that id';
+
+  let following = user.following;
+  following.push(followId);
+
+
+
+  const updateUser = {
+      following: following
+  };
+
+  const updatedInfo = await userCollection.findOneAndUpdate(
+      { _id: new ObjectId(userId) },
+      { $set: updateUser },
+      { returnDocument: 'after' }
+  );
+
+  if (!updatedInfo) {
+      throw 'Could not update user successfully';
+  }
+
+  updatedInfo._id = updatedInfo._id.toString();
+  return updatedInfo;
+}
+
+
+const unfollow = async (userId, unfollowId) => {
+  const userCollection = await users();
+  const user = await userCollection.findOne({ _id: new ObjectId(userId) });
+
+  if (user === null) throw 'No user with that id';
+
+  let following = user.following;
+  const index = following.indexOf(unfollowId);
+  if (index !== -1) {
+      following.splice(index, 1);
+  }
+
+  const updateUser = {
+      following: following
+  };
+
+  const updatedInfo = await userCollection.findOneAndUpdate(
+      { _id: new ObjectId(userId) },
+      { $set: updateUser },
+      { returnDocument: 'after' }
+  );
+
+  if (!updatedInfo) {
+      throw 'Could not update user successfully';
+  }
+
+  updatedInfo._id = updatedInfo._id.toString();
+  return updatedInfo;
+}
 /*const checkSave = async(userId, fpId, wardrobeId) => {
     const user = await getUserById(userId);
     if (user) {
@@ -499,16 +562,4 @@ const addToCloset = async (userId, pid) => {
 
 
 export { getAllUsers, getUserById, createUser, updateUserInfo, deleteUser, loginUser, checkLike, addLike, removeLike, addWardrobe, addToCloset, follow, unfollow };
-export {
-  getAllUsers,
-  getUserById,
-  createUser,
-  updateUserInfo,
-  deleteUser,
-  loginUser,
-  checkLike,
-  addLike,
-  removeLike,
-  addWardrobe,
-  addToCloset,
-};
+

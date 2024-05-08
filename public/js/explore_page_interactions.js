@@ -220,5 +220,6 @@ import * as fp from '../../data/fitposts.js';*/
             ubs.hide();
         });
     });
+});
 
 })(window.jQuery);
