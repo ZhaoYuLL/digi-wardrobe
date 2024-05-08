@@ -32,12 +32,15 @@ router.route("/").get(async (req, res) => {
         }
         const postsWithDescLinks = await addDescLinksForFitposts(postsWithSignedUrls);
         let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
-
+        //res.send(req.session.user);
         return res.render("explore_page", {
             title: "Explore",
             fitposts: postsWithDescLinks,
             wardrobes: drobes,
+            userId: req.session.user.userId,
         });
+
+   
     } catch (e) {
         return res.status(500).send(e);
     }
@@ -190,7 +193,7 @@ router.route("/trending").get(async (req, res) => {
             title: "Trending",
             fitposts: postsWithDescLinks,
             wardrobes: drobes,
-            username: req.session.user.username,
+            userId: req.session.user.userId,
         });
     } catch (e) {
         return res.status(500).send(e);
@@ -217,7 +220,7 @@ router.route("/latest").get(async (req, res) => {
             title: "Latest",
             fitposts: postsWithDescLinks,
             wardrobes: drobes,
-            username: req.session.user.username,
+            userId: req.session.user.userId,
         });
     } catch (e) {
         return res.status(500).send(e);
@@ -252,7 +255,7 @@ router.route("/user/:uid").get(async (req, res) => {
             title: `${req.session.user.username}'s FitPosts`,
             fitposts: postsWithDescLinks,
             wardrobes: drobes,
-            username: req.session.user.username,
+            userId: req.session.user.userId,
         });
     } catch (e) {
         return res.status(500).send(e);
@@ -304,14 +307,23 @@ router.get("/favorites", async (req, res) => {
             title: "Favorites",
             fitposts: postsWithDescLinks,
             wardrobes: drobes,
-            username: req.session.user.username,
+            userId: req.session.user.userId,
         });
     } catch (error) {
         console.error("Error retrieving favorites:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 
-})
+});
+
+router.route('/profile').get(async (req, res) => {
+    try {
+        return res.status(200).send(req.session.user);
+    } catch (error) {
+        console.error("Error in /profile route:", error);
+        return res.status(500).send("Internal Server Error ggs");
+    }
+});
 
 router.route("/:id").get(async (req, res) => {
     //console.log(req.params.id);
@@ -338,6 +350,10 @@ router.route("/:id").get(async (req, res) => {
         return res.status(500).send(e);
     }
 });
+
+
+
+
 
 // POST route for handling like action
 router.post("/like", async (req, res) => {
@@ -420,6 +436,8 @@ router.post("/closet", async (req, res) => {
     let updated = await user.addToCloset(userId, data.pid);
     return res.status(200).json(updated);
 });
+
+
 
 
 export default router;

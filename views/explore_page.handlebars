@@ -1,12 +1,12 @@
 <h1>{{title}}</h1>
 
 
-<ul class="fitposts" id={{username}}>
+<ul class="fitposts" id={{userId}}>
 	{{#each fitposts}}
 	<li class="fitpost" id={{this.username}}>
 		<h3 id="user{{addOne @index}}">{{this.username}}</h3>
-		<button class="follow" id="follow-{{this.user_id}}">Follow</button>
-		<button class="unfollow" id="unfollow-{{this.user_id}}">Unollow</button>
+		<button class="follow" id="follow{{addOne @index}}" data-part="{{this.user_id}}">Follow</button>
+		<button class="unfollow" id="unfollow{{addOne @index}}" data-part="{{this.user_id}}">Unfollow</button>
 		<p>Headwear:</p>
 		<button class="closet" id="closet-{{this.headid}}">Save</button>
 		<img src="{{this.headUrl}}" style="width: 200px; height: 200px" alt="head Image" />

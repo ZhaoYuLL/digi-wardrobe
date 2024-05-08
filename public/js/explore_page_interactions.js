@@ -11,25 +11,53 @@ import * as fp from '../../data/fitposts.js';*/
         dropdown = $('.wardrobe-select'),
         closetButtons = $('.closet'),
         followButtons = $('.follow'),
-        unfollowButtons = $('.unfollow');
+        unfollowButtons = $('.unfollow'),
+        doc = $('.fitposts');
+    
+    followButtons.hide();
+    unfollowButtons.hide();
+
+    let loggedUser = doc.attr('id');
 
     let requestConfig = {
         method: 'GET',
-        url: `${routing}`
+        url: `${routing}/profile`
         };
 
 
-    // ajax request upon load
     $.ajax(requestConfig).then(function (response) {
-        console.log('ajax request upon reload?', followButtons);
-        for (button of followButtons) {
-            console.log(button);
+        console.log('this is user', response);
+        let following = response.following;
+        loggedUser = response._id;
+        console.log(loggedUser);
+
+        for (let button of followButtons) {
+            let $button = $(button); // Wrap the button with jQuery
+            if ($button.attr('data-part') !== loggedUser){
+                if (following.includes($button.attr('data-part'))) {
+                    continue;
+                } else {
+                    console.log('display button');
+                    $button.show();
+                }
+            }
         }
+    
+        for (let button of unfollowButtons) {
+            let $button = $(button); // Wrap the button with jQuery
+            if ($button.attr('ooga') !== loggedUser){
+                if (following.includes($button.attr('ooga'))) {
+                    $button.show();
+                } else {
+                    continue;
+                }
+            }
+        }
+    });
 
-    });        
 
 
-  
+    
 
     likeButtons.on('click', function(event) {
         event.preventDefault();
@@ -126,7 +154,6 @@ import * as fp from '../../data/fitposts.js';*/
                 console.log('updated wardrobe');
                 
                 
-                
             });
             
         }
@@ -150,6 +177,8 @@ import * as fp from '../../data/fitposts.js';*/
         });
         
     });
+
+
 
 })(window.jQuery);
 
