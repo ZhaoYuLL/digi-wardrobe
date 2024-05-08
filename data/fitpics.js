@@ -30,7 +30,8 @@ export const getFitpic = async (imageName) => {
 export const getAllFitpics = async () => {
     const fitpicCollection = await fitpics();
     let fpList = await fitpicCollection.find({}).toArray();
-    if (!fpList) throw "There are no fitpics";
+    console.log(fpList)
+    if (fpList.length === 0) return [];
   
     // replaces ObjectId with string
     fpList = fpList.map((element) => {
@@ -44,14 +45,3 @@ export const getAllFitpics = async () => {
   
     return fpList;
   };
-  export const getFitpicsByUsername = async (username) => {
-    const fitpicCollection = await fitpics(); 
-    const fitpicsByUsername = await fitpicCollection.find({
-        username: username,
-    }).toArray();
-    if (fitpicsByUsername.length > 0) {
-        return fitpicsByUsername;
-    } else {
-        throw new Error("No fitpics found for the username");
-    }
-}

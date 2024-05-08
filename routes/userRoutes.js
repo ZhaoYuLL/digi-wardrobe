@@ -11,7 +11,7 @@ import {
   searchByUID,
 } from "../data/fitposts.js";
 import { getAllOutfitPieces } from "../data/testCloset.js";
-import { getAllFitpics, getFitpicsByUsername } from "../data/fitpics.js";
+import { getAllFitpics } from "../data/fitpics.js";
 
 import {
   addSignedUrlsToFitPosts_in_wardrobe,
@@ -165,9 +165,6 @@ router.route("/userProfile").get(async (req, res) => {
     const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_closet(
       outfitpieces
     );
-    const fitpics = await getFitpicsByUsername(username);
-    const fitUrls = await addSignedUrlsToFitPosts_in_fitpics(fitpics);
-
     // Add signed URLs to fitposts
     const fitpostsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
       allFitposts
@@ -188,7 +185,6 @@ router.route("/userProfile").get(async (req, res) => {
       wardrobes: postsWithSignedUrls,
       outfitpiecesJson: JSON.stringify(postsWithSignedUrls),
       following,
-      fitpics: fitUrls
     });
   } catch (error) {
     console.error("Error fetching user data:", error);
