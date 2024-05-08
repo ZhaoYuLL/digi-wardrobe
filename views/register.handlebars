@@ -2,44 +2,48 @@
 
 <h2>Register</h2>
 
-<form action="/register" method="POST" id="signup-form">
+<form
+  action="/register"
+  method="POST"
+  id="signup-form"
+  enctype="multipart/form-data"
+>
   <div>
     <label for="userName">Username:</label>
-    <input type="text" id="userName" name="userName">
+    <input type="text" id="userName" name="userName" />
   </div>
   <div>
     <label for="firstName">First Name:</label>
-    <input type="text" id="firstName" name="firstName">
+    <input type="text" id="firstName" name="firstName" />
   </div>
   <div>
     <label for="lastName">Last Name:</label>
-    <input type="text" id="lastName" name="lastName">
+    <input type="text" id="lastName" name="lastName" />
   </div>
   <div>
     <label for="age">Age:</label>
-    <input type="number" id="age" name="age">
+    <input type="number" id="age" name="age" />
   </div>
   <div>
     <label for="email">Email:</label>
-    <input type="email" id="email" name="email">
+    <input type="email" id="email" name="email" />
   </div>
   <div>
     <label for="password">Password:</label>
-    <input type="password" id="password" name="password">
+    <input type="password" id="password" name="password" />
   </div>
   <div>
     <label for="confirmPassword">Confirm Password:</label>
-    <input type="password" id="confirmPassword" name="confirmPassword">
+    <input type="password" id="confirmPassword" name="confirmPassword" />
   </div>
   <div>
     <label for="bio">Bio:</label>
-    <textarea id="bio" name="bio" ></textarea>
+    <textarea id="bio" name="bio"></textarea>
   </div>
   <button type="submit" id="submitButton">Submit</button>
 </form>
 <p id="errorMessage">{{error}}</p>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/public/js/clientVal.js"></script>
-
 
 <a href="/login">Already have an account? Click here to log-in</a>
