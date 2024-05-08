@@ -62,9 +62,11 @@ router
     if (!req.session || !req.session.user) {
       return res.status(500).send("Not logged in");
     } else {
+      let imageName;
+      let img;
       if (req.file) {
-        const imageName = await generateFileName();
-        const img = await uploadImageToS3(req.file, 1920, 1080, imageName);
+        imageName = await generateFileName();
+        img = await uploadImageToS3(req.file, 1920, 1080, imageName);
       }
 
       let data = req.body;
@@ -73,7 +75,12 @@ router
         data.description = xss(data.description);
         validURL(data.description);
       } catch (e) {
-        return res.status(400).send(e);
+        console.log("not valid url");
+        return res.status(400).render("outfitpieces", {
+          title: "My Clothes",
+          error:
+            "Not Valid Url. Needs http://www, followed by 5-26 characters, and ending with .com",
+        });
       }
       try {
         data.link = validString(data.link);
