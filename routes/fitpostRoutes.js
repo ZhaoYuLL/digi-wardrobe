@@ -339,6 +339,50 @@ router.route('/profile').get(async (req, res) => {
     }
 });
 
+router.route("/following").get(async (req, res) => {
+    console.log('takis following');
+    if (!req.session.user) {
+        return res.redirect("/login");
+      }
+    
+      try {
+        const { following } = req.session.user;
+        //const following = req.session.user;
+        console.log('this is following', following);
+        const followingUserIds = [...following];
+        
+        console.log('this is folowing uid', followingUserIds);
+        const allFitposts = [];
+        for (const userId of followingUserIds) {
+          const fitposts = await searchByUID(userId);
+          allFitposts.push(...fitposts);
+        }
+    
+        const fitpostsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
+          allFitposts
+        );
+
+        for (let fit of fitpostsWithSignedUrls) {
+            fit.postedDate = convertDate(fit);
+          }
+
+          let drobes = await wardrobe.getWardrobesByIds(req.session.user.wardrobes);
+
+    
+        return res.render("explore_page", {
+            title: "Following",
+            fitposts: fitpostsWithSignedUrls,
+            wardrobes: drobes,
+            userId: req.session.user.userId,
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).render("error", {
+          error: "An error occurred while fetching following data",
+        });
+      }
+})
+
 router.route("/:id").get(async (req, res) => {
     //console.log(req.params.id);
     if (!req.session || !req.session.user) {
