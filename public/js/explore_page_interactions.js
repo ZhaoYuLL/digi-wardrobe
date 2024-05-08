@@ -98,43 +98,58 @@ import * as fp from '../../data/fitposts.js';*/
             newWardrobeName = input.val();
             input.focus(); 
             // wait for user input
-            input.keypress(function(event) {
-                if (event.which === 13) { // when enter is clicked
-                    event.preventDefault();
-                    let newWardrobeName = input.val();
-                    console.log(newWardrobeName);
-                    if (typeof newWardrobeName !== "string" || !newWardrobeName) {
-                        alert('invalid naming');
-                    } else {
-                        let inputTrim = newWardrobeName.trim();
-                        if (inputTrim.length === 0) {
-                            alert('no name was entered');
-                        }
-                        newWardrobeName = inputTrim;
-                    }
-                    input.hide();
-                    let requestData = {
-                        fitpostId: currentId,
-                        wardrobeId: drobeId,
-                        newName: newWardrobeName
-                    };
-                
-                    let requestConfig = {
-                        method: 'POST',
-                        url: `${routing}/save`,
-                        contentType: 'application/json',
-                        data: JSON.stringify(requestData)
-                    };
-                    $.ajax(requestConfig).then(function (response) { 
-                        //console.log('this is wardrobe',response);
-                        // add new wardrobe name to the dropdown
-                        let newOption = `<option value="${response._id}">${response.wardrobeName}</option>`;
-                        $(".wardrobe-select").append(newOption);
-                    });
-                }
-                
-        
+      let ajaxInProgress = false; // Flag variable to track AJAX request status
+
+      input.on("keypress", function (event) {
+        if (event.which === 13 && !ajaxInProgress) {
+          event.preventDefault();
+          let newWardrobeName = input.val();
+          console.log(newWardrobeName);
+          if (typeof newWardrobeName !== "string" || !newWardrobeName) {
+            alert("invalid naming");
+          } else {
+            let inputTrim = newWardrobeName.trim();
+            if (inputTrim.length === 0) {
+              alert("no name was entered");
+            }
+            newWardrobeName = inputTrim;
+          }
+
+          let requestData = {
+            fitpostId: currentId,
+            wardrobeId: drobeId,
+            newName: newWardrobeName,
+          };
+
+          let requestConfig = {
+            method: "POST",
+            url: `${routing}/save`,
+            contentType: "application/json",
+            data: JSON.stringify(requestData),
+          };
+
+          ajaxInProgress = true; // Set the flag to indicate AJAX request in progress
+
+          $.ajax(requestConfig)
+            .then(function (response) {
+              console.log("response");
+              if (response === "Duplicate") {
+                alert("Cannot have duplicate wardrobenames");
+                ajaxInProgress = false;
+              } else {
+                let newOption = `<option value="${response._id}">${response.wardrobeName}</option>`;
+                $(".wardrobe-select").append(newOption);
+                input.hide(); // Hide the input field
+              }
+            })
+            .catch(function (error) {
+              console.error("Error:", error);
+            })
+            .finally(function () {
+              ajaxInProgress = false; // Reset the flag
             });
+        }
+      });
         }
         else { // adding fp to existing wardrobe
             let requestData = {
