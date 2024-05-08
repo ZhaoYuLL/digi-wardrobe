@@ -50,31 +50,56 @@
     <div class="fitposts">
       {{#each fitposts}}
       <div class="fitpost">
-        <h1>this is fitpost {{addOne @index}}</h1>
-        <p>headwear</p>
+        <h3>{{this.username}}'s fitpost</h3>
+        {{addOne @index}}
+        <p>Headwear:</p>
         <img
           src="{{this.headUrl}}"
           style="width: 200px; height: 200px"
           alt="head Image"
         />
-        <p>bodywear:</p>
+        {{!--
+        <p>Description: {{this.headDesc}}</p>
+        --}}
+        <p>
+          <a href="{{this.headLink}}" target="_blank">Link</a>
+        </p>
+        <p>Bodywear:</p>
         <img
           src="{{this.bodyUrl}}"
           style="width: 200px; height: 200px"
           alt="head Image"
         />
-        <p>legwear:</p>
+        {{!--
+        <p>Description: {{this.bodyDesc}}</p>
+        --}}
+        <p>
+          <a href="{{this.bodyLink}}" target="_blank">Link</a>
+        </p>
+        <p>Legwear:</p>
         <img
           src="{{this.legUrl}}"
           style="width: 200px; height: 200px"
           alt="head Image"
         />
-        <p>footwear:</p>
+        {{!--
+        <p>Description: {{this.legDesc}}</p>
+        --}}
+        <p>
+          <a href="{{this.legLink}}" target="_blank">Link</a>
+        </p>
+        <p>Footwear:</p>
         <img
           src="{{this.footUrl}}"
           style="width: 200px; height: 200px"
           alt="head Image"
         />
+        {{!--
+        <p>Description: {{this.footDesc}}</p>
+        --}}
+        <p>
+          <a href="{{this.footLink}}" target="_blank">Link</a>
+        </p>
         <p>likes: {{likes}}</p>
         <p>saves: {{saves}}</p>
         <p>Posted Date: {{postedDate}}</p>
@@ -86,7 +111,7 @@
 </div>
 
 <script>
-  var ward = {{{wardrobesJson}}}
+  var ward = {{{ wardrobesJson }}}
   var currentIndex = {};
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -101,7 +126,6 @@
     }
 
     // Add event listeners to the buttons
-    console.log(window.wardrobesData);
 
     var nextButtons = document.getElementsByClassName("next-button");
     for (var i = 0; i < nextButtons.length; i++) {

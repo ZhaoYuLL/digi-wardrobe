@@ -46,6 +46,7 @@ const trending = async () => {
 
 const searchByUID = async (uid) => {
   uid = validString(uid);
+  if (!ObjectId.isValid(uid)) throw new Error(`${uid} is not a valid ObjectId`);
   let fpList = await latest();
   fpList = fpList.filter((fp) => fp.user_id === uid);
   if (!fpList) throw "There are no user of that id";
@@ -55,6 +56,7 @@ const searchByUID = async (uid) => {
 
 const searchByFPID = async (id) => {
   id = validString(id);
+  if (!ObjectId.isValid(id)) throw new Error(`${id} is not a valid ObjectId`);
   const fitpostCollection = await fitposts();
   const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
   if (fp === null) throw "No fitpost with that id";
@@ -67,6 +69,7 @@ const searchByFPID = async (id) => {
 
 const addLike = async (id) => {
   id = validString(id);
+  if (!ObjectId.isValid(id)) throw new Error(`${id} is not a valid ObjectId`);
   const fitpostCollection = await fitposts();
   const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
   if (fp === null) throw "No fitpost with that id";
@@ -93,6 +96,7 @@ const addLike = async (id) => {
 
 const removeLike = async (id) => {
   id = validString(id);
+  if (!ObjectId.isValid(id)) throw new Error(`${id} is not a valid ObjectId`);
   const fitpostCollection = await fitposts();
   const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
   if (fp === null) throw "No fitpost with that id";
@@ -120,6 +124,7 @@ const removeLike = async (id) => {
 
 const addSave = async (id) => {
   id = validString(id);
+  if (!ObjectId.isValid(id)) throw new Error(`${id} is not a valid ObjectId`);
   const fitpostCollection = await fitposts();
   const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
   if (fp === null) throw "No fitpost with that id";
@@ -157,15 +162,16 @@ const createFP = async (
 ) => {
   // find a way to validate these ids
   user_id = validString(user_id);
+  if (!ObjectId.isValid(user_id)) throw new Error(`${user_id} is not a valid ObjectId`);
   username = validString(username);
   headwear = validString(headwear);
   bodywear = validString(bodywear);
   legwear = validString(legwear);
   footwear = validString(footwear);
-  headid = validString(head_id);
-  bodyid = validString(body_id);
-  legid = validString(leg_id);
-  footid = validString(foot_id);
+  headid = validString(headid);
+  bodyid = validString(bodyid);
+  legid = validString(legid);
+  footid = validString(footid);
 
   let likes = 0;
   let saves = 0;
@@ -203,6 +209,7 @@ const createFP = async (
 
 const deleteFitpost = async (fitpost_id) => {
   //   fitpost_id = validString(fitpost_id);
+  if (!ObjectId.isValid(fitpost_id)) throw new Error(`${fitpost_id} is not a valid ObjectId`);
 
   const fitpostCollection = await fitposts();
   const deletionInfo = await fitpostCollection.deleteOne({
@@ -217,6 +224,7 @@ const deleteFitpost = async (fitpost_id) => {
 };
 
 const updateFitpost = async (fitpost_id, attribute, changed_to) => {
+  if (!ObjectId.isValid(fitpost_id)) throw new Error(`${fitpost_id} is not a valid ObjectId`);
   const fitpostCollection = await fitposts();
 
   try {
@@ -237,6 +245,7 @@ const updateFitpost = async (fitpost_id, attribute, changed_to) => {
 
 const searchBySID = async (id) => {
   id = validString(id);
+  //if (!ObjectId.isValid(id)) throw new Error(`${id} is not a valid ObjectId`);
   const fitpostCollection = await fitposts();
   const fp = await fitpostCollection.findOne({ _id: new ObjectId(id) });
   if (fp === null) throw "No fitpost with that id";

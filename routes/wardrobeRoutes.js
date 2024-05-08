@@ -8,9 +8,11 @@ import {
   addSignedUrlsToFitPosts_in_wardrobe,
   addSignedUrlsToFitPosts_in_closet,
   addSignedUrlsToFitPosts_in_fitposts,
+  addDescLinksForFitposts_inWardrobes,
 } from "../helper.js";
-import xss from 'xss';
-import { getAllFromCloset, getAllImages } from "../data/outfitPieces.js";
+import xss from "xss";
+import { getAllFromCloset } from "../data/outfitPieces.js";
+import { getAllWardrobes, getWardrobesByUsername } from "../data/wardrobes.js";
 
 const router = Router();
 
@@ -27,7 +29,7 @@ router.get("/closet", async (req, res) => {
     res.status(500).send("Not logged in");
   }
   try {
-    const outfitpieces = await getAllImages(req.session.user.username);
+    const outfitpieces = await getAllFromCloset(req.session.user.username);
     const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_closet(
       outfitpieces
     );
@@ -42,7 +44,6 @@ router.get("/closet", async (req, res) => {
   } catch (error) {
     res.status(500).send(error);
   }
-
 });
 router.get("/wardrobe", async (req, res) => {
   // Render your sign-in page
@@ -50,21 +51,22 @@ router.get("/wardrobe", async (req, res) => {
     res.status(500).send("Not logged in");
   }
   try {
-    const outfits = await getAllOutfits();
+    const outfits = await getWardrobesByUsername(req.session.user.username);
     const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_wardrobe(
       outfits
     );
-    //   console.log(postsWithSignedUrls[0].wardrobeName);
-    // console.log(postsWithSignedUrls.fitposts);
+    const postsWithDescLinks = await addDescLinksForFitposts_inWardrobes(
+      postsWithSignedUrls
+    );
+
     res.render("wardrobe", {
       title: "Wardrobe Page",
-      wardrobes: postsWithSignedUrls,
+      wardrobes: postsWithDescLinks,
       wardrobesJson: JSON.stringify(postsWithSignedUrls),
     });
   } catch (error) {
     res.status(500).send(error);
   }
-
 });
 router.get("/favorites", async (req, res) => {
   // Render your sign-in page
@@ -81,11 +83,11 @@ router.get("/favorites", async (req, res) => {
         { favorite: 1 }
       );
       //   const favoriteIds = user.favorite;
-      //console.log("user:", user);
+
       // Convert favoriteIds to ObjectId
       const favoriteIds = ["6638dc15cdc617f979c324e8"];
       const favoriteObjectIds = favoriteIds.map((id) => new ObjectId(id));
-      //console.log("ids:", favoriteObjectIds);
+
       // Find the fitposts that match the favorite IDs
       const fitpostCollection = await fitposts();
       const favoriteFitposts = await fitpostCollection
@@ -114,37 +116,4 @@ router.get("/favorites", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-/*
-router.post("/create-fitpost", async (req, res) => {
-  try {
-    const selectedOutfits = JSON.parse(req.body.msg);
-    console.log("Received selected outfits:", selectedOutfits);
-
-    // Extract the outfit data from the selectedOutfits object
-    const { foot, body, leg, head } = selectedOutfits;
-
-    console.log("foot", foot);
-    console.log("body", body);
-    console.log("leg", leg);
-    console.log("head", head);
-
-    // Call the createFP function with the received data
-    const newFitpost = await createFP(
-      "user123", // Replace with the actual user ID
-      "johndoe", // Replace with the actual username
-      head,
-      body,
-      leg,
-      foot
-    );
-
-    // Send a success response back to the client as JSON
-    res.json({ message: "Fitpost created successfully", fitpost: newFitpost });
-  } catch (error) {
-    console.error("Error creating fitpost:", error);
-    res
-      .status(500)
-      .json({ message: "Error creating fitpost", error: error.message });
-  }
-});*/
 export default router;

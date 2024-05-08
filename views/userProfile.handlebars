@@ -5,6 +5,11 @@
 <div>
   <p id="welcome">Welcome {{firstName}} {{lastName}}</p>
   <h2 id="userName">{{userName}}</h2>
+  <img
+    src="{{profilePicture}}"
+    style="width: 200px; height: 200px"
+    alt="profilepic"
+  />
 </div>
 <div></div>
 <div class="container">
@@ -13,15 +18,15 @@
 </div>
 
 <div class="fitposts-container">
+  {{!--
   <h1>My fitposts</h1>
-  {{#each allFitposts}}
+  --}} {{#each allFitposts}}
   <div class="fitpost" data-fitpost-id="{{_id}}">
     <h1>Fitpost {{addOne @index}}</h1>
     <p>Headwear:</p>
     <img
       src="{{this.headUrl}}"
-      width="200px;"
-      height="200px"
+      style="width: 200px; height: 200px"
       alt="Head Image"
       data-headid="{{this.headid}}"
       data-headwear="{{this.headwear}}"
@@ -29,8 +34,7 @@
     <p>Bodywear:</p>
     <img
       src="{{this.bodyUrl}}"
-      width="200px;"
-      height="200px"
+      style="width: 200px; height: 200px"
       alt="Body Image"
       data-bodyid="{{this.bodyid}}"
       data-bodywear="{{this.bodywear}}"
@@ -38,8 +42,7 @@
     <p>Legwear:</p>
     <img
       src="{{this.legUrl}}"
-      width="200px;"
-      height="200px"
+      style="width: 200px; height: 200px"
       alt="Leg Image"
       data-legid="{{this.legid}}"
       data-legwear="{{this.legwear}}"
@@ -47,8 +50,7 @@
     <p>Footwear:</p>
     <img
       src="{{this.footUrl}}"
-      width="200px;"
-      height="200px"
+      style="width: 200px; height: 200px"
       alt="Foot Image"
       data-footid="{{this.footid}}"
       data-footwear="{{this.footwear}}"
