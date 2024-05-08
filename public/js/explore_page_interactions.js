@@ -45,8 +45,8 @@ import * as fp from '../../data/fitposts.js';*/
     
         for (let button of unfollowButtons) {
             let $button = $(button); // Wrap the button with jQuery
-            if ($button.attr('ooga') !== loggedUser){
-                if (following.includes($button.attr('ooga'))) {
+            if ($button.attr('data-part') !== loggedUser){
+                if (following.includes($button.attr('data-part'))) {
                     $button.show();
                 } else {
                     continue;
@@ -197,6 +197,27 @@ import * as fp from '../../data/fitposts.js';*/
             fbs.hide();
             let ubs = $(`.unfollow[data-part=${fid}]`)
             ubs.show();
+        });
+    });
+
+    unfollowButtons.on('click', function(event) {
+        let fid = $(this).attr('data-part');
+        let requestConfig = {
+            method: 'POST',
+            url:   `${routing}/unfollow`,
+            contentType: 'application/json',
+            data: JSON.stringify({
+                userId: loggedUser,
+                followId: fid
+            })
+        };
+
+        $.ajax(requestConfig).then(function (response) {
+            console.log(response);
+            let fbs = $(`.follow[data-part=${fid}]`);
+            fbs.show();
+            let ubs = $(`.unfollow[data-part=${fid}]`)
+            ubs.hide();
         });
     });
 

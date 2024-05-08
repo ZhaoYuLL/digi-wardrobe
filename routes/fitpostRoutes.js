@@ -444,6 +444,15 @@ router.post("/follow", async (req, res) => {
     return res.status(200).json('updated');
 });
 
+router.post("/unfollow", async (req, res) => {
+    const data = req.body;
+    const userId = req.session.user._id;
+    await user.unfollow(userId, data.followId);
+    return res.status(200).json('updated');
+});
+
+
+
 
 
 
