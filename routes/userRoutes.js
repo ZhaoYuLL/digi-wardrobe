@@ -11,6 +11,7 @@ import {
 } from "../data/fitposts.js";
 import { getAllOutfitPieces } from "../data/testCloset.js";
 import { getAllFitpics } from "../data/fitpics.js";
+import { getOutfitPiecesByUsername } from "../data/outfitPieces.js";
 
 import {
   addSignedUrlsToFitPosts_in_wardrobe,
@@ -21,6 +22,7 @@ import {
   addSignedUrlsToProfile,
   addSignedUrlsToFitPosts_in_fitposts,
   validString,
+  addSignedUrlsToFitPosts_in_fitpics
 } from "../helper.js";
 
 const router = Router();
@@ -74,7 +76,6 @@ router.get("/userProfile", async (req, res) => {
       allFitposts: fitpostsWithOutfitDescLinks,
       wardrobes: postsWithSignedUrls,
       outfitpiecesJson: JSON.stringify(postsWithSignedUrls),
-      following,
       following,
     });
   } catch (error) {
@@ -270,7 +271,11 @@ router.get("/logout", async (req, res) => {
 });
 router.route("/fitpics").get(async (req, res) => {
   const fitpics = await getAllFitpics();
-  const fitUrls = await addSignedUrlsToFitPosts_in_fitpics(fitpics);
+  let fitUrls;
+  if(fitpics.length === 0){
+   fitUrls = await addSignedUrlsToFitPosts_in_fitpics(fitpics);
+
+  }
 
   res.render("fitpics", {title : "fitpics",
   fitpics: fitUrls})

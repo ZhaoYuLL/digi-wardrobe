@@ -6,12 +6,6 @@ import * as fitpics from "../data/fitpics.js"
 import { fitposts, users } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 import {
-  validString,
-  addSignedUrlsToFitPosts_in_fitposts,
-  convertDate,
-  addSignedUrlsToPosts,
-  addSignedUrlsToOutfitPieces,
-  addDescLinksForFitposts,
     validString,
     addSignedUrlsToFitPosts_in_fitposts,
     convertDate,
