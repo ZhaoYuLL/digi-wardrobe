@@ -274,43 +274,6 @@ const seedOutfitPieces = async () => {
   );
 };
 
-const newUser = {
-  _id: new ObjectId("611a24a197aa3b5a1d315701"),
-  username: "spongebob",
-  firstName: "spongebob",
-  lastName: "squarepants",
-  age: "420",
-  email: "pineapple@underthesea@gmail.com",
-  password: await passwordHelper("Squidward1@"),
-  profilePicture:
-    "88191896f6945e8aaff7451f6fffd55e0644305a9876b2465873dda7d4a256b3",
-  wardrobes: [],
-  closet: [
-    "711a24a197aa3b5a1c314701",
-    "711a24a197aa3b5a1c314702",
-    "711a24a197aa3b5a1c314703",
-    "711a24a197aa3b5a1c314704",
-    "711a24a197aa3b5a1c314705",
-    "811a24a197aa3b5a1c314701",
-    "811a24a197aa3b5a1c314702",
-    "811a24a197aa3b5a1c314703",
-    "811a24a197aa3b5a1c314704",
-    "811a24a197aa3b5a1c314705",
-    "911a24a197aa3b5a1c314701",
-    "911a24a197aa3b5a1c314702",
-    "911a24a197aa3b5a1c314703",
-    "911a24a197aa3b5a1c314704",
-    "911a24a197aa3b5a1c314705",
-    "101a24a197aa3b5a1c314701",
-    "101a24a197aa3b5a1c314702",
-    "101a24a197aa3b5a1c314703",
-    "101a24a197aa3b5a1c314704",
-    "101a24a197aa3b5a1c314705",
-  ],
-  favorite: ["721a24a197aa3b5a1c314701"],
-};
-const userCollection = await users();
-const newInsertInformation = await userCollection.insertOne(newUser);
 const fp1 = {
   _id: new ObjectId("611a24a197aa3b5a1c315701"),
   user_id: "611a24a197aa3b5a1d315701",
@@ -372,5 +335,72 @@ await storeWardrobe(
   w1,
   "spongebob"
 );
+
+const newUser = {
+  _id: new ObjectId("611a24a197aa3b5a1d315701"),
+  username: "spongebob",
+  firstName: "spongebob",
+  lastName: "squarepants",
+  age: "420",
+  email: "pineappleunderthesea@gmail.com",
+  password: await passwordHelper("Squidward1@"),
+  profilePicture:
+    "88191896f6945e8aaff7451f6fffd55e0644305a9876b2465873dda7d4a256b3",
+  wardrobes: ["721a24a197aa3b5a1c314701"],
+  closet: [
+    "711a24a197aa3b5a1c314701",
+    "711a24a197aa3b5a1c314702",
+    "711a24a197aa3b5a1c314703",
+    "711a24a197aa3b5a1c314704",
+    "711a24a197aa3b5a1c314705",
+    "811a24a197aa3b5a1c314701",
+    "811a24a197aa3b5a1c314702",
+    "811a24a197aa3b5a1c314703",
+    "811a24a197aa3b5a1c314704",
+    "811a24a197aa3b5a1c314705",
+    "911a24a197aa3b5a1c314701",
+    "911a24a197aa3b5a1c314702",
+    "911a24a197aa3b5a1c314703",
+    "911a24a197aa3b5a1c314704",
+    "911a24a197aa3b5a1c314705",
+    "101a24a197aa3b5a1c314701",
+    "101a24a197aa3b5a1c314702",
+    "101a24a197aa3b5a1c314703",
+    "101a24a197aa3b5a1c314704",
+    "101a24a197aa3b5a1c314705",
+  ],
+  favorite: [],
+  following: [],
+};
+const newUser2 = {
+  _id: new ObjectId("611a24a197aa3b5a1d315702"),
+  username: "phills",
+  firstName: "patrick",
+  lastName: "hills",
+  age: "420",
+  email: "patrick@hill.com",
+  password: await passwordHelper("CSProfessor!@"),
+  profilePicture:
+    "9903ab6777c1152911aa57db1d21aceb48c5817354cdceab710e5b31745ee211",
+  wardrobes: [],
+  closet: [
+    "711a24a197aa3b5a1c314701",
+    "711a24a197aa3b5a1c314702",
+    "711a24a197aa3b5a1c314703",
+    "711a24a197aa3b5a1c314704",
+    "711a24a197aa3b5a1c314705",
+    "811a24a197aa3b5a1c314701",
+    "811a24a197aa3b5a1c314702",
+    "811a24a197aa3b5a1c314703",
+    "811a24a197aa3b5a1c314704",
+    "811a24a197aa3b5a1c314705",
+  ],
+  favorite: ["611a24a197aa3b5a1c315701", "611a24a197aa3b5a1c315702"],
+  following: ["611a24a197aa3b5a1d315701"],
+};
+const userCollection = await users();
+const newInsertInformation = await userCollection.insertOne(newUser);
+const newInsertInformation2 = await userCollection.insertOne(newUser2);
+
 console.log("Done seeding database");
 await closeConnection();
