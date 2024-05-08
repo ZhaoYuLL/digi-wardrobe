@@ -282,6 +282,8 @@ const newUser = {
   age: "420",
   email: "pineapple@underthesea@gmail.com",
   password: await passwordHelper("Squidward1@"),
+  profilePicture:
+    "88191896f6945e8aaff7451f6fffd55e0644305a9876b2465873dda7d4a256b3",
   wardrobes: [],
   closet: [
     "711a24a197aa3b5a1c314701",

@@ -1,8 +1,7 @@
 import { Router } from "express";
-const router = Router();
-// import data from users
+import multer from "multer";
+import xss from "xss";
 import { createUser, loginUser } from "../data/users.js";
-
 import {
   getAll,
   deleteFitpost,
@@ -10,158 +9,26 @@ import {
   searchByFPID,
   searchByUID,
 } from "../data/fitposts.js";
-import { getAllOutfitPieces } from "../data/testCloset.js";
+import { getOutfitPiecesByUsername } from "../data/outfitPieces.js";
 import {
   addSignedUrlsToFitPosts_in_wardrobe,
   addSignedUrlsToFitPosts_in_closet,
   addDescLinksForFitposts,
+  generateFileName,
+  uploadImageToS3,
+  addSignedUrlsToProfile,
+  addSignedUrlsToFitPosts_in_fitposts,
+  validString,
 } from "../helper.js";
 
-import { addSignedUrlsToFitPosts_in_fitposts, validString } from "../helper.js";
-import xss from "xss";
-import { getOutfitPiecesByUsername } from "../data/outfitPieces.js";
+const router = Router();
 
-router.route("/").get(async (req, res) => {
-  //code here for GET THIS ROUTE SHOULD NEVER FIRE BECAUSE OF MIDDLEWARE #1 IN SPECS.
-  return res.json({ error: "YOU SHOULD NOT BE HERE!" });
-});
-// POST route for handling sign-in form submission
-router
-  .route("/register")
-  .get(async (req, res) => {
-    //code here for GET
-    if (req.session.user) {
-      res.redirect("/userProfile");
-    } else {
-      res.render("register", { title: "Register" });
-    }
-  })
-  .post(async (req, res) => {
-    //code here for POST
-    let {
-      userName,
-      firstName,
-      lastName,
-      age,
-      email,
-      password,
-      confirmPassword,
-      bio,
-    } = req.body;
+// Multer configuration for image upload
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-    try {
-      userName = validString(userName);
-      userName = xss(userName);
-    } catch (e) {
-      res.status(400).send(e);
-    }
-    try {
-      firstName = validString(firstName);
-      firstName = xss(firstName);
-    } catch (e) {
-      res.status(400).send(e);
-    }
-    try {
-      lastName = validString(lastName);
-      lastName = xss(lastName);
-    } catch (e) {
-      res.status(400).send(e);
-    }
-    try {
-      age = validString(age);
-      age = xss(age);
-    } catch (e) {
-      res.status(400).send(e);
-    }
-    try {
-      email = validString(email);
-      email = xss(email);
-    } catch (e) {
-      res.status(400).send(e);
-    }
-    try {
-      password = validString(password);
-      password = xss(password);
-    } catch (e) {
-      res.status(400).send(e);
-    }
-    try {
-      confirmPassword = validString(confirmPassword);
-      confirmPassword = xss(confirmPassword);
-    } catch (e) {
-      res.status(400).send(e);
-    }
-
-    if (password !== confirmPassword) {
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
-    try {
-      const newUser = await createUser(
-        userName,
-        firstName,
-        lastName,
-        age,
-        email,
-        password,
-        bio
-      );
-      req.session.user = newUser;
-      res.redirect("/userProfile");
-    } catch (err) {
-      res.status(400).render("register", {
-        error: err,
-      });
-    }
-  });
-
-router
-  .route("/login")
-  .get(async (req, res) => {
-    if (req.session.user) {
-      res.redirect("/user");
-    }
-    res.render("login", { title: "Login" });
-  })
-  .post(async (req, res) => {
-    //code here for POST
-    let { userName, password } = req.body;
-
-    try {
-      userName = validString(userName);
-      userName = xss(userName);
-    } catch (e) {
-      res.status(400).send(e);
-    }
-    try {
-      password = validString(password);
-      password = xss(password);
-    } catch (e) {
-      res.status(400).send(e);
-    }
-    try {
-      const user = await loginUser(userName, password);
-
-      req.session.user = {
-        username: user.username,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        wardrobes: user.wardrobes,
-        closet: user.closet,
-        favorite: user.favorite,
-        bio: user.bio,
-        _id: user.userId,
-        following: user.following,
-      };
-
-      res.redirect("/userProfile");
-    } catch (err) {
-      res.status(400).render("login", {
-        error: err,
-      });
-    }
-  });
-
-router.route("/userProfile").get(async (req, res) => {
+// GET route for user profile
+router.get("/userProfile", async (req, res) => {
   if (!req.session.user) {
     return res.redirect("/login");
   }
@@ -176,37 +43,33 @@ router.route("/userProfile").get(async (req, res) => {
     _id,
     bio,
     following,
+    profilePicture,
   } = req.session.user;
-  const userId = _id;
+
   try {
-    // Get all fitposts for the user
-    //console.log(req.session.user);
-    const allFitposts = await searchByUID(userId);
-    //test for display
-    const outfitpieces = await getOutfitPiecesByUsername(userId);
+    const allFitposts = await searchByUID(_id);
+    const outfitpieces = await getOutfitPiecesByUsername(_id);
     const postsWithSignedUrls = await addSignedUrlsToFitPosts_in_closet(
       outfitpieces
     );
-
-    // Add signed URLs to fitposts
     const fitpostsWithSignedUrls = await addSignedUrlsToFitPosts_in_fitposts(
       allFitposts
     );
     const fitpostsWithOutfitDescLinks = await addDescLinksForFitposts(
       fitpostsWithSignedUrls
     );
-    //console.log(fitpostsWithOutfitDescLinks);
+    const pfp = await addSignedUrlsToProfile(profilePicture);
 
     res.render("userProfile", {
       title: "User Profile",
+      profilePicture: pfp,
       userName: username,
       firstName,
       lastName,
       closet,
       favorite,
-      bio: bio,
+      bio,
       allFitposts: fitpostsWithOutfitDescLinks,
-      wardrobes,
       wardrobes: postsWithSignedUrls,
       outfitpiecesJson: JSON.stringify(postsWithSignedUrls),
       following,
@@ -217,11 +80,114 @@ router.route("/userProfile").get(async (req, res) => {
   }
 });
 
-// Route for deleting a fitpost
+// GET route for registration form
+router.get("/register", async (req, res) => {
+  if (req.session.user) {
+    res.redirect("/userProfile");
+  } else {
+    res.render("register", { title: "Register" });
+  }
+});
+
+// POST route for user registration
+router.post("/register", upload.single("image"), async (req, res) => {
+  try {
+    let {
+      userName,
+      firstName,
+      lastName,
+      age,
+      email,
+      password,
+      confirmPassword,
+      bio,
+    } = req.body;
+
+    // Validate and sanitize input fields
+    userName = validString(xss(userName));
+    firstName = validString(xss(firstName));
+    lastName = validString(xss(lastName));
+    age = validString(xss(age));
+    email = validString(xss(email));
+    password = validString(xss(password));
+    confirmPassword = validString(xss(confirmPassword));
+    const imageName = await generateFileName();
+
+    const profilePicture = await uploadImageToS3(
+      req.file,
+      1920,
+      1080,
+      imageName
+    );
+    if (password !== confirmPassword) {
+      return res.status(400).json({ error: "Passwords do not match" });
+    }
+
+    const newUser = await createUser(
+      userName,
+      firstName,
+      lastName,
+      age,
+      email,
+      password,
+      bio,
+      profilePicture
+    );
+
+    req.session.user = newUser;
+    res.redirect("/userProfile");
+  } catch (error) {
+    res.status(400).render("register", {
+      error: error.message,
+    });
+  }
+});
+
+// GET route for login form
+router.get("/login", async (req, res) => {
+  if (req.session.user) {
+    res.redirect("/userProfile");
+  } else {
+    res.render("login", { title: "Login" });
+  }
+});
+
+// POST route for user login
+router.post("/login", async (req, res) => {
+  try {
+    let { userName, password } = req.body;
+
+    // Validate and sanitize input fields
+    userName = validString(xss(userName));
+    password = validString(xss(password));
+
+    const user = await loginUser(userName, password);
+
+    req.session.user = {
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      wardrobes: user.wardrobes,
+      closet: user.closet,
+      favorite: user.favorite,
+      bio: user.bio,
+      _id: user.userId,
+      following: user.following,
+      profilePicture: user.profilePicture,
+    };
+
+    res.redirect("/userProfile");
+  } catch (error) {
+    res.status(400).render("login", {
+      error: error.message,
+    });
+  }
+});
+
+// POST route for deleting a fitpost
 router.post("/userprofile/delete-fitpost", async (req, res) => {
   try {
     const { fitpostId } = req.body;
-    //console.log(fitpostId);
     await deleteFitpost(fitpostId);
     res.json({ message: "Fitpost deleted successfully" });
   } catch (error) {
@@ -230,47 +196,47 @@ router.post("/userprofile/delete-fitpost", async (req, res) => {
   }
 });
 
-router.post("/userprofile/update-fitpost", async function (req, res) {
-  const {
-    fitpostId,
-    headid,
-    bodyid,
-    legid,
-    footid,
-    headwear,
-    bodywear,
-    legwear,
-    footwear,
-  } = req.body;
-  //console.log(fitpostId);
-  //console.log(headid);
-  //console.log("headid: ", headid);
-  //console.log("headwearname: ", headwear);
+// POST route for updating a fitpost
+router.post("/userprofile/update-fitpost", async (req, res) => {
+  try {
+    const {
+      fitpostId,
+      headid,
+      bodyid,
+      legid,
+      footid,
+      headwear,
+      bodywear,
+      legwear,
+      footwear,
+    } = req.body;
 
-  await updateFitpost(fitpostId, "headid", headid);
-  await updateFitpost(fitpostId, "headwear", headwear);
-  await updateFitpost(fitpostId, "bodywear", bodywear);
-  await updateFitpost(fitpostId, "bodyid", bodyid);
-  await updateFitpost(fitpostId, "legid", legid);
-  await updateFitpost(fitpostId, "legwear", legwear);
-  await updateFitpost(fitpostId, "footid", footid);
-  await updateFitpost(fitpostId, "footwear", footwear);
-  const updatedFitpost = await searchByFPID(fitpostId);
+    await updateFitpost(fitpostId, "headid", headid);
+    await updateFitpost(fitpostId, "headwear", headwear);
+    await updateFitpost(fitpostId, "bodywear", bodywear);
+    await updateFitpost(fitpostId, "bodyid", bodyid);
+    await updateFitpost(fitpostId, "legid", legid);
+    await updateFitpost(fitpostId, "legwear", legwear);
+    await updateFitpost(fitpostId, "footid", footid);
+    await updateFitpost(fitpostId, "footwear", footwear);
 
-  // Send the updated fitpost as the response
-  res.json(updatedFitpost);
+    const updatedFitpost = await searchByFPID(fitpostId);
+    res.json(updatedFitpost);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
 });
-router.route("/following").get(async (req, res) => {
+
+// GET route for following page
+router.get("/following", async (req, res) => {
   if (!req.session.user) {
     return res.redirect("/login");
   }
 
   try {
     const { following } = req.session.user;
-    const followingUserIds = [...following]; // create a new array by spreading the values of the 'following' array
-    // const testUserId = "611a24a197aa3b5a1d315701";
-    // followingUserIds.push(testUserId);
-    // console.log(followingUserIds);
+    const followingUserIds = [...following];
 
     const allFitposts = [];
     for (const userId of followingUserIds) {
@@ -286,15 +252,16 @@ router.route("/following").get(async (req, res) => {
       title: "Following",
       fitposts: fitpostsWithSignedUrls,
     });
-  } catch (err) {
-    res.status(400).render("login", {
-      error: err,
+  } catch (error) {
+    console.error(error);
+    res.status(500).render("error", {
+      error: "An error occurred while fetching following data",
     });
   }
 });
 
-router.route("/logout").get(async (req, res) => {
-  //code here for GET
+// GET route for user logout
+router.get("/logout", async (req, res) => {
   req.session.destroy();
   res.render("logout", { title: "Logout Page" });
 });

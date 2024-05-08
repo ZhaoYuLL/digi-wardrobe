@@ -1,6 +1,11 @@
 {{! POST request to upload a single file }}
 
-<form id="createOutfitPiece" action="/outfitpieces" method="POST" enctype="multipart/form-data">
+<form
+  id="createOutfitPiece"
+  action="/outfitpieces"
+  method="POST"
+  enctype="multipart/form-data"
+>
   <label for="image">Upload an image of your clothing item: </label>
   <input type="file" id="image" name="image" accept="image/*" />
   <br />
@@ -13,7 +18,12 @@
   </select>
   <br />
   <label for="description">Description: </label>
-  <input type="text" id="description" name="description" placeholder="Write a description!" />
+  <input
+    type="text"
+    id="description"
+    name="description"
+    placeholder="Write a description!"
+  />
   <br />
   <label for="link">Where did you get your clothing item from?</label>
   <input type="text" id="link" name="link" placeholder="Clothing source link" />
@@ -26,6 +36,8 @@
   <img src="{{this.imageUrl}}" alt="{{this.caption}}" />
   <p>Description: {{this.description}}</p>
   <p>Clothing Source: {{this.link}}</p>
-  <button type="button" class="delete-button" id="{{this.imageName}}">Delete</button>
+  <button type="button" class="delete-button" id="{{this.imageName}}">
+    Delete
+  </button>
 </div>
 {{/each}}
