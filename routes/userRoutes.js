@@ -13,6 +13,8 @@ import { getAllOutfitPieces } from "../data/testCloset.js";
 import { getAllFitpics } from "../data/fitpics.js";
 import { getOutfitPiecesByUsername } from "../data/outfitPieces.js";
 
+import * as user from '../data/users.js'
+
 import {
   addSignedUrlsToFitPosts_in_wardrobe,
   addSignedUrlsToFitPosts_in_closet,
@@ -239,7 +241,7 @@ router.get("/following", async (req, res) => {
   }
 
   try {
-    const { following } = req.session.user;
+    const { following } = await user.getUserById(req.session.user._id);
     const followingUserIds = [...following];
 
     const allFitposts = [];
