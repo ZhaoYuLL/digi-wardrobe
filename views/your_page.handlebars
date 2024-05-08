@@ -1,7 +1,7 @@
 <h1>My Page</h1>
 
 <h2>Create a Fitpost</h2>
-<form id="createFitpost" method="POST" action="/fitposts/create">
+<form id="createFitpost" method="POST" action="/fitposts/create" enctype="multipart/form-data">
   <label for="headwear">Headwear:</label>
   <div id="headwear-slider">
     <button type="button" class="slide-button" data-id="prev" data-part="headwear">
@@ -82,6 +82,8 @@
   </div>
   <input type="hidden" id="footwear" name="footwear" value="" />
   <input type="hidden" id="footid" name="footid" value="" />
+  <label for="fitpic">(Optional) Fitpic Image:</label>
+  <input type="file" id="fitpic" name="fitpic" accept="image/*">
   <button type="submit">Create Fitpost</button>
 </form>
 

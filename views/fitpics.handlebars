@@ -1,0 +1,22 @@
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<div>
+  <p id="welcome">Following</p>
+</div>
+
+<div class="fitpics-container">
+  <h1>fitpics from everyone!</h1>
+  {{#each fitpics}}
+  <div class="fitpic" data-fitpic-id="">
+    <h2>fitpic by {{this.username}}</h2>
+    <img
+      src="{{this.imageUrl}}"
+      width="200px;"
+      height="200px"
+      alt="fitpic Image"
+    />
+  </div>
+  {{/each}}
+</div>
+
+<a id="logoutLink" href="/logout">Logout</a>

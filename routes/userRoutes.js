@@ -9,7 +9,10 @@ import {
   searchByFPID,
   searchByUID,
 } from "../data/fitposts.js";
+import { getAllOutfitPieces } from "../data/testCloset.js";
+import { getAllFitpics } from "../data/fitpics.js";
 import { getOutfitPiecesByUsername } from "../data/outfitPieces.js";
+
 import {
   addSignedUrlsToFitPosts_in_wardrobe,
   addSignedUrlsToFitPosts_in_closet,
@@ -19,6 +22,7 @@ import {
   addSignedUrlsToProfile,
   addSignedUrlsToFitPosts_in_fitposts,
   validString,
+  addSignedUrlsToFitPosts_in_fitpics
 } from "../helper.js";
 
 const router = Router();
@@ -264,6 +268,15 @@ router.get("/following", async (req, res) => {
 router.get("/logout", async (req, res) => {
   req.session.destroy();
   res.render("logout", { title: "Logout Page" });
+});
+router.route("/fitpics").get(async (req, res) => {
+  const fitpics = await getAllFitpics();
+  let fitUrls;
+  if(fitpics.length !== 0){
+   fitUrls = await addSignedUrlsToFitPosts_in_fitpics(fitpics);
+  }
+  res.render("fitpics", {title : "fitpics",
+  fitpics: fitUrls})
 });
 
 export default router;

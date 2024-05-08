@@ -2,18 +2,26 @@ import { Router } from "express";
 import * as fp from "../data/fitposts.js";
 import * as user from "../data/users.js";
 import * as wardrobe from "../data/wardrobes.js";
+import * as fitpics from "../data/fitpics.js"
 import { fitposts, users } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 import {
-  validString,
-  addSignedUrlsToFitPosts_in_fitposts,
-  convertDate,
-  addSignedUrlsToPosts,
-  addSignedUrlsToOutfitPieces,
-  addDescLinksForFitposts,
+    validString,
+    addSignedUrlsToFitPosts_in_fitposts,
+    convertDate,
+    addSignedUrlsToPosts,
+    addSignedUrlsToOutfitPieces,
+    addDescLinksForFitposts,
+    generateFileName,
+    uploadImageToS3
 } from "../helper.js";
 import xss from "xss";
-import { getAllFromCloset } from "../data/outfitPieces.js";
+import { getAllFromCloset } from '../data/outfitPieces.js';
+import { storeFitpic, getFitpic } from "../data/fitpics.js";
+import multer from "multer";
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const router = Router();
 
@@ -76,37 +84,41 @@ router
         return element.outfitType === "foot";
       });
 
-      res.render("your_page", {
-        title: "Create Fitpost",
-        head: headwear,
-        body: bodywear,
-        leg: legwear,
-        foot: footwear,
-        script_partial: "createFP_script",
-      });
-    } catch (e) {
-      return res.status(500).send(e.message);
-    }
-  })
-  .post(async (req, res) => {
-    //console.log("found the post route!");
-    if (req.session && req.session.user) {
-      let data = req.body;
-      const user = req.session.user;
-      //console.log(user);
-
-      try {
-        if (!data.headwear) throw new Error("Headwear not provided in route");
-        if (!data.bodywear) throw new Error("Bodywear not provided in route");
-        if (!data.legwear) throw new Error("Legwear not provided in route");
-        if (!data.footwear) throw new Error("Footwear not provided in route");
-        if (!data.headid) throw new Error("headid not provided in route");
-        if (!data.bodyid) throw new Error("bodyid not provided in route");
-        if (!data.legid) throw new Error("legid not provided in route");
-        if (!data.footid) throw new Error("footid not provided in route");
-      } catch (e) {
-        res.status(400).send(e);
-      }
+            res.render("your_page", {
+                title: "Create Fitpost",
+                head: headwear,
+                body: bodywear,
+                leg: legwear,
+                foot: footwear,
+                script_partial: "createFP_script",
+            });
+        } catch (e) {
+            return res.status(500).send(e.message);
+        }
+    })
+    .post(upload.single("fitpic"), async (req, res) => {
+        //console.log("found the post route!");
+        if (req.session && req.session.user) {
+            let data = req.body;
+            const user = req.session.user;
+            //console.log(user);
+            if(req.file){
+            const imageName = await generateFileName();
+			      const img = await uploadImageToS3(req.file, 1920, 1080, imageName);
+            const a = await storeFitpic(imageName,req.session.user.username)
+            }
+            try {
+                if (!data.headwear) throw new Error("Headwear not provided in route");
+                if (!data.bodywear) throw new Error("Bodywear not provided in route");
+                if (!data.legwear) throw new Error("Legwear not provided in route");
+                if (!data.footwear) throw new Error("Footwear not provided in route");
+                if (!data.headid) throw new Error("Head_id not provided in route");
+                if (!data.bodyid) throw new Error("Body_id not provided in route");
+                if (!data.legid) throw new Error("Leg_id not provided in route");
+                if (!data.footid) throw new Error("Foot_id not provided in route");
+            } catch (e) {
+                return res.status(400).send(e);
+            }
 
       try {
         data.headwear = validString(data.headwear);
