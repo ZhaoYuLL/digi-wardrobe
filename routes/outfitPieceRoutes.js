@@ -62,10 +62,10 @@ router
     if (!req.session || !req.session.user) {
       return res.status(500).send("Not logged in");
     } else {
-      const imageName = await generateFileName();
-      console.log(req.session.user.image);
-      console.log(req.file);
-      const img = await uploadImageToS3(req.file, 1920, 1080, imageName);
+      if (req.file) {
+        const imageName = await generateFileName();
+        const img = await uploadImageToS3(req.file, 1920, 1080, imageName);
+      }
 
       let data = req.body;
       try {
