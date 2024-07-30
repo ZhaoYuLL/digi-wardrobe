@@ -1,4 +1,3 @@
-546-final
 https://github.com/ZhaoYuLL/digi-wardrobe
 
 To start, run "npm start"
