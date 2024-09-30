@@ -124,7 +124,7 @@ nav ul {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: seagreen;
+  background-color: #1d3557;
   border-bottom: 1px solid #ddd;
   display: flex;
   justify-content: space-between;
@@ -140,7 +140,7 @@ nav ul li a {
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
-  font-family: 'Comic Sans MS', cursive;
+  font-family: 'Droid Sans', ;
   font-size: larger;
 }
 
@@ -149,7 +149,7 @@ nav ul li a:hover {
 }
 
 body {
-  font-family: 'Comic Sans MS', cursive;
+  font-family: 'Droid Sans';
   background-color: #f0f0f0;
   text-align: center;
 }
@@ -183,7 +183,7 @@ input {
 button {
   width: 100%;
   padding: 10px;
-  background-color: seagreen;
+  background-color: #1d3557;
   color: white;
   border: none;
   border-radius: 5px;
@@ -199,7 +199,7 @@ p {
 }
 
 p a {
-  color: seagreen;
+  color: #457b9d;
   text-decoration: none;
   font-weight: bold;
 }
@@ -217,7 +217,7 @@ p a:hover {
 .dropdown-menu {
   display: none;
   position: absolute;
-  background-color: seagreen;
+  background-color: #1d3557;
   /* Color based on wardrobe-preview */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   /* Add shadow for better visibility */
